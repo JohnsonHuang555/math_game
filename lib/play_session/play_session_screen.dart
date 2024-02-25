@@ -4,6 +4,13 @@
 
 import 'dart:async';
 
+import 'package:basic/play_session/game_board.dart';
+import 'package:basic/play_session/item_list.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
+
+import '../components/header.dart';
+import '../style/responsive_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
@@ -26,9 +33,7 @@ import 'game_widget.dart';
 /// It is a stateful widget because it manages some state of its own,
 /// such as whether the game is in a "celebration" state.
 class PlaySessionScreen extends StatefulWidget {
-  final GameLevel level;
-
-  const PlaySessionScreen(this.level, {super.key});
+  const PlaySessionScreen({super.key});
 
   @override
   State<PlaySessionScreen> createState() => _PlaySessionScreenState();
@@ -56,105 +61,148 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
 
-    return MultiProvider(
-      providers: [
-        Provider.value(value: widget.level),
-        // Create and provide the [LevelState] object that will be used
-        // by widgets below this one in the widget tree.
-        ChangeNotifierProvider(
-          create: (context) => LevelState(
-            goal: widget.level.difficulty,
-            onWin: _playerWon,
-          ),
+    // return MultiProvider(
+    //   providers: [
+    //     Provider.value(value: widget.level),
+    //     // Create and provide the [LevelState] object that will be used
+    //     // by widgets below this one in the widget tree.
+    //     ChangeNotifierProvider(
+    //       create: (context) => LevelState(
+    //         goal: widget.level.difficulty,
+    //         onWin: _playerWon,
+    //       ),
+    //     ),
+    //   ],
+    //   child: IgnorePointer(
+    //     // Ignore all input during the celebration animation.
+    //     ignoring: _duringCelebration,
+    //     child: Scaffold(
+    //       backgroundColor: palette.backgroundPlaySession,
+    //       // The stack is how you layer widgets on top of each other.
+    //       // Here, it is used to overlay the winning confetti animation on top
+    //       // of the game.
+    //       body: Stack(
+    //         children: [
+    //           // This is the main layout of the play session screen,
+    //           // with a settings button on top, the actual play area
+    //           // in the middle, and a back button at the bottom.
+    //           Column(
+    //             mainAxisAlignment: MainAxisAlignment.center,
+    //             children: [
+    //               Align(
+    //                 alignment: Alignment.centerRight,
+    //                 child: InkResponse(
+    //                   onTap: () => GoRouter.of(context).push('/settings'),
+    //                   child: Image.asset(
+    //                     'assets/images/settings.png',
+    //                     semanticLabel: 'Settings',
+    //                   ),
+    //                 ),
+    //               ),
+    //               const Spacer(),
+    //               Expanded(
+    //                 // The actual UI of the game.
+    //                 child: GameWidget(),
+    //               ),
+    //               const Spacer(),
+    //               Padding(
+    //                 padding: const EdgeInsets.all(8.0),
+    //                 child: MyButton(
+    //                   onPressed: () => GoRouter.of(context).go('/play'),
+    //                   child: const Text('Back'),
+    //                 ),
+    //               ),
+    //             ],
+    //           ),
+    //           // This is the confetti animation that is overlaid on top of the
+    //           // game when the player wins.
+    //           SizedBox.expand(
+    //             child: Visibility(
+    //               visible: _duringCelebration,
+    //               child: IgnorePointer(
+    //                 child: Confetti(
+    //                   isStopped: !_duringCelebration,
+    //                 ),
+    //               ),
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     ),
+    //   ),
+    // );
+    return Scaffold(
+      backgroundColor: palette.backgroundMain,
+      body: ResponsiveScreen(
+        squarishMainArea: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: const [
+            Header(
+              child: Icon(
+                Icons.help_outline,
+                size: 34,
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              '風險 1',
+              style: TextStyle(
+                fontSize: 26,
+              ),
+            ),
+            SizedBox(height: 50),
+            Text(
+              '請選擇任三個符號',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            SizedBox(height: 10),
+            GameBoard(),
+            SizedBox(height: 50),
+            Padding(
+              padding: EdgeInsets.only(left: 50, right: 50),
+              child: ItemList(),
+            )
+          ],
         ),
-      ],
-      child: IgnorePointer(
-        // Ignore all input during the celebration animation.
-        ignoring: _duringCelebration,
-        child: Scaffold(
-          backgroundColor: palette.backgroundPlaySession,
-          // The stack is how you layer widgets on top of each other.
-          // Here, it is used to overlay the winning confetti animation on top
-          // of the game.
-          body: Stack(
-            children: [
-              // This is the main layout of the play session screen,
-              // with a settings button on top, the actual play area
-              // in the middle, and a back button at the bottom.
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: InkResponse(
-                      onTap: () => GoRouter.of(context).push('/settings'),
-                      child: Image.asset(
-                        'assets/images/settings.png',
-                        semanticLabel: 'Settings',
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
-                  Expanded(
-                    // The actual UI of the game.
-                    child: GameWidget(),
-                  ),
-                  const Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: MyButton(
-                      onPressed: () => GoRouter.of(context).go('/play'),
-                      child: const Text('Back'),
-                    ),
-                  ),
-                ],
-              ),
-              // This is the confetti animation that is overlaid on top of the
-              // game when the player wins.
-              SizedBox.expand(
-                child: Visibility(
-                  visible: _duringCelebration,
-                  child: IgnorePointer(
-                    child: Confetti(
-                      isStopped: !_duringCelebration,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+        rectangularMenuArea: MyButton(
+          onPressed: () {
+            GoRouter.of(context).go('/');
+          },
+          child: const Text('選好了'),
         ),
       ),
     );
   }
 
-  Future<void> _playerWon() async {
-    _log.info('Level ${widget.level.number} won');
+  // Future<void> _playerWon() async {
+  //   _log.info('Level ${widget.level.number} won');
 
-    final score = Score(
-      widget.level.number,
-      widget.level.difficulty,
-      DateTime.now().difference(_startOfPlay),
-    );
+  //   final score = Score(
+  //     widget.level.number,
+  //     widget.level.difficulty,
+  //     DateTime.now().difference(_startOfPlay),
+  //   );
 
-    final playerProgress = context.read<PlayerProgress>();
-    playerProgress.setLevelReached(widget.level.number);
+  //   final playerProgress = context.read<PlayerProgress>();
+  //   playerProgress.setLevelReached(widget.level.number);
 
-    // Let the player see the game just after winning for a bit.
-    await Future<void>.delayed(_preCelebrationDuration);
-    if (!mounted) return;
+  //   // Let the player see the game just after winning for a bit.
+  //   await Future<void>.delayed(_preCelebrationDuration);
+  //   if (!mounted) return;
 
-    setState(() {
-      _duringCelebration = true;
-    });
+  //   setState(() {
+  //     _duringCelebration = true;
+  //   });
 
-    final audioController = context.read<AudioController>();
-    audioController.playSfx(SfxType.congrats);
+  //   final audioController = context.read<AudioController>();
+  //   audioController.playSfx(SfxType.congrats);
 
-    /// Give the player some time to see the celebration animation.
-    await Future<void>.delayed(_celebrationDuration);
-    if (!mounted) return;
+  //   /// Give the player some time to see the celebration animation.
+  //   await Future<void>.delayed(_celebrationDuration);
+  //   if (!mounted) return;
 
-    GoRouter.of(context).go('/play/won', extra: {'score': score});
-  }
+  //   GoRouter.of(context).go('/play/won', extra: {'score': score});
+  // }
 }

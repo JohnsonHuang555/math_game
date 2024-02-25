@@ -1,3 +1,5 @@
+Refactor for [schrodinger-s_box](https://github.com/JohnsonHuang555/schrodinger-s_box) with new structure
+
 A starter Flutter project with a minimal shell of a game
 including the following features:
 

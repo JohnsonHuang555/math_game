@@ -41,9 +41,12 @@ class _MyButtonState extends State<MyButton>
       },
       child: RotationTransition(
         turns: _controller.drive(const _MySineTween(0.005)),
-        child: FilledButton(
-          onPressed: widget.onPressed,
-          child: widget.child,
+        child: SizedBox(
+          width: double.infinity,
+          child: FilledButton(
+            onPressed: widget.onPressed,
+            child: widget.child,
+          ),
         ),
       ),
     );

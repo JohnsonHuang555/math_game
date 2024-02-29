@@ -4,12 +4,14 @@
 
 import 'dart:async';
 
+import 'package:basic/play_session/content_hint.dart';
 import 'package:basic/play_session/game_board.dart';
 import 'package:basic/play_session/item_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 
 import '../components/header.dart';
+import '../game_internals/game_state.dart';
 import '../style/responsive_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -60,7 +62,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
-
     // return MultiProvider(
     //   providers: [
     //     Provider.value(value: widget.level),
@@ -131,46 +132,101 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     //     ),
     //   ),
     // );
-    return Scaffold(
-      backgroundColor: palette.backgroundMain,
-      body: ResponsiveScreen(
-        squarishMainArea: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: const [
-            Header(
-              child: Icon(
-                Icons.help_outline,
-                size: 34,
-              ),
-            ),
-            SizedBox(height: 20),
-            Text(
-              '風險 1',
-              style: TextStyle(
-                fontSize: 26,
-              ),
-            ),
-            SizedBox(height: 50),
-            Text(
-              '請選擇任三個符號',
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
-            SizedBox(height: 10),
-            GameBoard(),
-            SizedBox(height: 50),
-            Padding(
-              padding: EdgeInsets.only(left: 50, right: 50),
-              child: ItemList(),
-            )
-          ],
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => GameState(),
         ),
-        rectangularMenuArea: MyButton(
-          onPressed: () {
-            GoRouter.of(context).go('/');
-          },
-          child: const Text('選好了'),
+      ],
+      child: Scaffold(
+        backgroundColor: palette.backgroundMain,
+        body: Consumer<GameState>(
+          builder: ((context, state, child) {
+            return ResponsiveScreen(
+              squarishMainArea: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Header(
+                    child: Icon(
+                      Icons.help_outline,
+                      size: 34,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    state.risk.toString(),
+                    style: TextStyle(
+                      fontSize: 26,
+                    ),
+                  ),
+                  SizedBox(height: 40),
+                  Text(
+                    '請選擇任三個符號',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  GameBoard(),
+                  SizedBox(height: 5),
+                  ContentHint(),
+                  SizedBox(height: 35),
+                  Padding(
+                    padding: EdgeInsets.only(left: 50, right: 50),
+                    child: ItemList(),
+                  ),
+                ],
+              ),
+              rectangularMenuArea: MyButton(
+                onPressed: () {
+                  GoRouter.of(context).go('/');
+                },
+                child: const Text('選好了'),
+              ),
+            );
+          }),
+          // body: ResponsiveScreen(
+          //   squarishMainArea: Column(
+          //     mainAxisAlignment: MainAxisAlignment.start,
+          //     children: [
+          //       Header(
+          //         child: Icon(
+          //           Icons.help_outline,
+          //           size: 34,
+          //         ),
+          //       ),
+          //       SizedBox(height: 10),
+          //       Text(
+          //         gameState.risk.toString(),
+          //         style: TextStyle(
+          //           fontSize: 26,
+          //         ),
+          //       ),
+          //       SizedBox(height: 40),
+          //       Text(
+          //         '請選擇任三個符號',
+          //         style: TextStyle(
+          //           fontSize: 16,
+          //         ),
+          //       ),
+          //       SizedBox(height: 10),
+          //       GameBoard(),
+          //       SizedBox(height: 5),
+          //       ContentHint(),
+          //       SizedBox(height: 35),
+          //       Padding(
+          //         padding: EdgeInsets.only(left: 50, right: 50),
+          //         child: ItemList(),
+          //       ),
+          //     ],
+          //   ),
+          //   rectangularMenuArea: MyButton(
+          //     onPressed: () {
+          //       GoRouter.of(context).go('/');
+          //     },
+          //     child: const Text('選好了'),
+          //   ),
+          // ),
         ),
       ),
     );

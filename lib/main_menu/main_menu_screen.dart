@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
@@ -46,14 +47,13 @@ class MainMenuScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: 26,
-                  child: Image.asset(
-                    'assets/icons/crown.png',
-                  ),
+                SvgPicture.asset(
+                  'assets/icons/crown.svg',
+                  width: 36,
+                  height: 36,
                 ),
                 SizedBox(
-                  width: 10,
+                  width: 5,
                 ),
                 Text(
                   '1st',
@@ -88,8 +88,8 @@ class MainMenuScreen extends StatelessWidget {
                       ),
                     ),
                     Icon(
-                      Icons.play_arrow,
-                      size: 60,
+                      Icons.play_arrow_rounded,
+                      size: 70,
                     ),
                   ],
                 ),
@@ -100,11 +100,10 @@ class MainMenuScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SizedBox(
-                    width: 36,
-                    child: Image.asset(
-                      'assets/icons/medal.png',
-                    ),
+                  SvgPicture.asset(
+                    'assets/icons/trophy.svg',
+                    width: 32,
+                    height: 32,
                   ),
                   Icon(
                     Icons.leaderboard,

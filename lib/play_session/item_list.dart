@@ -12,7 +12,7 @@ class ItemList extends StatelessWidget {
         height: 50,
         decoration: BoxDecoration(
           border: Border.all(
-            width: 2,
+            width: 3,
           ),
           borderRadius: BorderRadius.circular(6),
         ),

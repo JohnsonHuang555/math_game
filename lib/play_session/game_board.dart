@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class GameBoard extends StatelessWidget {
-  const GameBoard({super.key});
+  final List<Widget> items;
+  final Function(int index) onSelect;
+  const GameBoard({super.key, required this.items, required this.onSelect});
 
   List<Widget> getGameCard() {
     return List.generate(
       9,
-      (index) => Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            width: 3,
+      (index) => GestureDetector(
+        onTap: () {
+          onSelect(index);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: 3,
+            ),
+            borderRadius: BorderRadius.circular(6),
           ),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Center(
-          child: SvgPicture.asset(
-            'assets/icons/question.svg',
-            width: 70,
-            height: 70,
+          child: Center(
+            child: items[index],
           ),
         ),
       ),

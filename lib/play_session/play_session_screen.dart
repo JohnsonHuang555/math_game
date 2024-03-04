@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:basic/play_session/content_hint.dart';
 import 'package:basic/play_session/game_board.dart';
 import 'package:basic/play_session/item_list.dart';
+import 'package:basic/play_session/session_step/step_select_symbol.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 
@@ -57,6 +58,17 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     super.initState();
 
     _startOfPlay = DateTime.now();
+  }
+
+  Widget _getGameStep(GameState state) {
+    switch(state.step) {
+      case 1:
+        return StepSelectSymbol(mathSymbols: state.boxSymbols, onSelect: state.handleSelectMathSymbol);
+      case 2:
+      case 3:
+      default:
+        return Text('Something wrong...');
+    }
   }
 
   @override
@@ -167,14 +179,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     ),
                   ),
                   SizedBox(height: 10),
-                  GameBoard(),
-                  SizedBox(height: 5),
-                  ContentHint(),
-                  SizedBox(height: 35),
-                  Padding(
-                    padding: EdgeInsets.only(left: 50, right: 50),
-                    child: ItemList(),
-                  ),
+                  _getGameStep(state),
                 ],
               ),
               rectangularMenuArea: MyButton(
@@ -185,48 +190,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
               ),
             );
           }),
-          // body: ResponsiveScreen(
-          //   squarishMainArea: Column(
-          //     mainAxisAlignment: MainAxisAlignment.start,
-          //     children: [
-          //       Header(
-          //         child: Icon(
-          //           Icons.help_outline,
-          //           size: 34,
-          //         ),
-          //       ),
-          //       SizedBox(height: 10),
-          //       Text(
-          //         gameState.risk.toString(),
-          //         style: TextStyle(
-          //           fontSize: 26,
-          //         ),
-          //       ),
-          //       SizedBox(height: 40),
-          //       Text(
-          //         '請選擇任三個符號',
-          //         style: TextStyle(
-          //           fontSize: 16,
-          //         ),
-          //       ),
-          //       SizedBox(height: 10),
-          //       GameBoard(),
-          //       SizedBox(height: 5),
-          //       ContentHint(),
-          //       SizedBox(height: 35),
-          //       Padding(
-          //         padding: EdgeInsets.only(left: 50, right: 50),
-          //         child: ItemList(),
-          //       ),
-          //     ],
-          //   ),
-          //   rectangularMenuArea: MyButton(
-          //     onPressed: () {
-          //       GoRouter.of(context).go('/');
-          //     },
-          //     child: const Text('選好了'),
-          //   ),
-          // ),
         ),
       ),
     );

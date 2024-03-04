@@ -61,9 +61,14 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   }
 
   Widget _getGameStep(GameState state) {
-    switch(state.step) {
+    switch (state.step) {
       case 1:
-        return StepSelectSymbol(mathSymbols: state.boxSymbols, onSelect: state.handleSelectMathSymbol);
+        return StepSelectSymbol(
+          mathSymbols: state.boxSymbols,
+          onSelect: state.handleSelectMathSymbol,
+          showSelectResult: state.showSelectResult,
+          selectedSymbols: state.selectSymbols,
+        );
       case 2:
       case 3:
       default:

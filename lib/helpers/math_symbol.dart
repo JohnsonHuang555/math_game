@@ -74,8 +74,9 @@ Widget convertMathSymbolToIcon(MathSymbol mathSymbol) {
   return mathSymbolMap[mathSymbol] as Widget;
 }
 
-class SelectedMathSymbol {
+class SelectedItem {
   int index;
-  MathSymbol mathSymbol;
-  SelectedMathSymbol({required this.index, required this.mathSymbol});
+  MathSymbol? mathSymbol;
+  int? number;
+  SelectedItem({required this.index, mathSymbol, number});
 }

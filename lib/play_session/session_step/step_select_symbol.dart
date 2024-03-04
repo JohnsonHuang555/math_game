@@ -7,8 +7,16 @@ import '../item_list.dart';
 
 class StepSelectSymbol extends StatelessWidget {
   final List<MathSymbol> mathSymbols;
+  final List<SelectedItem> selectedSymbols;
   final Function(int, MathSymbol) onSelect;
-  const StepSelectSymbol({super.key, required this.mathSymbols, required this.onSelect});
+  final bool showSelectResult;
+  const StepSelectSymbol({
+    super.key,
+    required this.mathSymbols,
+    required this.onSelect,
+    required this.showSelectResult,
+    required this.selectedSymbols,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +25,11 @@ class StepSelectSymbol extends StatelessWidget {
       children: [
         GameBoard(
           items: items,
-          onSelect:(index) {
+          onSelect: (index) {
             onSelect(index, mathSymbols[index]);
           },
+          showSelectResult: showSelectResult,
+          selectedItem: selectedSymbols,
         ),
         SizedBox(height: 5),
         ContentHint(),

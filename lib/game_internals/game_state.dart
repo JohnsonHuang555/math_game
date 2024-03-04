@@ -15,15 +15,17 @@ class GameState extends ChangeNotifier {
   // 當前數字
   List<int> _boxNumbers = [];
 
+  // 顯示選完的結果
+  bool showSelectResult = false;
   // 已選擇的符號
-  List<SelectedMathSymbol> _selectSymbols = [];
+  List<SelectedItem> _selectSymbols = [];
   // 已選擇的數字
   List<int> _selectNumbers = [];
 
   int? get risk => _risk;
   List<MathSymbol> get boxSymbols => _boxSymbols;
   List<int> get boxNumbers => _boxNumbers;
-  List<SelectedMathSymbol> get selectSymbols => _selectSymbols;
+  List<SelectedItem> get selectSymbols => _selectSymbols;
   List<int> get selectNumbers => _selectNumbers;
 
   GameState() {
@@ -44,16 +46,18 @@ class GameState extends ChangeNotifier {
     return array;
   }
 
+  void handleNextStep() {}
+
   void handleSelectMathSymbol(int index, MathSymbol mathSymbol) {
-    var isAlreadySelected = _selectSymbols.singleWhere((element) => element.index == index, orElse: () {
-      return SelectedMathSymbol(index: -1, mathSymbol: mathSymbol);
+    var isAlreadySelected = _selectSymbols
+        .singleWhere((element) => element.index == index, orElse: () {
+      return SelectedItem(index: -1);
     });
-    if (isAlreadySelected.index == -1) {
-      _selectSymbols.add(SelectedMathSymbol(index: index, mathSymbol: mathSymbol));
+    if (isAlreadySelected.index == -1 && _selectSymbols.length < 3) {
+      _selectSymbols.add(SelectedItem(index: index, mathSymbol: mathSymbol));
     } else {
       _selectSymbols.removeWhere((element) => element.index == index);
     }
-    print(_selectSymbols.length);
     notifyListeners();
   }
 }

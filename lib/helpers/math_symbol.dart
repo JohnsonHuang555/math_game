@@ -1,3 +1,4 @@
+import 'package:basic/style/palette.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -52,23 +53,31 @@ List<T> _createBoxes<T>(T symbol, int count) {
   return arr;
 }
 
-Widget convertMathSymbolToIcon(MathSymbol mathSymbol) {
+Widget convertMathSymbolToIcon(
+  MathSymbol mathSymbol,
+  bool isSelected,
+  Palette palette,
+) {
   var mathSymbolMap = <MathSymbol, Widget>{
     MathSymbol.plus: FaIcon(
       FontAwesomeIcons.plus,
       size: 40,
+      color: isSelected ? Color(0xffC95421) : palette.ink,
     ),
     MathSymbol.minus: FaIcon(
       FontAwesomeIcons.minus,
       size: 40,
+      color: isSelected ? Color(0xffC95421) : palette.ink,
     ),
     MathSymbol.times: FaIcon(
       FontAwesomeIcons.xmark,
       size: 40,
+      color: isSelected ? Color(0xffC95421) : palette.ink,
     ),
     MathSymbol.divide: FaIcon(
       FontAwesomeIcons.divide,
       size: 40,
+      color: isSelected ? Color(0xffC95421) : palette.ink,
     ),
   };
   return mathSymbolMap[mathSymbol] as Widget;

@@ -1,6 +1,8 @@
 import 'package:basic/helpers/math_symbol.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
+import '../../style/palette.dart';
 import '../content_hint.dart';
 import '../game_board.dart';
 import '../item_list.dart';
@@ -20,7 +22,19 @@ class StepSelectSymbol extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var items = mathSymbols.map((e) => convertMathSymbolToIcon(e)).toList();
+    final palette = context.read<Palette>();
+
+    var items = mathSymbols.asMap().entries.map((entry) {
+      int index = entry.key;
+      var isSelected = selectedSymbols.singleWhere(
+          (element) => element.index == index,
+          orElse: () => SelectedItem(index: -1));
+      return convertMathSymbolToIcon(
+        entry.value,
+        isSelected.index != -1,
+        palette,
+      );
+    }).toList();
     return Column(
       children: [
         GameBoard(

@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 
 class GameState extends ChangeNotifier {
   // 遊戲階段
-  int step = 1;
+  int _step = 1;
   // 遊戲風險
   int? _risk;
   // 當前符號
@@ -16,15 +16,17 @@ class GameState extends ChangeNotifier {
   List<int> _boxNumbers = [];
 
   // 顯示選完的結果
-  bool showSelectResult = false;
+  bool _showSelectResult = false;
   // 已選擇的符號
   List<SelectedItem> _selectSymbols = [];
   // 已選擇的數字
   List<int> _selectNumbers = [];
 
+  int get step => _step;
   int? get risk => _risk;
   List<MathSymbol> get boxSymbols => _boxSymbols;
   List<int> get boxNumbers => _boxNumbers;
+  bool get showSelectResult => _showSelectResult;
   List<SelectedItem> get selectSymbols => _selectSymbols;
   List<int> get selectNumbers => _selectNumbers;
 
@@ -46,7 +48,15 @@ class GameState extends ChangeNotifier {
     return array;
   }
 
-  void handleNextStep() {}
+  void handleNextStep() {
+    _showSelectResult = true;
+    Future.delayed(Duration(milliseconds: 2000), () {
+      _showSelectResult = false;
+      // _step = _step + 1;
+      notifyListeners();
+    });
+    notifyListeners();
+  }
 
   void handleSelectMathSymbol(int index, MathSymbol mathSymbol) {
     var isAlreadySelected = _selectSymbols

@@ -189,7 +189,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
               ),
               rectangularMenuArea: MyButton(
                 onPressed: () {
-                  GoRouter.of(context).go('/');
+                  state.handleNextStep();
+                  // GoRouter.of(context).go('/');
                 },
                 child: const Text('選好了'),
               ),

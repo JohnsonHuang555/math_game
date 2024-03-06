@@ -87,16 +87,5 @@ class SelectedItem {
   int index;
   MathSymbol? mathSymbol;
   int? number;
-  SelectedItem({required this.index, mathSymbol, number});
-}
-
-bool checkIsAlreadySelected(List<SelectedItem> selectedItems, int targetIndex) {
-  var alreadySelected = selectedItems
-      .singleWhere((element) => element.index == targetIndex, orElse: () {
-    return SelectedItem(index: -1);
-  });
-  if (alreadySelected.index == -1) {
-    return false;
-  }
-  return true;
+  SelectedItem({required this.index, this.mathSymbol, this.number});
 }

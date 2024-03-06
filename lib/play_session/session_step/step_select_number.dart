@@ -7,36 +7,38 @@ import '../../style/palette.dart';
 import '../content_hint.dart';
 import '../game_board.dart';
 
-class StepSelectSymbol extends StatelessWidget {
-  final List<MathSymbol> mathSymbols;
-  final List<SelectedItem> selectedSymbols;
-  final Function(int, MathSymbol) onSelect;
+class StepSelectNumber extends StatelessWidget {
+  final List<int> numbers;
+  final List<SelectedItem> selectedNumbers;
+  final Function(int, int) onSelect;
   final bool showSelectResult;
-  const StepSelectSymbol({
+  const StepSelectNumber({
     super.key,
-    required this.mathSymbols,
+    required this.numbers,
     required this.onSelect,
     required this.showSelectResult,
-    required this.selectedSymbols,
+    required this.selectedNumbers,
   });
 
   @override
   Widget build(BuildContext context) {
     final palette = context.read<Palette>();
 
-    var items = mathSymbols.asMap().entries.map((entry) {
+    var items = numbers.asMap().entries.map((entry) {
       int index = entry.key;
-      var isSelected = checkIsAlreadySelected(selectedSymbols, index);
-      return convertMathSymbolToIcon(
-        entry.value,
-        isSelected,
-        palette,
+      var isSelected = checkIsAlreadySelected(selectedNumbers, index);
+      return Text(
+        entry.value.toString(),
+        style: TextStyle(
+          fontSize: 40,
+          color: isSelected ? palette.selectedItem : palette.ink,
+        ),
       );
     }).toList();
     return Column(
       children: [
         Text(
-          '請選擇任三個符號',
+          '請選擇任三個數字',
           style: TextStyle(
             fontSize: 16,
           ),
@@ -45,10 +47,10 @@ class StepSelectSymbol extends StatelessWidget {
         GameBoard(
           items: items,
           onSelect: (index) {
-            onSelect(index, mathSymbols[index]);
+            onSelect(index, numbers[index]);
           },
           showSelectResult: showSelectResult,
-          selectedItems: selectedSymbols,
+          selectedItems: selectedNumbers,
         ),
         SizedBox(height: 5),
         ContentHint(),

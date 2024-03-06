@@ -4,9 +4,9 @@
 
 import 'dart:async';
 
-import 'package:basic/play_session/content_hint.dart';
-import 'package:basic/play_session/game_board.dart';
 import 'package:basic/play_session/item_list.dart';
+import 'package:basic/play_session/session_step/step_combine_formula.dart';
+import 'package:basic/play_session/session_step/step_select_number.dart';
 import 'package:basic/play_session/session_step/step_select_symbol.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
@@ -67,10 +67,20 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
           mathSymbols: state.boxSymbols,
           onSelect: state.handleSelectMathSymbol,
           showSelectResult: state.showSelectResult,
-          selectedSymbols: state.selectSymbols,
+          selectedSymbols: state.selectedSymbols,
         );
       case 2:
+        return StepSelectNumber(
+          numbers: state.boxNumbers,
+          onSelect: state.handleSelectNumber,
+          showSelectResult: state.showSelectResult,
+          selectedNumbers: state.selectedNumbers,
+        );
       case 3:
+        return StepCombineFormula(
+          currentSelectedItems: state.currentSelectedItems,
+          onSelectAnswer: state.handleSelectAnswer,
+        );
       default:
         return Text('Something wrong...');
     }
@@ -176,15 +186,13 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       fontSize: 26,
                     ),
                   ),
-                  SizedBox(height: 40),
-                  Text(
-                    '請選擇任三個符號',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 35),
                   _getGameStep(state),
+                  const Spacer(),
+                  Padding(
+                    padding: EdgeInsets.only(left: 50, right: 50),
+                    child: ItemList(),
+                  ),
                 ],
               ),
               rectangularMenuArea: MyButton(

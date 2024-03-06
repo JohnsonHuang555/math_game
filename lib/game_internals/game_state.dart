@@ -18,17 +18,30 @@ class GameState extends ChangeNotifier {
   // 顯示選完的結果
   bool _showSelectResult = false;
   // 已選擇的符號
-  List<SelectedItem> _selectSymbols = [];
+  final List<SelectedItem> _selectedSymbols = [];
   // 已選擇的數字
-  List<int> _selectNumbers = [];
+  final List<SelectedItem> _selectedNumbers = [];
 
   int get step => _step;
   int? get risk => _risk;
   List<MathSymbol> get boxSymbols => _boxSymbols;
   List<int> get boxNumbers => _boxNumbers;
   bool get showSelectResult => _showSelectResult;
-  List<SelectedItem> get selectSymbols => _selectSymbols;
-  List<int> get selectNumbers => _selectNumbers;
+  List<SelectedItem> get selectedSymbols => _selectedSymbols;
+  List<SelectedItem> get selectedNumbers => _selectedNumbers;
+  List<SelectedItem> get currentSelectedItems {
+    return [..._selectedSymbols, ..._selectedNumbers]
+        .asMap()
+        .entries
+        .map((entry) {
+      int index = entry.key;
+      return SelectedItem(
+        index: index,
+        mathSymbol: entry.value.mathSymbol,
+        number: entry.value.number,
+      );
+    }).toList();
+  }
 
   GameState() {
     _risk = createGameRisk();
@@ -52,22 +65,31 @@ class GameState extends ChangeNotifier {
     _showSelectResult = true;
     Future.delayed(Duration(milliseconds: 2000), () {
       _showSelectResult = false;
-      // _step = _step + 1;
+      _step = _step + 1;
       notifyListeners();
     });
     notifyListeners();
   }
 
   void handleSelectMathSymbol(int index, MathSymbol mathSymbol) {
-    var isAlreadySelected = _selectSymbols
-        .singleWhere((element) => element.index == index, orElse: () {
-      return SelectedItem(index: -1);
-    });
-    if (isAlreadySelected.index == -1 && _selectSymbols.length < 3) {
-      _selectSymbols.add(SelectedItem(index: index, mathSymbol: mathSymbol));
+    var isSelected = checkIsAlreadySelected(_selectedSymbols, index);
+    if (!isSelected && _selectedSymbols.length < 3) {
+      _selectedSymbols.add(SelectedItem(index: index, mathSymbol: mathSymbol));
     } else {
-      _selectSymbols.removeWhere((element) => element.index == index);
+      _selectedSymbols.removeWhere((element) => element.index == index);
     }
     notifyListeners();
   }
+
+  void handleSelectNumber(int index, int number) {
+    var isSelected = checkIsAlreadySelected(_selectedNumbers, index);
+    if (!isSelected && _selectedNumbers.length < 3) {
+      _selectedNumbers.add(SelectedItem(index: index, number: number));
+    } else {
+      _selectedNumbers.removeWhere((element) => element.index == index);
+    }
+    notifyListeners();
+  }
+
+  void handleSelectAnswer() {}
 }

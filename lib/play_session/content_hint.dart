@@ -37,7 +37,7 @@ class ContentHint extends StatelessWidget {
         Text(
           '內容物',
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 18,
           ),
         ),
         SizedBox(

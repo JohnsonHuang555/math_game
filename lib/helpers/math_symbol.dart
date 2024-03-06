@@ -62,22 +62,22 @@ Widget convertMathSymbolToIcon(
     MathSymbol.plus: FaIcon(
       FontAwesomeIcons.plus,
       size: 40,
-      color: isSelected ? Color(0xffC95421) : palette.ink,
+      color: isSelected ? palette.selectedItem : palette.ink,
     ),
     MathSymbol.minus: FaIcon(
       FontAwesomeIcons.minus,
       size: 40,
-      color: isSelected ? Color(0xffC95421) : palette.ink,
+      color: isSelected ? palette.selectedItem : palette.ink,
     ),
     MathSymbol.times: FaIcon(
       FontAwesomeIcons.xmark,
       size: 40,
-      color: isSelected ? Color(0xffC95421) : palette.ink,
+      color: isSelected ? palette.selectedItem : palette.ink,
     ),
     MathSymbol.divide: FaIcon(
       FontAwesomeIcons.divide,
       size: 40,
-      color: isSelected ? Color(0xffC95421) : palette.ink,
+      color: isSelected ? palette.selectedItem : palette.ink,
     ),
   };
   return mathSymbolMap[mathSymbol] as Widget;
@@ -88,4 +88,15 @@ class SelectedItem {
   MathSymbol? mathSymbol;
   int? number;
   SelectedItem({required this.index, mathSymbol, number});
+}
+
+bool checkIsAlreadySelected(List<SelectedItem> selectedItems, int targetIndex) {
+  var alreadySelected = selectedItems
+      .singleWhere((element) => element.index == targetIndex, orElse: () {
+    return SelectedItem(index: -1);
+  });
+  if (alreadySelected.index == -1) {
+    return false;
+  }
+  return true;
 }

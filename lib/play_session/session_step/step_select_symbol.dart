@@ -26,12 +26,10 @@ class StepSelectSymbol extends StatelessWidget {
 
     var items = mathSymbols.asMap().entries.map((entry) {
       int index = entry.key;
-      var isSelected = selectedSymbols.singleWhere(
-          (element) => element.index == index,
-          orElse: () => SelectedItem(index: -1));
+      var isSelected = checkIsAlreadySelected(selectedSymbols, index);
       return convertMathSymbolToIcon(
         entry.value,
-        isSelected.index != -1,
+        isSelected,
         palette,
       );
     }).toList();
@@ -43,7 +41,7 @@ class StepSelectSymbol extends StatelessWidget {
             onSelect(index, mathSymbols[index]);
           },
           showSelectResult: showSelectResult,
-          selectedItem: selectedSymbols,
+          selectedItems: selectedSymbols,
         ),
         SizedBox(height: 5),
         ContentHint(),

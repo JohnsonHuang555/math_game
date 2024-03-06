@@ -34,4 +34,5 @@ class Palette {
   Color get background4 => const Color(0xffffd7ff); // #ffd7ff
   Color get backgroundSettings => const Color(0xffbfc8e3); // #bfc8e3
   Color get trueWhite => const Color(0xffffffff);
+  Color get selectedItem => const Color(0xffC95421);
 }

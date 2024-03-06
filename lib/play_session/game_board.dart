@@ -8,7 +8,7 @@ import '../style/palette.dart';
 
 class GameBoard extends StatelessWidget {
   final List<Widget> items;
-  final List<SelectedItem> selectedItem;
+  final List<SelectedItem> selectedItems;
   final Function(int index) onSelect;
   final bool showSelectResult;
   const GameBoard({
@@ -16,16 +16,14 @@ class GameBoard extends StatelessWidget {
     required this.items,
     required this.onSelect,
     required this.showSelectResult,
-    required this.selectedItem,
+    required this.selectedItems,
   });
 
   List<Widget> getGameCard(BuildContext context) {
     final palette = context.read<Palette>();
 
     return List.generate(9, (index) {
-      var isCheckedIndex = selectedItem.singleWhere(
-          (element) => element.index == index,
-          orElse: () => SelectedItem(index: -1));
+      var isChecked = checkIsAlreadySelected(selectedItems, index);
       return GestureDetector(
         onTap: () {
           onSelect(index);
@@ -35,7 +33,7 @@ class GameBoard extends StatelessWidget {
             border: Border.all(
               width: 3,
               color:
-                  isCheckedIndex.index == -1 ? palette.ink : Color(0xffC95421),
+                  isChecked ? palette.selectedItem : palette.ink,
             ),
             borderRadius: BorderRadius.circular(6),
           ),
@@ -46,9 +44,9 @@ class GameBoard extends StatelessWidget {
                     'assets/icons/question.svg',
                     width: 70,
                     height: 70,
-                    color: isCheckedIndex.index == -1
-                        ? palette.ink
-                        : Color(0xffC95421),
+                    color: isChecked
+                        ? palette.selectedItem
+                        : palette.ink,
                   ),
           ),
         ),

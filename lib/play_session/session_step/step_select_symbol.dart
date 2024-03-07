@@ -28,9 +28,10 @@ class StepSelectSymbol extends StatelessWidget {
       int index = entry.key;
       var isSelected = checkIsAlreadySelected(selectedSymbols, index);
       return convertMathSymbolToIcon(
-        entry.value,
-        isSelected,
-        palette,
+        mathSymbol: entry.value,
+        isSelected: isSelected,
+        palette: palette,
+        size: 20,
       );
     }).toList();
     return Column(

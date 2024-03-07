@@ -1,33 +1,56 @@
-import 'package:basic/helpers/math_symbol.dart';
+import '../../helpers/math_symbol.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/game_risk.dart';
 import '../../style/palette.dart';
 
 class StepCombineFormula extends StatelessWidget {
   final List<SelectedItem> currentSelectedItems;
-  final Function() onSelectAnswer;
-  // final bool showSelectResult;
+  final List<SelectedItem> selectedFormulaItems;
+  final Function(SelectedItem) onSelectAnswer;
   const StepCombineFormula({
     super.key,
-    // required this.onSelect,
-    // required this.showSelectResult,
     required this.currentSelectedItems,
+    required this.selectedFormulaItems,
     required this.onSelectAnswer,
   });
 
-  List<Widget> _getBoardItems() {
-    List<Widget> items = [];
-    return items;
+  List<Widget> _getBoardItems(Palette palette) {
+    return selectedFormulaItems.map((item) {
+      if (item.mathSymbol != null) {
+        return Container(
+          margin: EdgeInsets.only(left: 5, right: 5),
+          child: convertMathSymbolToIcon(
+            mathSymbol: item.mathSymbol!,
+            isSelected: false,
+            palette: palette,
+            size: 26,
+          ),
+        );
+      }
+      return Container(
+        margin: EdgeInsets.only(left: 5, right: 5),
+        child: Text(
+          item.index.toString(),
+          style: TextStyle(
+            fontSize: 36,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
+    }).toList();
   }
 
   List<Widget> _getCurrentSelectItems(Palette palette) {
-    return currentSelectedItems.map((e) {
-      // print(e);
+    return currentSelectedItems.map((item) {
+      var isChecked = checkIsAlreadySelected(selectedFormulaItems, item.index);
       return GestureDetector(
-        onTap: () {},
+        onTap: () {
+          onSelectAnswer(item);
+        },
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -35,31 +58,29 @@ class StepCombineFormula extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border.all(
                   width: 3,
-                  // color:
-                  //     isChecked ? palette.selectedItem : palette.ink,
+                  color: isChecked ? palette.selectedItem : palette.ink,
                 ),
                 borderRadius: BorderRadius.circular(6),
               ),
             ),
-            e.mathSymbol != null
-                ? convertMathSymbolToIcon(e.mathSymbol!, false, palette)
+            item.mathSymbol != null
+                ? convertMathSymbolToIcon(
+                    mathSymbol: item.mathSymbol!,
+                    isSelected: isChecked,
+                    palette: palette,
+                    size: 28,
+                  )
                 : Text(
-                    e.number.toString(),
+                    item.number.toString(),
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.w500,
+                      color: isChecked ? palette.selectedItem : palette.ink,
                     ),
                   ),
           ],
         ),
       );
-      // if (e.mathSymbol != null) {
-      //   return Text('?');
-      // }
-      // if (e.number == null) {
-      //   return Text('?');
-      // }
-      // return Text('?');
     }).toList();
   }
 
@@ -90,11 +111,10 @@ class StepCombineFormula extends StatelessWidget {
           child: Center(
             child: Wrap(
               crossAxisAlignment: WrapCrossAlignment.center,
-              children: _getBoardItems(),
+              children: _getBoardItems(palette),
             ),
           ),
         ),
-        SizedBox(height: 5),
         Text(
           '= ?',
           style: TextStyle(
@@ -112,8 +132,8 @@ class StepCombineFormula extends StatelessWidget {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.all(10),
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
             children: _getCurrentSelectItems(palette),
           ),
         ),

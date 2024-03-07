@@ -79,6 +79,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       case 3:
         return StepCombineFormula(
           currentSelectedItems: state.currentSelectedItems,
+          selectedFormulaItems: state.selectedFormulaItems,
           onSelectAnswer: state.handleSelectAnswer,
         );
       default:
@@ -189,8 +190,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                   SizedBox(height: 35),
                   _getGameStep(state),
                   const Spacer(),
-                  Padding(
-                    padding: EdgeInsets.only(left: 50, right: 50),
+                  Container(
+                    margin: EdgeInsets.only(left: 80, right: 80),
                     child: ItemList(),
                   ),
                 ],

@@ -6,7 +6,7 @@ class ItemList extends StatelessWidget {
 
   List<Widget> getItemList() {
     return List.generate(
-      4,
+      3,
       (index) => Container(
         width: 50,
         height: 50,

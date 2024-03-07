@@ -53,30 +53,31 @@ List<T> _createBoxes<T>(T symbol, int count) {
   return arr;
 }
 
-Widget convertMathSymbolToIcon(
-  MathSymbol mathSymbol,
-  bool isSelected,
-  Palette palette,
-) {
+Widget convertMathSymbolToIcon({
+  required MathSymbol mathSymbol,
+  required bool isSelected,
+  required Palette palette,
+  required double size,
+}) {
   var mathSymbolMap = <MathSymbol, Widget>{
     MathSymbol.plus: FaIcon(
       FontAwesomeIcons.plus,
-      size: 40,
+      size: size,
       color: isSelected ? palette.selectedItem : palette.ink,
     ),
     MathSymbol.minus: FaIcon(
       FontAwesomeIcons.minus,
-      size: 40,
+      size: size,
       color: isSelected ? palette.selectedItem : palette.ink,
     ),
     MathSymbol.times: FaIcon(
       FontAwesomeIcons.xmark,
-      size: 40,
+      size: size,
       color: isSelected ? palette.selectedItem : palette.ink,
     ),
     MathSymbol.divide: FaIcon(
       FontAwesomeIcons.divide,
-      size: 40,
+      size: size,
       color: isSelected ? palette.selectedItem : palette.ink,
     ),
   };

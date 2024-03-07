@@ -21,6 +21,8 @@ class GameState extends ChangeNotifier {
   final List<SelectedItem> _selectedSymbols = [];
   // 已選擇的數字
   final List<SelectedItem> _selectedNumbers = [];
+  // 已選擇的算式項目
+  final List<SelectedItem> _selectedFormulaItems = [];
 
   int get step => _step;
   int? get risk => _risk;
@@ -29,6 +31,8 @@ class GameState extends ChangeNotifier {
   bool get showSelectResult => _showSelectResult;
   List<SelectedItem> get selectedSymbols => _selectedSymbols;
   List<SelectedItem> get selectedNumbers => _selectedNumbers;
+  List<SelectedItem> get selectedFormulaItems => _selectedFormulaItems;
+
   List<SelectedItem> get currentSelectedItems {
     return [..._selectedSymbols, ..._selectedNumbers]
         .asMap()
@@ -91,5 +95,13 @@ class GameState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void handleSelectAnswer() {}
+  void handleSelectAnswer(SelectedItem item) {
+    var isSelected = checkIsAlreadySelected(_selectedFormulaItems, item.index);
+    if (!isSelected) {
+      _selectedFormulaItems.add(item);
+    } else {
+      _selectedFormulaItems.removeWhere((element) => element.index == item.index);
+    }
+    notifyListeners();
+  }
 }

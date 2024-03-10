@@ -31,7 +31,7 @@ class StepSelectSymbol extends StatelessWidget {
         mathSymbol: entry.value,
         isSelected: isSelected,
         palette: palette,
-        size: 20,
+        size: 40,
       );
     }).toList();
     return Column(
@@ -39,7 +39,7 @@ class StepSelectSymbol extends StatelessWidget {
         Text(
           '請選擇任三個符號',
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 18,
           ),
         ),
         SizedBox(height: 10),

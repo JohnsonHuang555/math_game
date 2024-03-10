@@ -104,4 +104,9 @@ class GameState extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void clearSelection() {
+    _selectedFormulaItems.clear();
+    notifyListeners();
+  }
 }

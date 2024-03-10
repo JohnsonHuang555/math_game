@@ -34,7 +34,7 @@ class StepCombineFormula extends StatelessWidget {
       return Container(
         margin: EdgeInsets.only(left: 5, right: 5),
         child: Text(
-          item.index.toString(),
+          item.number.toString(),
           style: TextStyle(
             fontSize: 36,
             fontWeight: FontWeight.w500,
@@ -93,13 +93,13 @@ class StepCombineFormula extends StatelessWidget {
         Text(
           '請組合出合理算式',
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 18,
           ),
         ),
         SizedBox(height: 10),
         Container(
           width: double.infinity,
-          height: 240,
+          height: 200,
           decoration: BoxDecoration(
             color: Color(0xffE6E6E6),
             borderRadius: BorderRadius.circular(10),
@@ -115,12 +115,14 @@ class StepCombineFormula extends StatelessWidget {
             ),
           ),
         ),
+        SizedBox(height: 10),
         Text(
           '= ?',
           style: TextStyle(
             fontSize: 44,
           ),
         ),
+        SizedBox(height: 20),
         Padding(
           padding: EdgeInsets.only(
             left: 75,

@@ -40,7 +40,7 @@ class StepSelectNumber extends StatelessWidget {
         Text(
           '請選擇任三個數字',
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 18,
           ),
         ),
         SizedBox(height: 10),

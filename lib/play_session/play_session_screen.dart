@@ -2,33 +2,24 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
-
 import 'package:basic/play_session/item_list.dart';
 import 'package:basic/play_session/session_step/step_combine_formula.dart';
 import 'package:basic/play_session/session_step/step_select_number.dart';
 import 'package:basic/play_session/session_step/step_select_symbol.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
+import 'package:material_dialogs/material_dialogs.dart';
 
 import '../components/header.dart';
 import '../game_internals/game_state.dart';
 import '../style/responsive_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
 
-import '../audio/audio_controller.dart';
-import '../audio/sounds.dart';
-import '../game_internals/level_state.dart';
-import '../game_internals/score.dart';
-import '../level_selection/levels.dart';
-import '../player_progress/player_progress.dart';
-import '../style/confetti.dart';
 import '../style/my_button.dart';
 import '../style/palette.dart';
-import 'game_widget.dart';
 
 /// This widget defines the entirety of the screen that the player sees when
 /// they are playing a level.
@@ -60,6 +51,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     _startOfPlay = DateTime.now();
   }
 
+  // 棋盤遊戲區塊
   Widget _getGameStep(GameState state) {
     switch (state.step) {
       case 1:
@@ -84,6 +76,192 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
         );
       default:
         return Text('Something wrong...');
+    }
+  }
+
+  // 底部按鈕
+  Widget _getBottomAction(GameState state, Palette palette) {
+    final ButtonStyle outlinedButtonStyle = TextButton.styleFrom(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(6)),
+      ),
+    );
+    switch (state.step) {
+      case 1:
+      case 2:
+        return MyButton(
+          onPressed: () {
+            state.handleNextStep();
+            // GoRouter.of(context).go('/');
+          },
+          child: const Text('選好了'),
+        );
+      case 3:
+        return Row(
+          children: [
+            SizedBox(
+              width: 120,
+              child: OutlinedButton(
+                style: outlinedButtonStyle,
+                onPressed: () {
+                  state.clearSelection();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/icons/eraser.svg'),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      '清除',
+                      style: TextStyle(fontSize: 16, color: palette.ink),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: OutlinedButton(
+                style: outlinedButtonStyle,
+                onPressed: () {
+                  Dialogs.materialDialog(
+                    msg: '確定要完成嗎？',
+                    title: '結算分數',
+                    color: Colors.white,
+                    titleStyle: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
+                    ),
+                    msgAlign: TextAlign.end,
+                    context: context,
+                    barrierDismissible: false,
+                    actions: [
+                      OutlinedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: outlinedButtonStyle,
+                        child: Text(
+                          '取消',
+                          style: TextStyle(
+                            color: palette.ink,
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueGrey,
+                          elevation: 0.0,
+                          shadowColor: Colors.transparent,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(6)),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Dialogs.materialDialog(
+                            customView: Column(
+                              children: const [
+                                Text(
+                                  'Congratulations!',
+                                  style: TextStyle(
+                                    fontFamily: 'Saira',
+                                    fontSize: 18,
+                                  ),
+                                )
+                              ],
+                            ),
+                            color: Colors.white,
+                            titleStyle: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                            ),
+                            msgAlign: TextAlign.end,
+                            lottieBuilder: Lottie.asset(
+                              'assets/animations/congrats.json',
+                              fit: BoxFit.contain,
+                            ),
+                            context: context,
+                            barrierDismissible: false,
+                            actions: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      border: Border.all(
+                                        width: 2,
+                                      ),
+                                    ),
+                                    child: IconButton(
+                                      icon: SvgPicture.asset(
+                                        'assets/icons/home.svg',
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        color: palette.ink,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 30,
+                                  ),
+                                  Container(
+                                    width: 60,
+                                    height: 60,
+                                    padding: EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      border: Border.all(
+                                        width: 2,
+                                      ),
+                                    ),
+                                    child: IconButton(
+                                      icon: SvgPicture.asset(
+                                        'assets/icons/restart.svg',
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        color: palette.ink,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                        child: Text(
+                          '確定',
+                          style: TextStyle(
+                            color: palette.trueWhite,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+                child: Text(
+                  '完成',
+                  style: TextStyle(fontSize: 16, color: palette.ink),
+                ),
+              ),
+            ),
+          ],
+        );
+      default:
+        return Container();
     }
   }
 
@@ -196,13 +374,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                   ),
                 ],
               ),
-              rectangularMenuArea: MyButton(
-                onPressed: () {
-                  state.handleNextStep();
-                  // GoRouter.of(context).go('/');
-                },
-                child: const Text('選好了'),
-              ),
+              rectangularMenuArea: _getBottomAction(state, palette),
             );
           }),
         ),

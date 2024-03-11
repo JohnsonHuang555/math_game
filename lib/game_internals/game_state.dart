@@ -1,9 +1,11 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
+
+import 'package:function_tree/function_tree.dart';
 import '../helpers/box_number.dart';
 import '../helpers/game_risk.dart';
 import '../helpers/math_symbol.dart';
-import 'package:flutter/foundation.dart';
 
 class GameState extends ChangeNotifier {
   // 遊戲階段
@@ -45,6 +47,41 @@ class GameState extends ChangeNotifier {
         number: entry.value.number,
       );
     }).toList();
+  }
+
+  String getCurrentAnswer(String currentScore) {
+    String result = '$currentScore +';
+    if (_selectedFormulaItems.isEmpty) {
+      return '?';
+    }
+    for (var element in _selectedFormulaItems) {
+      if (element.mathSymbol != null) {
+        switch (element.mathSymbol) {
+          case MathSymbol.plus:
+            result += '+';
+            break;
+          case MathSymbol.minus:
+            result += '-';
+            break;
+          case MathSymbol.times:
+            result += '*';
+            break;
+          case MathSymbol.divide:
+            result += '/';
+            break;
+          default:
+            break;
+        }
+      } else {
+        result += element.number.toString();
+      }
+    }
+    try {
+      var answer = result.interpret();
+      return answer.toInt().toString();
+    } catch (e) {
+      return '?';
+    }
   }
 
   GameState() {
@@ -100,7 +137,8 @@ class GameState extends ChangeNotifier {
     if (!isSelected) {
       _selectedFormulaItems.add(item);
     } else {
-      _selectedFormulaItems.removeWhere((element) => element.index == item.index);
+      _selectedFormulaItems
+          .removeWhere((element) => element.index == item.index);
     }
     notifyListeners();
   }

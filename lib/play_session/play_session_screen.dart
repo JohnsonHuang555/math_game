@@ -8,6 +8,7 @@ import 'package:basic/play_session/session_step/step_select_number.dart';
 import 'package:basic/play_session/session_step/step_select_symbol.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 
@@ -165,14 +166,22 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                           Navigator.of(context).pop();
                           Dialogs.materialDialog(
                             customView: Column(
-                              children: const [
+                              children: [
                                 Text(
-                                  'Congratulations!',
+                                  '新積分',
                                   style: TextStyle(
-                                    fontFamily: 'Saira',
                                     fontSize: 18,
                                   ),
-                                )
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  state.getCurrentAnswer('100'),
+                                  style: TextStyle(
+                                    fontSize: 44,
+                                  ),
+                                ),
                               ],
                             ),
                             color: Colors.white,
@@ -188,55 +197,71 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                             context: context,
                             barrierDismissible: false,
                             actions: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              Column(
                                 children: [
-                                  Container(
-                                    width: 60,
-                                    height: 60,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(100),
-                                      border: Border.all(
-                                        width: 2,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 60,
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          border: Border.all(
+                                            width: 2,
+                                          ),
+                                        ),
+                                        child: IconButton(
+                                          icon: SvgPicture.asset(
+                                            'assets/icons/home.svg',
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                            color: palette.ink,
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            GoRouter.of(context)
+                                                .pushReplacement('/');
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                    child: IconButton(
-                                      icon: SvgPicture.asset(
-                                        'assets/icons/home.svg',
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        color: palette.ink,
+                                      SizedBox(
+                                        width: 30,
                                       ),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
+                                      Container(
+                                        width: 60,
+                                        height: 60,
+                                        padding: EdgeInsets.all(2),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          border: Border.all(
+                                            width: 2,
+                                          ),
+                                        ),
+                                        child: IconButton(
+                                          icon: SvgPicture.asset(
+                                            'assets/icons/restart.svg',
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                            color: palette.ink,
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            var canPop =
+                                                GoRouter.of(context).canPop();
+                                            if (canPop) {
+                                              GoRouter.of(context).pop();
+                                            }
+                                            GoRouter.of(context)
+                                                .pop('/play');
+                                          },
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: 30,
-                                  ),
-                                  Container(
-                                    width: 60,
-                                    height: 60,
-                                    padding: EdgeInsets.all(2),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(100),
-                                      border: Border.all(
-                                        width: 2,
-                                      ),
-                                    ),
-                                    child: IconButton(
-                                      icon: SvgPicture.asset(
-                                        'assets/icons/restart.svg',
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        color: palette.ink,
-                                      ),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ),
+                                  SizedBox(height: 20),
                                 ],
                               ),
                             ],

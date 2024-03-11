@@ -19,7 +19,7 @@ class Header extends StatelessWidget {
             size: 32,
           ),
         ),
-        child ?? SizedBox(),
+        child ?? Container(),
       ],
     );
   }

@@ -2,14 +2,20 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:developer' as dev;
+import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'firebase_options.dart';
 import 'app_lifecycle/app_lifecycle.dart';
 import 'audio/audio_controller.dart';
 import 'player_progress/player_progress.dart';
@@ -18,6 +24,8 @@ import 'settings/settings.dart';
 import 'style/palette.dart';
 
 void main() async {
+  await dotenv.load(fileName: '.env');
+
   // Basic logging setup.
   Logger.root.level = kDebugMode ? Level.FINE : Level.INFO;
   Logger.root.onRecord.listen((record) {
@@ -37,6 +45,25 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
+  // FirebaseCrashlytics? crashlytics;
+  // if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
+  //   try {
+  //     WidgetsFlutterBinding.ensureInitialized();
+  //     await Firebase.initializeApp();
+  //     FlutterError.onError = (errorDetails) {
+  //       FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  //     };
+  //     // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+  //     PlatformDispatcher.instance.onError = (error, stack) {
+  //       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+  //       return true;
+  //     };
+  //     crashlytics = FirebaseCrashlytics.instance;
+  //   } catch (e) {
+  //     debugPrint("Firebase couldn't be initialized: $e");
+  //   }
+  // }
 
   runApp(MyApp());
 }

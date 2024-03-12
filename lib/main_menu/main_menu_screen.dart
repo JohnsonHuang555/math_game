@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -72,6 +73,8 @@ class MainMenuScreen extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
+                  // throw Exception();
+                  // FirebaseCrashlytics.instance.crash();
                   GoRouter.of(context).go('/play');
                 },
                 child: Stack(

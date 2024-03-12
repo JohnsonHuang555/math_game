@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "485444861937",
+    "project_id": "math-game-dev-2235d",
+    "storage_bucket": "math-game-dev-2235d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:485444861937:android:31754198af4d2a47b5ce50",
+        "android_client_info": {
+          "package_name": "com.example.basic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDntGLqePoAYvCo-2cWvIVDTFp18WSZbE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -5,7 +5,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'persistence/local_storage_player_progress_persistence.dart';
 import 'persistence/player_progress_persistence.dart';
 
@@ -32,7 +32,7 @@ class PlayerProgress extends ChangeNotifier {
   String get yourScore => _yourScore;
   int get yourRank => _yourRank;
 
-  // FirebaseFirestore db = FirebaseFirestore.instance;
+  FirebaseFirestore db = FirebaseFirestore.instance;
 
   /// Creates an instance of [PlayerProgress] backed by an injected
   /// persistence [store].
@@ -67,23 +67,23 @@ class PlayerProgress extends ChangeNotifier {
 
   /// Fetches the latest data from the backing persistence store.
   Future<void> _getLatestFromStore() async {
-    // final usersRef = db.collection('players');
+    final usersRef = db.collection('players');
     // await db.collection("players").get().then((event) {
     //   for (var doc in event.docs) {
     //     print("${doc.id} => ${doc.data()}");
     //   }
     // });
-    // await usersRef.doc('3bHWeJHfWYsYJnSJmFSf').get().then((doc) async {
-    //   if (doc.exists) {
-    //     final data = doc.data() as Map<String, dynamic>;
-    //     _playerName = data['name'] as String;
-    //     _yourScore = data['score'].toString();
-    //     print(_playerName);
-    //     print(_yourScore);
-    //     // final rank = await getUserRank();
-    //     // _yourRank = rank;
-    //   }
-    // });
+    await usersRef.doc('3bHWeJHfWYsYJnSJmFSf').get().then((doc) async {
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>;
+        _playerName = data['name'] as String;
+        _yourScore = data['score'].toString();
+        print(_playerName);
+        print(_yourScore);
+        // final rank = await getUserRank();
+        // _yourRank = rank;
+      }
+    });
     // final level = await _store.getHighestLevelReached();
     // if (level > _highestLevelReached) {
     //   _highestLevelReached = level;

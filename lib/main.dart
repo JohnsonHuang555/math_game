@@ -46,24 +46,15 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  // FirebaseCrashlytics? crashlytics;
-  // if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
-  //   try {
-  //     WidgetsFlutterBinding.ensureInitialized();
-  //     await Firebase.initializeApp();
-  //     FlutterError.onError = (errorDetails) {
-  //       FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-  //     };
-  //     // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
-  //     PlatformDispatcher.instance.onError = (error, stack) {
-  //       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-  //       return true;
-  //     };
-  //     crashlytics = FirebaseCrashlytics.instance;
-  //   } catch (e) {
-  //     debugPrint("Firebase couldn't be initialized: $e");
-  //   }
-  // }
+  await Firebase.initializeApp();
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
 
   runApp(MyApp());
 }

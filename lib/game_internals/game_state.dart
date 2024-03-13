@@ -50,7 +50,7 @@ class GameState extends ChangeNotifier {
   }
 
   String getCurrentAnswer(String currentScore) {
-    String result = '$currentScore +';
+    String result = '$currentScore+';
     if (_selectedFormulaItems.isEmpty) {
       return '?';
     }

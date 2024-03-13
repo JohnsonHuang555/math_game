@@ -12,6 +12,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
+import '../player_progress/player_progress.dart';
 import '../settings/settings.dart';
 import '../style/my_button.dart';
 import '../style/palette.dart';
@@ -25,6 +26,8 @@ class MainMenuScreen extends StatelessWidget {
     final palette = context.watch<Palette>();
     final settingsController = context.watch<SettingsController>();
     final audioController = context.watch<AudioController>();
+
+    final playerProgress = context.watch<PlayerProgress>();
 
     return Scaffold(
       backgroundColor: palette.backgroundMain,
@@ -73,8 +76,6 @@ class MainMenuScreen extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  // throw Exception();
-                  // FirebaseCrashlytics.instance.crash();
                   GoRouter.of(context).go('/play');
                 },
                 child: Stack(

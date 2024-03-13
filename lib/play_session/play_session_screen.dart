@@ -255,7 +255,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                                               GoRouter.of(context).pop();
                                             }
                                             GoRouter.of(context)
-                                                .pop('/play');
+                                                .push('/play');
                                           },
                                         ),
                                       ),

@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -17,7 +18,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -25,7 +29,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -43,39 +50,20 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBHdxlF3T2oN-Bs-rjcnIIUFFo-eErcgRw',
-    appId: '1:485444861937:web:5630bbe24e3de32eb5ce50',
-    messagingSenderId: '485444861937',
-    projectId: 'math-game-dev-2235d',
-    authDomain: 'math-game-dev-2235d.firebaseapp.com',
-    storageBucket: 'math-game-dev-2235d.appspot.com',
-    measurementId: 'G-SN8BLD8LN9',
-  );
-
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDntGLqePoAYvCo-2cWvIVDTFp18WSZbE0',
-    appId: '1:485444861937:android:31754198af4d2a47b5ce50',
+  static FirebaseOptions android = FirebaseOptions(
+    apiKey: dotenv.get('FIREBASE_API_KEY_ANDROID'),
+    appId: dotenv.get('FIREBASE_APP_ID_ANDROID'),
     messagingSenderId: '485444861937',
     projectId: 'math-game-dev-2235d',
     storageBucket: 'math-game-dev-2235d.appspot.com',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBApIXI8pQ76J7h4MQZwEWJQa7nhGnETa0',
-    appId: '1:485444861937:ios:57f6fb0ef3404a9cb5ce50',
+  static FirebaseOptions ios = FirebaseOptions(
+    apiKey: dotenv.get('FIREBASE_API_KEY_IOS'),
+    appId: dotenv.get('FIREBASE_APP_ID_IOS'),
     messagingSenderId: '485444861937',
     projectId: 'math-game-dev-2235d',
     storageBucket: 'math-game-dev-2235d.appspot.com',
     iosBundleId: 'com.example.basic',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBApIXI8pQ76J7h4MQZwEWJQa7nhGnETa0',
-    appId: '1:485444861937:ios:7525630dab51f73db5ce50',
-    messagingSenderId: '485444861937',
-    projectId: 'math-game-dev-2235d',
-    storageBucket: 'math-game-dev-2235d.appspot.com',
-    iosBundleId: 'com.example.basic.RunnerTests',
   );
 }

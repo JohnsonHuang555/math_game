@@ -12,6 +12,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
+import '../helpers/converters.dart';
 import '../player_progress/player_progress.dart';
 import '../settings/settings.dart';
 import '../style/my_button.dart';
@@ -43,7 +44,7 @@ class MainMenuScreen extends StatelessWidget {
             ),
             SizedBox(height: 50),
             Text(
-              '1000',
+              playerProgress.yourScore,
               style: TextStyle(
                 fontSize: 64,
               ),
@@ -60,7 +61,7 @@ class MainMenuScreen extends StatelessWidget {
                   width: 5,
                 ),
                 Text(
-                  '1st',
+                  getOrdinalSuffix(playerProgress.yourRank),
                   style: TextStyle(fontSize: 24),
                 ),
               ],

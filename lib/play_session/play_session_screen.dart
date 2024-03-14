@@ -14,6 +14,7 @@ import 'package:material_dialogs/material_dialogs.dart';
 
 import '../components/header.dart';
 import '../game_internals/game_state.dart';
+import '../player_progress/player_progress.dart';
 import '../style/responsive_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart' hide Level;
@@ -162,7 +163,15 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                             borderRadius: BorderRadius.all(Radius.circular(6)),
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
+                          var playerProgress = context.read<PlayerProgress>();
+                          var yourScore = playerProgress.yourScore;
+                          var newScore = state.getCurrentAnswer(yourScore);
+                          // 寫到 firebase
+                          var result = await playerProgress.saveNewScore(newScore);
+                          if (!result) {
+                            throw Exception('setNewScore error');
+                          }
                           Navigator.of(context).pop();
                           Dialogs.materialDialog(
                             customView: Column(
@@ -177,7 +186,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                                   height: 10,
                                 ),
                                 Text(
-                                  state.getCurrentAnswer('100'),
+                                  newScore,
                                   style: TextStyle(
                                     fontSize: 44,
                                   ),

@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -15,7 +14,6 @@ import '../audio/sounds.dart';
 import '../helpers/converters.dart';
 import '../player_progress/player_progress.dart';
 import '../settings/settings.dart';
-import '../style/my_button.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
 
@@ -43,12 +41,18 @@ class MainMenuScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 50),
-            Text(
-              playerProgress.yourScore,
-              style: TextStyle(
-                fontSize: 64,
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: FittedBox(
+                child: Text(
+                  playerProgress.yourScore,
+                  style: TextStyle(
+                    fontSize: 64,
+                  ),
+                ),
               ),
             ),
+            SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

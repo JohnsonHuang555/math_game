@@ -96,7 +96,7 @@ class StepCombineFormula extends StatelessWidget {
             fontSize: 18,
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 15),
         Container(
           width: double.infinity,
           height: 200,

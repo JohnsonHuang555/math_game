@@ -1,8 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-
+import 'package:flutter/material.dart';
 import 'package:function_tree/function_tree.dart';
+
 import '../helpers/box_number.dart';
 import '../helpers/game_risk.dart';
 import '../helpers/math_symbol.dart';
@@ -103,8 +104,14 @@ class GameState extends ChangeNotifier {
   }
 
   void handleNextStep() {
+    if (_step == 1 && _selectedSymbols.length != 3) {
+      return;
+    }
+    if (_step == 2 && _selectedSymbols.length != 3) {
+      return;
+    }
     _showSelectResult = true;
-    Future.delayed(Duration(milliseconds: 2000), () {
+    Future.delayed(Duration(milliseconds: 3000), () {
       _showSelectResult = false;
       _step = _step + 1;
       notifyListeners();

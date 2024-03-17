@@ -8,10 +8,12 @@ import 'package:basic/play_session/session_step/step_select_number.dart';
 import 'package:basic/play_session/session_step/step_select_symbol.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 
+import '../components/basic_button.dart';
 import '../components/header.dart';
 import '../game_internals/game_state.dart';
 import '../player_progress/player_progress.dart';
@@ -20,7 +22,6 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
 
-import '../style/my_button.dart';
 import '../style/palette.dart';
 
 /// This widget defines the entirety of the screen that the player sees when
@@ -83,28 +84,28 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
   // 底部按鈕
   Widget _getBottomAction(GameState state, Palette palette) {
-    final ButtonStyle outlinedButtonStyle = TextButton.styleFrom(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(6)),
-      ),
-    );
     switch (state.step) {
       case 1:
       case 2:
-        return MyButton(
-          onPressed: () {
-            state.handleNextStep();
-            // GoRouter.of(context).go('/');
-          },
-          child: const Text('選好了'),
-        );
+        return BasicButton(
+            onPressed: () {
+              if (!state.showSelectResult) {
+                state.handleNextStep();
+              }
+            },
+            child: Text(
+              '選好了',
+              style: TextStyle(
+                color: palette.ink,
+                fontSize: 18,
+              ),
+            ));
       case 3:
         return Row(
           children: [
             SizedBox(
               width: 120,
-              child: OutlinedButton(
-                style: outlinedButtonStyle,
+              child: BasicButton(
                 onPressed: () {
                   state.clearSelection();
                 },
@@ -117,7 +118,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     ),
                     Text(
                       '清除',
-                      style: TextStyle(fontSize: 16, color: palette.ink),
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: palette.ink,
+                      ),
                     ),
                   ],
                 ),
@@ -127,8 +131,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
               width: 10,
             ),
             Expanded(
-              child: OutlinedButton(
-                style: outlinedButtonStyle,
+              child: BasicButton(
                 onPressed: () {
                   Dialogs.materialDialog(
                     msg: '確定要完成嗎？',
@@ -142,11 +145,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     context: context,
                     barrierDismissible: false,
                     actions: [
-                      OutlinedButton(
+                      BasicButton(
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        style: outlinedButtonStyle,
                         child: Text(
                           '取消',
                           style: TextStyle(
@@ -167,8 +169,24 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                           var playerProgress = context.read<PlayerProgress>();
                           var yourScore = playerProgress.yourScore;
                           var newScore = state.getCurrentAnswer(yourScore);
-                          // 寫到 firebase
-                          var result = await playerProgress.saveNewScore(newScore);
+
+                          if (newScore == '?') {
+                            Fluttertoast.showToast(
+                              msg: ' 算式有誤 ',
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 2,
+                              backgroundColor: palette.redPen,
+                              textColor: Colors.white,
+                              fontSize: 16,
+                            );
+                            Navigator.of(context).pop();
+                            return;
+                          }
+
+                          // 寫到 firebase TODO: 串 service center
+                          var result =
+                              await playerProgress.saveNewScore(newScore);
                           if (!result) {
                             throw Exception('setNewScore error');
                           }
@@ -263,8 +281,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                                             if (canPop) {
                                               GoRouter.of(context).pop();
                                             }
-                                            GoRouter.of(context)
-                                                .push('/play');
+                                            GoRouter.of(context).push('/play');
                                           },
                                         ),
                                       ),
@@ -288,7 +305,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                 },
                 child: Text(
                   '完成',
-                  style: TextStyle(fontSize: 16, color: palette.ink),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: palette.ink,
+                  ),
                 ),
               ),
             ),
@@ -396,7 +416,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                   Text(
                     state.risk.toString(),
                     style: TextStyle(
-                      fontSize: 26,
+                      fontSize: 28,
                     ),
                   ),
                   SizedBox(height: 35),

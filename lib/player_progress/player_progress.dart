@@ -97,7 +97,6 @@ class PlayerProgress extends ChangeNotifier {
   }
 
   Future<bool> saveNewScore(String score) async {
-    print(score);
     final data = {'score': double.parse(score).round()};
     try {
       await db

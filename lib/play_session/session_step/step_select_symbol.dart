@@ -37,7 +37,7 @@ class StepSelectSymbol extends StatelessWidget {
     return Column(
       children: [
         Text(
-          '請選擇任三個符號',
+          '請選擇三個',
           style: TextStyle(
             fontSize: 18,
           ),

@@ -38,7 +38,7 @@ class StepSelectNumber extends StatelessWidget {
     return Column(
       children: [
         Text(
-          '請選擇任三個數字',
+          '請選擇三個',
           style: TextStyle(
             fontSize: 18,
           ),

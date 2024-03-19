@@ -319,6 +319,19 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     }
   }
 
+  String _getStep(int step) {
+    switch (step) {
+      case 1:
+        return '符號';
+      case 2:
+        return '數字';
+      case 3:
+        return '組合';
+      default:
+        return '';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
@@ -414,9 +427,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    state.risk.toString(),
+                    _getStep(state.step).toString(),
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: 26,
                     ),
                   ),
                   SizedBox(height: 35),

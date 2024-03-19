@@ -1,11 +1,12 @@
-import '../../helpers/math_symbol.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../../helpers/game_risk.dart';
+import '../../player_progress/player_progress.dart';
 import '../../style/palette.dart';
+import '../../helpers/math_symbol.dart';
 
 class StepCombineFormula extends StatelessWidget {
   final List<SelectedItem> currentSelectedItems;
@@ -27,7 +28,7 @@ class StepCombineFormula extends StatelessWidget {
             mathSymbol: item.mathSymbol!,
             isSelected: false,
             palette: palette,
-            size: 26,
+            size: 36,
           ),
         );
       }
@@ -36,7 +37,7 @@ class StepCombineFormula extends StatelessWidget {
         child: Text(
           item.number.toString(),
           style: TextStyle(
-            fontSize: 36,
+            fontSize: 44,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -87,6 +88,7 @@ class StepCombineFormula extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.read<Palette>();
+    final playerProgress = context.read<PlayerProgress>();
 
     return Column(
       children: [
@@ -99,7 +101,7 @@ class StepCombineFormula extends StatelessWidget {
         SizedBox(height: 15),
         Container(
           width: double.infinity,
-          height: 200,
+          height: 270,
           decoration: BoxDecoration(
             color: Color(0xffE6E6E6),
             borderRadius: BorderRadius.circular(10),
@@ -109,20 +111,62 @@ class StepCombineFormula extends StatelessWidget {
             right: 5,
           ),
           child: Center(
-            child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: _getBoardItems(palette),
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 30,
+                      ),
+                      FittedBox(
+                        child: Text(
+                          playerProgress.yourScore,
+                          style: TextStyle(
+                            fontSize: 36,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: _getBoardItems(palette),
+                      )
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: const [
+                      Text(
+                        '= ?',
+                        style: TextStyle(
+                          fontSize: 36,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-        SizedBox(height: 10),
-        Text(
-          '= ?',
-          style: TextStyle(
-            fontSize: 44,
-          ),
-        ),
-        SizedBox(height: 20),
+        SizedBox(height: 40),
         Padding(
           padding: EdgeInsets.only(
             left: 75,

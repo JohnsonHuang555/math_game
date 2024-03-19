@@ -1,37 +1,36 @@
 import 'dart:math';
 
-List<int> createBoxNumbers(int? risk) {
-  if (risk != null) {
-    switch (risk) {
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-      case 6:
-      case 7:
-      case 8:
-      case 9:
-      case 10:
-        var numbers = _createBoxes(min: 1, max: 5); // 1 ~ 5
-        return numbers;
-      default:
-        return [];
-    }
-  }
-  return [];
+int getNumber(List<int> numbers) {
+  var random = Random();
+  var index = random.nextInt(numbers.length);
+  return numbers[index];
 }
 
-/// 產生九個隨機數字
-List<int> _createBoxes({
-  required int min,
-  required int max,
-}) {
-  List<int> numbers = [];
+List<int> createBoxNumbers() {
+  var details = {
+    1: 17,
+    2: 16,
+    3: 14,
+    4: 13,
+    5: 12,
+    6: 10,
+    7: 8,
+    8: 5,
+    9: 3,
+    0: 2,
+  };
 
-  for (var i = 0; i < 9; i++) {
-    var random = Random();
-    numbers.add(random.nextInt(max) + min);
+  List<int> totalNumbers = [];
+  details.forEach((key, value) {
+    for (var i = 0; i < value; i++) {
+      totalNumbers.add(key);
+    }
+  });
+
+  List<int> result = [];
+  for (int i = 0; i < 9; i++) {
+    result.add(getNumber(totalNumbers));
   }
-  return numbers;
+
+  return result;
 }

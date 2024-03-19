@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:function_tree/function_tree.dart';
@@ -51,7 +49,7 @@ class GameState extends ChangeNotifier {
   }
 
   String getCurrentAnswer(String currentScore) {
-    String result = '$currentScore+';
+    String result = currentScore;
     if (_selectedFormulaItems.isEmpty) {
       return '?';
     }
@@ -87,20 +85,8 @@ class GameState extends ChangeNotifier {
 
   GameState() {
     _risk = createGameRisk();
-    _boxSymbols = _shuffleArray(createMathSymbols(_risk));
-    _boxNumbers = _shuffleArray(createBoxNumbers(_risk));
-  }
-
-  List<T> _shuffleArray<T>(List<T> array) {
-    var random = Random();
-    for (var i = array.length - 1; i > 0; i--) {
-      var j = random.nextInt(i + 1);
-      var temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
-    }
-
-    return array;
+    _boxSymbols = createMathSymbols();
+    _boxNumbers = createBoxNumbers();
   }
 
   void handleNextStep() {

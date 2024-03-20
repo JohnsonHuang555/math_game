@@ -86,20 +86,59 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   Widget _getBottomAction(GameState state, Palette palette) {
     switch (state.step) {
       case 1:
+        return BasicButton(
+          onPressed: () {
+            if (!state.showSelectResult) {
+              if (state.selectedSymbols.length == 3) {
+                state.handleNextStep();
+                return;
+              }
+              Fluttertoast.showToast(
+                msg: ' 請選擇三個 ',
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 2,
+                backgroundColor: palette.redPen,
+                textColor: Colors.white,
+                fontSize: 16,
+              );
+            }
+          },
+          child: Text(
+            '選好了',
+            style: TextStyle(
+              color: palette.ink,
+              fontSize: 18,
+            ),
+          ),
+        );
       case 2:
         return BasicButton(
-            onPressed: () {
-              if (!state.showSelectResult) {
+          onPressed: () {
+            if (!state.showSelectResult) {
+              if (state.selectedNumbers.length == 3) {
                 state.handleNextStep();
+                return;
               }
-            },
-            child: Text(
-              '選好了',
-              style: TextStyle(
-                color: palette.ink,
-                fontSize: 18,
-              ),
-            ));
+              Fluttertoast.showToast(
+                msg: ' 請選擇三個 ',
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 2,
+                backgroundColor: palette.redPen,
+                textColor: Colors.white,
+                fontSize: 16,
+              );
+            }
+          },
+          child: Text(
+            '選好了',
+            style: TextStyle(
+              color: palette.ink,
+              fontSize: 18,
+            ),
+          ),
+        );
       case 3:
         return Row(
           children: [
@@ -133,6 +172,21 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
             Expanded(
               child: BasicButton(
                 onPressed: () {
+                  var playerProgress = context.read<PlayerProgress>();
+                  var yourScore = playerProgress.yourScore;
+                  var newScore = state.getCurrentAnswer(yourScore);
+                  if (!state.checkFormula() || newScore == '?') {
+                    Fluttertoast.showToast(
+                      msg: ' 算式有誤 ',
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 2,
+                      backgroundColor: palette.redPen,
+                      textColor: Colors.white,
+                      fontSize: 16,
+                    );
+                    return;
+                  }
                   Dialogs.materialDialog(
                     msg: '確定要完成嗎？',
                     title: '結算分數',
@@ -166,24 +220,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                           ),
                         ),
                         onPressed: () async {
-                          var playerProgress = context.read<PlayerProgress>();
-                          var yourScore = playerProgress.yourScore;
-                          var newScore = state.getCurrentAnswer(yourScore);
-
-                          if (newScore == '?') {
-                            Fluttertoast.showToast(
-                              msg: ' 算式有誤 ',
-                              toastLength: Toast.LENGTH_LONG,
-                              gravity: ToastGravity.CENTER,
-                              timeInSecForIosWeb: 2,
-                              backgroundColor: palette.redPen,
-                              textColor: Colors.white,
-                              fontSize: 16,
-                            );
-                            Navigator.of(context).pop();
-                            return;
-                          }
-
                           // 寫到 firebase TODO: 串 service center
                           var result =
                               await playerProgress.saveNewScore(newScore);
@@ -203,10 +239,18 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                Text(
-                                  newScore,
-                                  style: TextStyle(
-                                    fontSize: 44,
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 20,
+                                    right: 20,
+                                  ),
+                                  child: FittedBox(
+                                    child: Text(
+                                      newScore,
+                                      style: TextStyle(
+                                        fontSize: 44,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -425,14 +469,14 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       size: 34,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 5),
                   Text(
                     _getStep(state.step).toString(),
                     style: TextStyle(
                       fontSize: 26,
                     ),
                   ),
-                  SizedBox(height: 35),
+                  SizedBox(height: 30),
                   _getGameStep(state),
                   const Spacer(),
                   Container(

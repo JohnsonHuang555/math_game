@@ -106,6 +106,9 @@ class GameState extends ChangeNotifier {
   }
 
   void handleSelectMathSymbol(int index, MathSymbol mathSymbol) {
+    if (showSelectResult) {
+      return;
+    }
     var isSelected = checkIsAlreadySelected(_selectedSymbols, index);
     if (!isSelected && _selectedSymbols.length < 3) {
       _selectedSymbols.add(SelectedItem(index: index, mathSymbol: mathSymbol));
@@ -116,6 +119,9 @@ class GameState extends ChangeNotifier {
   }
 
   void handleSelectNumber(int index, int number) {
+    if (showSelectResult) {
+      return;
+    }
     var isSelected = checkIsAlreadySelected(_selectedNumbers, index);
     if (!isSelected && _selectedNumbers.length < 3) {
       _selectedNumbers.add(SelectedItem(index: index, number: number));
@@ -139,5 +145,20 @@ class GameState extends ChangeNotifier {
   void clearSelection() {
     _selectedFormulaItems.clear();
     notifyListeners();
+  }
+
+  bool checkFormula() {
+    if (_selectedFormulaItems.isEmpty) {
+      return false;
+    }
+    // 第 1, 3, 5 個必須要是符號
+    if (_selectedFormulaItems[0].mathSymbol == null || _selectedFormulaItems[2].mathSymbol == null || _selectedFormulaItems[4].mathSymbol == null) {
+      return false;
+    }
+    // 第 2, 4, 6 個必須要是符號
+    if (_selectedFormulaItems[1].number == null || _selectedFormulaItems[3].number == null || _selectedFormulaItems[5].number == null) {
+      return false;
+    }
+    return true;
   }
 }

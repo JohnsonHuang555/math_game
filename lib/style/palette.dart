@@ -25,7 +25,7 @@ import 'package:flutter/material.dart';
 class Palette {
   Color get pen => const Color(0xff1d75fb); // #1d75fb
   Color get darkPen => const Color(0xFF0050bc); // #0050bc
-  Color get redPen => const Color(0xFFd10841); // #d10841
+  Color get redPen => Color.fromARGB(255, 196, 78, 78); // #d10841
   Color get inkFullOpacity => Color.fromARGB(255, 0, 0, 0); // #352b42
   Color get ink => Color.fromARGB(255, 0, 0, 0); // #352b42
   Color get backgroundMain => Color.fromARGB(255, 255, 255, 255);

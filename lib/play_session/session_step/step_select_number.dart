@@ -43,7 +43,7 @@ class StepSelectNumber extends StatelessWidget {
             fontSize: 18,
           ),
         ),
-        SizedBox(height: 15),
+        SizedBox(height: 10),
         GameBoard(
           items: items,
           onSelect: (index) {
@@ -52,7 +52,7 @@ class StepSelectNumber extends StatelessWidget {
           showSelectResult: showSelectResult,
           selectedItems: selectedNumbers,
         ),
-        SizedBox(height: 5),
+        SizedBox(height: 10),
         ContentHint(),
       ],
     );

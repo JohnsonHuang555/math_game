@@ -1,3 +1,4 @@
+import 'package:basic/helpers/contain_hint_item.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:function_tree/function_tree.dart';
@@ -48,6 +49,40 @@ class GameState extends ChangeNotifier {
     }).toList();
   }
 
+  // 符號提示內容物
+  List<ContainHintItem> get containHintSymbolItems {
+    var symbolMap = <MathSymbol, int>{
+      MathSymbol.plus: 0,
+      MathSymbol.minus: 0,
+      MathSymbol.times: 0,
+      MathSymbol.divide: 0,
+    };
+    for (var symbol in _boxSymbols) {
+      symbolMap[symbol] = symbolMap[symbol]! + 1;
+    }
+    return symbolMap.entries
+        .map((e) => ContainHintItem(count: e.value, mathSymbol: e.key))
+        .toList();
+  }
+
+  // 數字提示內容物
+  List<ContainHintItem> get containHintNumberItems {
+    var numberMap = <int, int>{};
+    for (var number in _boxNumbers) {
+      if (numberMap[number] == null) {
+        numberMap[number] = 1;
+      } else {
+        numberMap[number] = numberMap[number]! + 1;
+      }
+    }
+    var items = numberMap.entries
+        .map((e) => ContainHintItem(count: e.value, number: e.key))
+        .toList();
+
+    items.sort((a, b) => a.number!.compareTo(b.number!));
+    return items;
+  }
+
   String getCurrentAnswer(String currentScore) {
     String result = currentScore;
     if (_selectedFormulaItems.isEmpty) {
@@ -75,6 +110,7 @@ class GameState extends ChangeNotifier {
         result += element.number.toString();
       }
     }
+    print(result);
     try {
       var answer = result.interpret();
       return answer.toInt().toString();
@@ -97,7 +133,7 @@ class GameState extends ChangeNotifier {
       return;
     }
     _showSelectResult = true;
-    Future.delayed(Duration(milliseconds: 3000), () {
+    Future.delayed(Duration(milliseconds: 2000), () {
       _showSelectResult = false;
       _step = _step + 1;
       notifyListeners();
@@ -148,15 +184,20 @@ class GameState extends ChangeNotifier {
   }
 
   bool checkFormula() {
-    if (_selectedFormulaItems.isEmpty) {
+    // 沒有選跟空的都不合法
+    if (_selectedFormulaItems.isEmpty || _selectedFormulaItems.length != 6) {
       return false;
     }
     // 第 1, 3, 5 個必須要是符號
-    if (_selectedFormulaItems[0].mathSymbol == null || _selectedFormulaItems[2].mathSymbol == null || _selectedFormulaItems[4].mathSymbol == null) {
+    if (_selectedFormulaItems[0].mathSymbol == null ||
+        _selectedFormulaItems[2].mathSymbol == null ||
+        _selectedFormulaItems[4].mathSymbol == null) {
       return false;
     }
     // 第 2, 4, 6 個必須要是符號
-    if (_selectedFormulaItems[1].number == null || _selectedFormulaItems[3].number == null || _selectedFormulaItems[5].number == null) {
+    if (_selectedFormulaItems[1].number == null ||
+        _selectedFormulaItems[3].number == null ||
+        _selectedFormulaItems[5].number == null) {
       return false;
     }
     return true;

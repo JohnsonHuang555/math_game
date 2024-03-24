@@ -1,3 +1,4 @@
+import 'package:basic/helpers/contain_hint_item.dart';
 import 'package:basic/helpers/math_symbol.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -12,12 +13,14 @@ class StepSelectSymbol extends StatelessWidget {
   final List<SelectedItem> selectedSymbols;
   final Function(int, MathSymbol) onSelect;
   final bool showSelectResult;
+  final List<ContainHintItem> containHintSymbolItems;
   const StepSelectSymbol({
     super.key,
     required this.mathSymbols,
     required this.onSelect,
     required this.showSelectResult,
     required this.selectedSymbols,
+    required this.containHintSymbolItems,
   });
 
   @override
@@ -36,13 +39,13 @@ class StepSelectSymbol extends StatelessWidget {
     }).toList();
     return Column(
       children: [
-        Text(
+        const Text(
           '請選擇三個',
           style: TextStyle(
             fontSize: 18,
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         GameBoard(
           items: items,
           onSelect: (index) {
@@ -51,8 +54,10 @@ class StepSelectSymbol extends StatelessWidget {
           showSelectResult: showSelectResult,
           selectedItems: selectedSymbols,
         ),
-        SizedBox(height: 10),
-        ContentHint(),
+        const SizedBox(height: 5),
+        ContentHint(
+          containHintItems: containHintSymbolItems,
+        ),
       ],
     );
   }

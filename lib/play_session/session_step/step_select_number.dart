@@ -2,6 +2,7 @@ import 'package:basic/helpers/math_symbol.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/contain_hint_item.dart';
 import '../../helpers/game_risk.dart';
 import '../../style/palette.dart';
 import '../content_hint.dart';
@@ -12,12 +13,14 @@ class StepSelectNumber extends StatelessWidget {
   final List<SelectedItem> selectedNumbers;
   final Function(int, int) onSelect;
   final bool showSelectResult;
+  final List<ContainHintItem> containHintNumberItems;
   const StepSelectNumber({
     super.key,
     required this.numbers,
     required this.onSelect,
     required this.showSelectResult,
     required this.selectedNumbers,
+    required this.containHintNumberItems,
   });
 
   @override
@@ -37,13 +40,13 @@ class StepSelectNumber extends StatelessWidget {
     }).toList();
     return Column(
       children: [
-        Text(
+        const Text(
           '請選擇三個',
           style: TextStyle(
             fontSize: 18,
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         GameBoard(
           items: items,
           onSelect: (index) {
@@ -52,8 +55,10 @@ class StepSelectNumber extends StatelessWidget {
           showSelectResult: showSelectResult,
           selectedItems: selectedNumbers,
         ),
-        SizedBox(height: 10),
-        ContentHint(),
+        const SizedBox(height: 10),
+        ContentHint(
+          containHintItems: containHintNumberItems,
+        ),
       ],
     );
   }

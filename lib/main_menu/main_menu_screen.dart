@@ -33,14 +33,14 @@ class MainMenuScreen extends StatelessWidget {
       body: ResponsiveScreen(
         squarishMainArea: Column(
           children: [
-            SizedBox(height: 80),
+            const SizedBox(height: 80),
             SizedBox(
               width: 200,
               child: Image.asset(
                 'assets/images/logo.png',
               ),
             ),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: FittedBox(
@@ -52,7 +52,7 @@ class MainMenuScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -61,7 +61,7 @@ class MainMenuScreen extends StatelessWidget {
                   width: 36,
                   height: 36,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 5,
                 ),
                 Text(
@@ -76,7 +76,7 @@ class MainMenuScreen extends StatelessWidget {
           height: 300,
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               GestureDetector(
@@ -103,7 +103,7 @@ class MainMenuScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 80,
               ),
               Row(

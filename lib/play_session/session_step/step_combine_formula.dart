@@ -98,7 +98,7 @@ class StepCombineFormula extends StatelessWidget {
             fontSize: 18,
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Container(
           width: double.infinity,
           height: 270,
@@ -117,7 +117,7 @@ class StepCombineFormula extends StatelessWidget {
                   flex: 1,
                   child: Column(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       FittedBox(
@@ -135,7 +135,7 @@ class StepCombineFormula extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Row(
@@ -166,7 +166,7 @@ class StepCombineFormula extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 40),
+        const SizedBox(height: 40),
         Padding(
           padding: EdgeInsets.only(
             left: 75,

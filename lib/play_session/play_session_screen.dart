@@ -63,6 +63,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
           onSelect: state.handleSelectMathSymbol,
           showSelectResult: state.showSelectResult,
           selectedSymbols: state.selectedSymbols,
+          containHintSymbolItems: state.containHintSymbolItems,
         );
       case 2:
         return StepSelectNumber(
@@ -70,6 +71,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
           onSelect: state.handleSelectNumber,
           showSelectResult: state.showSelectResult,
           selectedNumbers: state.selectedNumbers,
+          containHintNumberItems: state.containHintNumberItems,
         );
       case 3:
         return StepCombineFormula(
@@ -152,7 +154,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SvgPicture.asset('assets/icons/eraser.svg'),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     Text(
@@ -166,7 +168,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             Expanded(
@@ -236,7 +238,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                                     fontSize: 18,
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Padding(
@@ -297,7 +299,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                                           },
                                         ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 30,
                                       ),
                                       Container(
@@ -331,7 +333,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 20),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
                                 ],
                               ),
                             ],
@@ -469,14 +473,14 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       size: 34,
                     ),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Text(
                     _getStep(state.step).toString(),
                     style: TextStyle(
                       fontSize: 26,
                     ),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   _getGameStep(state),
                   const Spacer(),
                   Container(

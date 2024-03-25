@@ -1,8 +1,8 @@
-import 'package:basic/helpers/math_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:provider/provider.dart';
 
+import '../helpers/math_symbol.dart';
 import '../helpers/contain_hint_item.dart';
 import '../style/palette.dart';
 
@@ -20,7 +20,7 @@ class ContentHint extends StatelessWidget {
         badgeStyle: badges.BadgeStyle(
           shape: badges.BadgeShape.circle,
           badgeColor: palette.darkPen,
-          padding: EdgeInsets.all(7),
+          padding: EdgeInsets.all(6),
           borderRadius: BorderRadius.circular(4),
           elevation: 0,
         ),
@@ -65,14 +65,14 @@ class ContentHint extends StatelessWidget {
     if (containHintItems.length == 5) {
       padding = 90;
     } else if (containHintItems.length >= 6 && containHintItems.length < 8) {
-      padding = 80;
-    } else if (containHintItems.length >= 8 && containHintItems.length < 10) {
       padding = 60;
+    } else if (containHintItems.length >= 8 && containHintItems.length < 10) {
+      padding = 40;
     }
 
     return Column(
       children: [
-        Text(
+        const Text(
           '問號中可能包含',
           style: TextStyle(
             fontSize: 16,

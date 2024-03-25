@@ -1,12 +1,12 @@
-import 'package:basic/helpers/contain_hint_item.dart';
-import 'package:basic/helpers/math_symbol.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/contain_hint_item.dart';
 import '../../helpers/game_risk.dart';
-import '../../style/palette.dart';
+import '../../helpers/math_symbol.dart';
 import '../content_hint.dart';
 import '../game_board.dart';
+import '../../style/palette.dart';
 
 class StepSelectSymbol extends StatelessWidget {
   final List<MathSymbol> mathSymbols;
@@ -27,9 +27,9 @@ class StepSelectSymbol extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.read<Palette>();
 
-    var items = mathSymbols.asMap().entries.map((entry) {
+    final items = mathSymbols.asMap().entries.map((entry) {
       int index = entry.key;
-      var isSelected = checkIsAlreadySelected(selectedSymbols, index);
+      final isSelected = checkIsAlreadySelected(selectedSymbols, index);
       return convertMathSymbolToIcon(
         mathSymbol: entry.value,
         isSelected: isSelected,

@@ -1,7 +1,7 @@
-import 'package:basic/helpers/math_symbol.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/math_symbol.dart';
 import '../../helpers/contain_hint_item.dart';
 import '../../helpers/game_risk.dart';
 import '../../style/palette.dart';
@@ -27,9 +27,9 @@ class StepSelectNumber extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.read<Palette>();
 
-    var items = numbers.asMap().entries.map((entry) {
+    final items = numbers.asMap().entries.map((entry) {
       int index = entry.key;
-      var isSelected = checkIsAlreadySelected(selectedNumbers, index);
+      final isSelected = checkIsAlreadySelected(selectedNumbers, index);
       return Text(
         entry.value.toString(),
         style: TextStyle(

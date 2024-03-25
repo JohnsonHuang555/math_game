@@ -107,7 +107,12 @@ class GameState extends ChangeNotifier {
             break;
         }
       } else {
-        result += element.number.toString();
+        if (element.number! < 0) {
+          final val = element.number.toString();
+          result += '($val)';
+        } else {
+          result += element.number.toString();
+        }
       }
     }
     print(result);
@@ -185,7 +190,7 @@ class GameState extends ChangeNotifier {
 
   bool checkFormula() {
     // 沒有選跟空的都不合法
-    if (_selectedFormulaItems.isEmpty || _selectedFormulaItems.length != 6) {
+    if (_selectedFormulaItems.isEmpty) {
       return false;
     }
     // 第 1, 3, 5 個必須要是符號

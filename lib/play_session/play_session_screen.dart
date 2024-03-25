@@ -2,26 +2,25 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:basic/play_session/item_list.dart';
-import 'package:basic/play_session/session_step/step_combine_formula.dart';
-import 'package:basic/play_session/session_step/step_select_number.dart';
-import 'package:basic/play_session/session_step/step_select_symbol.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:material_dialogs/material_dialogs.dart';
+import 'package:flutter/material.dart';
+import 'package:logging/logging.dart' hide Level;
+import 'package:provider/provider.dart';
 
 import '../components/basic_button.dart';
 import '../components/header.dart';
 import '../game_internals/game_state.dart';
 import '../player_progress/player_progress.dart';
+import '../play_session/item_list.dart';
+import '../play_session/session_step/step_combine_formula.dart';
+import '../play_session/session_step/step_select_number.dart';
+import '../play_session/session_step/step_select_symbol.dart';
 import '../style/responsive_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:logging/logging.dart' hide Level;
-import 'package:provider/provider.dart';
-
 import '../style/palette.dart';
 
 /// This widget defines the entirety of the screen that the player sees when
@@ -80,7 +79,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
           onSelectAnswer: state.handleSelectAnswer,
         );
       default:
-        return Text('Something wrong...');
+        return const Text('Something wrong...');
     }
   }
 
@@ -174,9 +173,21 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
             Expanded(
               child: BasicButton(
                 onPressed: () {
-                  var playerProgress = context.read<PlayerProgress>();
-                  var yourScore = playerProgress.yourScore;
-                  var newScore = state.getCurrentAnswer(yourScore);
+                  final playerProgress = context.read<PlayerProgress>();
+                  final yourScore = playerProgress.yourScore;
+                  final newScore = state.getCurrentAnswer(yourScore);
+                  if (state.selectedFormulaItems.length != 6) {
+                    Fluttertoast.showToast(
+                      msg: ' 每個都要使用到 ',
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 2,
+                      backgroundColor: palette.redPen,
+                      textColor: Colors.white,
+                      fontSize: 16,
+                    );
+                    return;
+                  }
                   if (!state.checkFormula() || newScore == '?') {
                     Fluttertoast.showToast(
                       msg: ' 算式有誤 ',
@@ -223,7 +234,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                         ),
                         onPressed: () async {
                           // 寫到 firebase TODO: 串 service center
-                          var result =
+                          final result =
                               await playerProgress.saveNewScore(newScore);
                           if (!result) {
                             throw Exception('setNewScore error');
@@ -232,7 +243,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                           Dialogs.materialDialog(
                             customView: Column(
                               children: [
-                                Text(
+                                const Text(
                                   '新積分',
                                   style: TextStyle(
                                     fontSize: 18,
@@ -258,7 +269,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                               ],
                             ),
                             color: Colors.white,
-                            titleStyle: TextStyle(
+                            titleStyle: const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 18,
                             ),
@@ -467,7 +478,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
               squarishMainArea: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Header(
+                  const Header(
                     child: Icon(
                       Icons.help_outline,
                       size: 34,

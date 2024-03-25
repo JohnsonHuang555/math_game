@@ -12,12 +12,12 @@ class ItemList extends StatelessWidget {
         onTap: () {},
         badgeContent: Text(
           '1',
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
           ),
         ),
         position: badges.BadgePosition.topEnd(top: -15),
-        badgeStyle: badges.BadgeStyle(padding: EdgeInsets.all(8)),
+        badgeStyle: badges.BadgeStyle(padding: EdgeInsets.all(10)),
         child: Container(
           width: 50,
           height: 50,

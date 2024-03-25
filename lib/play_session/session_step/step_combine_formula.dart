@@ -32,10 +32,12 @@ class StepCombineFormula extends StatelessWidget {
           ),
         );
       }
+      // 負數需要加括號
+      final numberVal = item.number.toString();
       return Container(
         margin: EdgeInsets.only(left: 5, right: 5),
         child: Text(
-          item.number.toString(),
+          item.number! < 0 ? '($numberVal)' : numberVal,
           style: TextStyle(
             fontSize: 44,
             fontWeight: FontWeight.w500,

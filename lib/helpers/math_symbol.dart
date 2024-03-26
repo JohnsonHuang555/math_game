@@ -12,13 +12,13 @@ enum MathSymbol {
 }
 
 MathSymbol getSymbol(List<MathSymbol> symbols) {
-  var random = Random();
-  var index = random.nextInt(symbols.length);
+  final random = Random();
+  final index = random.nextInt(symbols.length);
   return symbols[index];
 }
 
 List<MathSymbol> createMathSymbols() {
-  var details = {
+  final details = {
      MathSymbol.plus: 25,
      MathSymbol.minus: 25,
      MathSymbol.times: 25,
@@ -46,7 +46,7 @@ Widget convertMathSymbolToIcon({
   required Palette palette,
   required double size,
 }) {
-  var mathSymbolMap = <MathSymbol, Widget>{
+  final mathSymbolMap = <MathSymbol, Widget>{
     MathSymbol.plus: FaIcon(
       FontAwesomeIcons.plus,
       size: size,

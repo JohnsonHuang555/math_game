@@ -8,7 +8,6 @@ import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'persistence/local_storage_player_progress_persistence.dart';
 import 'persistence/player_progress_persistence.dart';
-import 'package:uuid/uuid.dart';
 
 /// Encapsulates the player's progress.
 class PlayerProgress extends ChangeNotifier {
@@ -27,14 +26,14 @@ class PlayerProgress extends ChangeNotifier {
   String _yourScore = '---'; // 預設
   int _yourRank = 0;
 
-  bool _showCreateUserModal = false;
+  bool _showIntroduceScreen = false;
 
   String get userId => _userId;
   String get playerName => _playerName;
   String get editedPlayerName => _editedPlayerName;
   String get yourScore => _yourScore;
   int get yourRank => _yourRank;
-  bool get showCreateUserModal => _showCreateUserModal;
+  bool get showIntroduceScreenModal => _showIntroduceScreen;
 
   FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -71,41 +70,38 @@ class PlayerProgress extends ChangeNotifier {
 
   /// Fetches the latest data from the backing persistence store.
   Future<void> _getLatestFromStore() async {
-    final userId = await _store.getUserId();
-    _userId = userId;
-    if (userId == '') {
-      var uuid = Uuid();
-      var createdId = uuid.v4();
-      await _store.setUserId(createdId);
-      _userId = createdId;
-      _showCreateUserModal = true;
-    } else {
+    final userIdFromDB = await _store.getUserId();
+    if (userIdFromDB != '') {
       final usersRef = db.collection('players');
-      await usersRef.doc(userId).get().then((doc) async {
+      await usersRef.doc(userIdFromDB).get().then((doc) async {
         if (doc.exists) {
           final data = doc.data() as Map<String, dynamic>;
           _playerName = data['name'] as String;
           _yourScore = data['score'].toString();
-          final rank = await getUserRank();
-          _yourRank = rank;
-        } else {
-          _showCreateUserModal = true;
+          _userId = userIdFromDB;
+          // 更新 rank
+          _yourRank = await _getUserRank();
         }
       });
+    } else {
+      _showIntroduceScreen = true;
     }
     notifyListeners();
   }
 
-  Future<bool> saveNewScore(String score) async {
-    final data = {'score': double.parse(score).round()};
+  Future<bool> createNewPlayer(String name) async {
+    const initScore = 100;
+    final player = <String, dynamic>{'name': name, 'score': initScore};
+
     try {
-      await db
-          .collection('players')
-          .doc(userId)
-          .set(data, SetOptions(merge: true));
-      _yourScore = score;
-      final rank = await getUserRank();
-      _yourRank = rank;
+      final doc = await db.collection('players').add(player);
+      await _store.setUserId(doc.id);
+      _userId = doc.id;
+      _yourScore = initScore.toString();
+      _playerName = name;
+      _yourRank = await _getUserRank();
+
+      _showIntroduceScreen = false;
       return true;
     } catch (e) {
       return false;
@@ -114,7 +110,26 @@ class PlayerProgress extends ChangeNotifier {
     }
   }
 
-  Future<int> getUserRank() async {
+  /// 儲存積分到 firebase
+  Future<bool> saveNewScore(String score) async {
+    final data = {'score': double.parse(score).round()};
+    try {
+      await db
+          .collection('players')
+          .doc(userId)
+          .set(data, SetOptions(merge: true));
+      _yourScore = score;
+      _yourRank = await _getUserRank();
+      return true;
+    } catch (e) {
+      return false;
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  /// 從 firebase 取得自己名次
+  Future<int> _getUserRank() async {
     final usersRef = db.collection('players');
 
     // 步驟1：取得自己的使用者資料

@@ -49,7 +49,7 @@ class StepCombineFormula extends StatelessWidget {
 
   List<Widget> _getCurrentSelectItems(Palette palette) {
     return currentSelectedItems.map((item) {
-      var isChecked = checkIsAlreadySelected(selectedFormulaItems, item.index);
+      final isChecked = checkIsAlreadySelected(selectedFormulaItems, item.index);
       return GestureDetector(
         onTap: () {
           onSelectAnswer(item);

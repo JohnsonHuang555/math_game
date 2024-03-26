@@ -28,6 +28,12 @@ class MainMenuScreen extends StatelessWidget {
 
     final playerProgress = context.watch<PlayerProgress>();
 
+    if (playerProgress.showIntroduceScreenModal) {
+      Future.delayed(Duration.zero).then((_) {
+        GoRouter.of(context).push('/intro');
+      });
+    }
+
     return Scaffold(
       backgroundColor: palette.backgroundMain,
       body: ResponsiveScreen(
@@ -96,7 +102,7 @@ class MainMenuScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(100),
                       ),
                     ),
-                    Icon(
+                    const Icon(
                       Icons.play_arrow_rounded,
                       size: 70,
                     ),
@@ -114,11 +120,11 @@ class MainMenuScreen extends StatelessWidget {
                     width: 32,
                     height: 32,
                   ),
-                  Icon(
+                  const Icon(
                     Icons.leaderboard,
                     size: 36,
                   ),
-                  Icon(
+                  const Icon(
                     Icons.settings,
                     size: 36,
                   ),

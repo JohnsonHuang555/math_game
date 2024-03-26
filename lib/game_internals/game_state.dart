@@ -51,13 +51,13 @@ class GameState extends ChangeNotifier {
 
   // 符號提示內容物
   List<ContainHintItem> get containHintSymbolItems {
-    var symbolMap = <MathSymbol, int>{
+    final symbolMap = <MathSymbol, int>{
       MathSymbol.plus: 0,
       MathSymbol.minus: 0,
       MathSymbol.times: 0,
       MathSymbol.divide: 0,
     };
-    for (var symbol in _boxSymbols) {
+    for (final symbol in _boxSymbols) {
       symbolMap[symbol] = symbolMap[symbol]! + 1;
     }
     return symbolMap.entries
@@ -67,15 +67,15 @@ class GameState extends ChangeNotifier {
 
   // 數字提示內容物
   List<ContainHintItem> get containHintNumberItems {
-    var numberMap = <int, int>{};
-    for (var number in _boxNumbers) {
+    final numberMap = <int, int>{};
+    for (final number in _boxNumbers) {
       if (numberMap[number] == null) {
         numberMap[number] = 1;
       } else {
         numberMap[number] = numberMap[number]! + 1;
       }
     }
-    var items = numberMap.entries
+    final items = numberMap.entries
         .map((e) => ContainHintItem(count: e.value, number: e.key))
         .toList();
 
@@ -88,7 +88,7 @@ class GameState extends ChangeNotifier {
     if (_selectedFormulaItems.isEmpty) {
       return '?';
     }
-    for (var element in _selectedFormulaItems) {
+    for (final element in _selectedFormulaItems) {
       if (element.mathSymbol != null) {
         switch (element.mathSymbol) {
           case MathSymbol.plus:
@@ -117,7 +117,7 @@ class GameState extends ChangeNotifier {
     }
     print(result);
     try {
-      var answer = result.interpret();
+      final answer = result.interpret();
       return answer.toInt().toString();
     } catch (e) {
       return '?';
@@ -150,7 +150,7 @@ class GameState extends ChangeNotifier {
     if (showSelectResult) {
       return;
     }
-    var isSelected = checkIsAlreadySelected(_selectedSymbols, index);
+    final isSelected = checkIsAlreadySelected(_selectedSymbols, index);
     if (!isSelected && _selectedSymbols.length < 3) {
       _selectedSymbols.add(SelectedItem(index: index, mathSymbol: mathSymbol));
     } else {
@@ -163,7 +163,7 @@ class GameState extends ChangeNotifier {
     if (showSelectResult) {
       return;
     }
-    var isSelected = checkIsAlreadySelected(_selectedNumbers, index);
+    final isSelected = checkIsAlreadySelected(_selectedNumbers, index);
     if (!isSelected && _selectedNumbers.length < 3) {
       _selectedNumbers.add(SelectedItem(index: index, number: number));
     } else {
@@ -173,7 +173,7 @@ class GameState extends ChangeNotifier {
   }
 
   void handleSelectAnswer(SelectedItem item) {
-    var isSelected = checkIsAlreadySelected(_selectedFormulaItems, item.index);
+    final isSelected = checkIsAlreadySelected(_selectedFormulaItems, item.index);
     if (!isSelected) {
       _selectedFormulaItems.add(item);
     } else {
@@ -189,7 +189,7 @@ class GameState extends ChangeNotifier {
   }
 
   bool checkFormula() {
-    // 沒有選跟空的都不合法
+    // 沒有選不合法
     if (_selectedFormulaItems.isEmpty) {
       return false;
     }

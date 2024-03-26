@@ -1,13 +1,13 @@
 import 'dart:math';
 
 int getNumber(List<int> numbers) {
-  var random = Random();
-  var index = random.nextInt(numbers.length);
+  final random = Random();
+  final index = random.nextInt(numbers.length);
   return numbers[index];
 }
 
 List<int> createBoxNumbers() {
-  var details = {
+  final details = {
     1: 10,
     2: 8,
     3: 7,

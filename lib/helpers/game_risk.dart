@@ -6,12 +6,12 @@ import './math_symbol.dart';
 const MAX_RISK = 10;
 
 int createGameRisk() {
-  var random = Random();
+  final random = Random();
   return random.nextInt(MAX_RISK) + 1;
 }
 
 bool checkIsAlreadySelected(List<SelectedItem> selectedItems, int targetIndex) {
-  var alreadySelected = selectedItems
+  final alreadySelected = selectedItems
       .singleWhere((element) => element.index == targetIndex, orElse: () {
     return SelectedItem(index: -1);
   });

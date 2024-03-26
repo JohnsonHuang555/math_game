@@ -27,7 +27,7 @@ class ContentHint extends StatelessWidget {
         badgeContent: Text(
           containHintItems[index].count.toString(),
           style: TextStyle(
-            color: Colors.white,
+            color: palette.trueWhite,
           ),
         ),
         position: badges.BadgePosition.topEnd(top: -15),

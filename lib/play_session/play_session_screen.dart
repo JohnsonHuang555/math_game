@@ -100,7 +100,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 2,
                 backgroundColor: palette.redPen,
-                textColor: Colors.white,
+                textColor: palette.trueWhite,
                 fontSize: 16,
               );
             }
@@ -127,7 +127,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 2,
                 backgroundColor: palette.redPen,
-                textColor: Colors.white,
+                textColor: palette.trueWhite,
                 fontSize: 16,
               );
             }
@@ -183,7 +183,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       gravity: ToastGravity.CENTER,
                       timeInSecForIosWeb: 2,
                       backgroundColor: palette.redPen,
-                      textColor: Colors.white,
+                      textColor: palette.trueWhite,
                       fontSize: 16,
                     );
                     return;
@@ -195,7 +195,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       gravity: ToastGravity.CENTER,
                       timeInSecForIosWeb: 2,
                       backgroundColor: palette.redPen,
-                      textColor: Colors.white,
+                      textColor: palette.trueWhite,
                       fontSize: 16,
                     );
                     return;
@@ -203,7 +203,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                   Dialogs.materialDialog(
                     msg: '確定要完成嗎？',
                     title: '結算分數',
-                    color: Colors.white,
+                    color: palette.trueWhite,
                     titleStyle: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 18,
@@ -268,7 +268,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                                 ),
                               ],
                             ),
-                            color: Colors.white,
+                            color: palette.trueWhite,
                             titleStyle: const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 18,
@@ -333,7 +333,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                                           ),
                                           onPressed: () {
                                             Navigator.of(context).pop();
-                                            var canPop =
+                                            final canPop =
                                                 GoRouter.of(context).canPop();
                                             if (canPop) {
                                               GoRouter.of(context).pop();
@@ -374,7 +374,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
           ],
         );
       default:
-        return Container();
+        return SizedBox.shrink();
     }
   }
 

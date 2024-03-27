@@ -35,7 +35,8 @@ class PlaySessionScreen extends StatefulWidget {
   State<PlaySessionScreen> createState() => _PlaySessionScreenState();
 }
 
-class _PlaySessionScreenState extends State<PlaySessionScreen> {
+class _PlaySessionScreenState extends State<PlaySessionScreen>
+    with WidgetsBindingObserver {
   static final _log = Logger('PlaySessionScreen');
 
   static const _celebrationDuration = Duration(milliseconds: 2000);
@@ -49,8 +50,23 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   @override
   void initState() {
     super.initState();
-
+    WidgetsBinding.instance.addObserver(this);
     _startOfPlay = DateTime.now();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // if (state == AppLifecycleState.detached) {
+    //   final playerProgress = context.read<PlayerProgress>();
+    //   // playerProgress.saveCurrentPlayingData();
+    // }
   }
 
   // 棋盤遊戲區塊
@@ -84,7 +100,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   }
 
   // 底部按鈕
-  Widget _getBottomAction(GameState state, Palette palette) {
+  Widget _getBottomAction(
+      BuildContext context, GameState state, Palette palette) {
     switch (state.step) {
       case 1:
         return BasicButton(
@@ -233,13 +250,16 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                           ),
                         ),
                         onPressed: () async {
-                          // 寫到 firebase TODO: 串 service center
+                          if (!context.mounted) return;
+                          Navigator.of(context).pop();
+
                           final result =
                               await playerProgress.saveNewScore(newScore);
                           if (!result) {
                             throw Exception('setNewScore error');
                           }
-                          Navigator.of(context).pop();
+
+                          if (!context.mounted) return;
                           Dialogs.materialDialog(
                             customView: Column(
                               children: [
@@ -393,7 +413,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.watch<Palette>();
+    final palette = context.read<Palette>();
     // return MultiProvider(
     //   providers: [
     //     Provider.value(value: widget.level),
@@ -478,20 +498,23 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
               squarishMainArea: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Header(
-                    child: Icon(
+                  Header(
+                    leftChild: GestureDetector(
+                      onTap: () {
+                        GoRouter.of(context).push('/settings');
+                      },
+                      child: Icon(
+                        Icons.settings,
+                        size: 32,
+                      ),
+                    ),
+                    rightChild: Icon(
                       Icons.help_outline,
                       size: 34,
                     ),
+                    title: _getStep(state.step).toString(),
                   ),
-                  const SizedBox(height: 5),
-                  Text(
-                    _getStep(state.step).toString(),
-                    style: TextStyle(
-                      fontSize: 26,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 50),
                   _getGameStep(state),
                   const Spacer(),
                   Container(
@@ -500,7 +523,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                   ),
                 ],
               ),
-              rectangularMenuArea: _getBottomAction(state, palette),
+              rectangularMenuArea: _getBottomAction(context, state, palette),
             );
           }),
         ),

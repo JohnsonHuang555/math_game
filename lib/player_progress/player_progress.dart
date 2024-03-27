@@ -150,4 +150,21 @@ class PlayerProgress extends ChangeNotifier {
 
     return selfRank;
   }
+
+  // void saveCurrentPlayingData() async {
+  //   final data = {'score': double.parse('9').round()};
+
+  //   await Future.microtask(() async {
+  //     try {
+  //       await db
+  //           .collection('players')
+  //           .doc(userId)
+  //           .set(data, SetOptions(merge: true));
+  //     } catch (e) {
+  //       // 處理錯誤
+  //       print(e);
+  //     }
+  //   });
+  //   // final data = {'tempPlayingData': '1234'};
+  // }
 }

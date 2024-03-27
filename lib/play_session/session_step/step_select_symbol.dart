@@ -54,7 +54,7 @@ class StepSelectSymbol extends StatelessWidget {
           showSelectResult: showSelectResult,
           selectedItems: selectedSymbols,
         ),
-        const SizedBox(height: 5),
+        const SizedBox(height: 10),
         ContentHint(
           containHintItems: containHintSymbolItems,
         ),

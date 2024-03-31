@@ -1,4 +1,5 @@
 import 'package:basic/helpers/contain_hint_item.dart';
+import 'package:basic/helpers/current_playing_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:function_tree/function_tree.dart';
@@ -10,8 +11,6 @@ import '../helpers/math_symbol.dart';
 class GameState extends ChangeNotifier {
   // 遊戲階段
   int _step = 1;
-  // 遊戲風險
-  int? _risk;
   // 當前符號
   List<MathSymbol> _boxSymbols = [];
   // 當前數字
@@ -20,14 +19,26 @@ class GameState extends ChangeNotifier {
   // 顯示選完的結果
   bool _showSelectResult = false;
   // 已選擇的符號
-  final List<SelectedItem> _selectedSymbols = [];
+  List<SelectedItem> _selectedSymbols = [];
   // 已選擇的數字
-  final List<SelectedItem> _selectedNumbers = [];
+  List<SelectedItem> _selectedNumbers = [];
   // 已選擇的算式項目
   final List<SelectedItem> _selectedFormulaItems = [];
 
+  GameState(CurrentPlayingData? data) {
+    if (data != null) {
+      _step = data.step;
+      _boxSymbols = data.boxSymbols;
+      _boxNumbers = data.boxNumbers;
+      _selectedSymbols = data.selectedSymbols;
+      _selectedNumbers = data.selectedNumbers;
+    } else {
+      _boxSymbols = createMathSymbols();
+      _boxNumbers = createBoxNumbers();
+    }
+  }
+
   int get step => _step;
-  int? get risk => _risk;
   List<MathSymbol> get boxSymbols => _boxSymbols;
   List<int> get boxNumbers => _boxNumbers;
   bool get showSelectResult => _showSelectResult;
@@ -61,6 +72,7 @@ class GameState extends ChangeNotifier {
       symbolMap[symbol] = symbolMap[symbol]! + 1;
     }
     return symbolMap.entries
+        .where((x) => x.value != 0)
         .map((e) => ContainHintItem(count: e.value, mathSymbol: e.key))
         .toList();
   }
@@ -124,12 +136,6 @@ class GameState extends ChangeNotifier {
     }
   }
 
-  GameState() {
-    _risk = createGameRisk();
-    _boxSymbols = createMathSymbols();
-    _boxNumbers = createBoxNumbers();
-  }
-
   void handleNextStep() {
     if (_step == 1 && _selectedSymbols.length != 3) {
       return;
@@ -173,7 +179,8 @@ class GameState extends ChangeNotifier {
   }
 
   void handleSelectAnswer(SelectedItem item) {
-    final isSelected = checkIsAlreadySelected(_selectedFormulaItems, item.index);
+    final isSelected =
+        checkIsAlreadySelected(_selectedFormulaItems, item.index);
     if (!isSelected) {
       _selectedFormulaItems.add(item);
     } else {

@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../../helpers/game_risk.dart';
@@ -49,7 +47,8 @@ class StepCombineFormula extends StatelessWidget {
 
   List<Widget> _getCurrentSelectItems(Palette palette) {
     return currentSelectedItems.map((item) {
-      final isChecked = checkIsAlreadySelected(selectedFormulaItems, item.index);
+      final isChecked =
+          checkIsAlreadySelected(selectedFormulaItems, item.index);
       return GestureDetector(
         onTap: () {
           onSelectAnswer(item);
@@ -95,12 +94,12 @@ class StepCombineFormula extends StatelessWidget {
     return Column(
       children: [
         Text(
-          '請組合出合理算式',
+          '組合出合理算式',
           style: TextStyle(
             fontSize: 18,
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         Container(
           width: double.infinity,
           height: 270,
@@ -122,13 +121,28 @@ class StepCombineFormula extends StatelessWidget {
                       const SizedBox(
                         height: 30,
                       ),
-                      FittedBox(
-                        child: Text(
-                          playerProgress.yourScore,
-                          style: TextStyle(
-                            fontSize: 36,
+                      Row(
+                        // crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            width: 30,
                           ),
-                        ),
+                          Text(
+                            '當前積分',
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            playerProgress.yourScore,
+                            style: TextStyle(
+                              fontSize: 36,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -137,13 +151,20 @@ class StepCombineFormula extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: _getBoardItems(palette),
-                      )
+                      selectedFormulaItems.isNotEmpty
+                          ? FittedBox(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: _getBoardItems(palette),
+                              ),
+                            )
+                          : Text(
+                              '請點擊下方的符號或數字組合算式',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            )
                     ],
                   ),
                 ),
@@ -152,11 +173,19 @@ class StepCombineFormula extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: const [
-                      Text(
-                        '= ?',
-                        style: TextStyle(
-                          fontSize: 36,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            '= ?',
+                            style: TextStyle(
+                              fontSize: 36,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 30,
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 30,

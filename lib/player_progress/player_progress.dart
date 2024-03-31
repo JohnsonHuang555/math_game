@@ -4,8 +4,10 @@
 
 import 'dart:async';
 
+import 'package:basic/helpers/current_playing_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../helpers/math_symbol.dart';
 import 'persistence/local_storage_player_progress_persistence.dart';
 import 'persistence/player_progress_persistence.dart';
 
@@ -27,13 +29,16 @@ class PlayerProgress extends ChangeNotifier {
   int _yourRank = 0;
 
   bool _showIntroduceScreen = false;
+  CurrentPlayingData? _currentPlayingData;
 
   String get userId => _userId;
   String get playerName => _playerName;
   String get editedPlayerName => _editedPlayerName;
   String get yourScore => _yourScore;
   int get yourRank => _yourRank;
+
   bool get showIntroduceScreenModal => _showIntroduceScreen;
+  CurrentPlayingData? get currentPlayingData => _currentPlayingData;
 
   FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -70,6 +75,11 @@ class PlayerProgress extends ChangeNotifier {
 
   /// Fetches the latest data from the backing persistence store.
   Future<void> _getLatestFromStore() async {
+    final data = await _store.getCurrentPlayingData();
+    if (data != null) {
+      _currentPlayingData = data;
+    }
+
     final userIdFromDB = await _store.getUserId();
     if (userIdFromDB != '') {
       final usersRef = db.collection('players');
@@ -151,20 +161,24 @@ class PlayerProgress extends ChangeNotifier {
     return selfRank;
   }
 
-  // void saveCurrentPlayingData() async {
-  //   final data = {'score': double.parse('9').round()};
+  void saveCurrentPlayingData({
+    required int step,
+    required List<MathSymbol> boxSymbols,
+    required List<int> boxNumbers,
+    required List<SelectedItem> selectedSymbols,
+    required List<SelectedItem> selectedNumbers,
+  }) async {
+    // 中離遊戲暫存
+    _store.saveCurrentPlayingData(CurrentPlayingData(
+      step: step,
+      boxSymbols: boxSymbols,
+      boxNumbers: boxNumbers,
+      selectedSymbols: selectedSymbols,
+      selectedNumbers: selectedNumbers,
+    ));
+  }
 
-  //   await Future.microtask(() async {
-  //     try {
-  //       await db
-  //           .collection('players')
-  //           .doc(userId)
-  //           .set(data, SetOptions(merge: true));
-  //     } catch (e) {
-  //       // 處理錯誤
-  //       print(e);
-  //     }
-  //   });
-  //   // final data = {'tempPlayingData': '1234'};
-  // }
+  void removeCurrentPlayingData() {
+    _store.removeCurrentPlayingData();
+  }
 }

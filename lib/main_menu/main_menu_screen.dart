@@ -34,6 +34,12 @@ class MainMenuScreen extends StatelessWidget {
       });
     }
 
+    if (playerProgress.currentPlayingData != null) {
+      Future.delayed(Duration.zero).then((_) {
+        GoRouter.of(context).push('/play');
+      });
+    }
+
     return Scaffold(
       backgroundColor: palette.backgroundMain,
       body: ResponsiveScreen(
@@ -87,7 +93,7 @@ class MainMenuScreen extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  GoRouter.of(context).go('/play');
+                  GoRouter.of(context).pushReplacement('/play');
                 },
                 child: Stack(
                   alignment: Alignment.center,

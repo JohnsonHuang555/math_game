@@ -19,10 +19,10 @@ MathSymbol getSymbol(List<MathSymbol> symbols) {
 
 List<MathSymbol> createMathSymbols() {
   final details = {
-     MathSymbol.plus: 25,
-     MathSymbol.minus: 25,
-     MathSymbol.times: 25,
-     MathSymbol.divide: 25,
+    MathSymbol.plus: 25,
+    MathSymbol.minus: 25,
+    MathSymbol.times: 25,
+    MathSymbol.divide: 25,
   };
 
   List<MathSymbol> totalSymbols = [];
@@ -76,4 +76,27 @@ class SelectedItem {
   MathSymbol? mathSymbol;
   int? number;
   SelectedItem({required this.index, this.mathSymbol, this.number});
+
+  SelectedItem.fromJson(
+    Map<String, dynamic> json,
+  )    // This Function helps to convert our Map into our User Object
+  : index = json['index'] as int,
+        mathSymbol = json['mathSymbol'] != null
+            ? getMathSymbol(json['mathSymbol'] as String)
+            : null,
+        number = json['number'] != null ? json['number'] as int : null;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'index': index,
+      'mathSymbol': mathSymbol?.toString(),
+      'number': number ?? number,
+    };
+  }
+}
+
+MathSymbol getMathSymbol(String mathSymbolStr) {
+  MathSymbol symbol = MathSymbol.values
+      .firstWhere((element) => element.toString() == mathSymbolStr);
+  return symbol;
 }

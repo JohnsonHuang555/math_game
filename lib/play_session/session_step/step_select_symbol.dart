@@ -40,7 +40,7 @@ class StepSelectSymbol extends StatelessWidget {
     return Column(
       children: [
         const Text(
-          '請選擇三個',
+          '選三個',
           style: TextStyle(
             fontSize: 18,
           ),

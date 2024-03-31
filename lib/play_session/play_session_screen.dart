@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:basic/helpers/math_symbol.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -47,6 +48,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
 
   late DateTime _startOfPlay;
 
+  late BuildContext tempContext;
+
   @override
   void initState() {
     super.initState();
@@ -63,10 +66,17 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    // if (state == AppLifecycleState.detached) {
-    //   final playerProgress = context.read<PlayerProgress>();
-    //   // playerProgress.saveCurrentPlayingData();
-    // }
+    if (state == AppLifecycleState.inactive) {
+      final playerProgress = context.read<PlayerProgress>();
+      final gameState = tempContext.read<GameState>();
+      playerProgress.saveCurrentPlayingData(
+        step: gameState.step,
+        boxSymbols: gameState.boxSymbols,
+        boxNumbers: gameState.boxNumbers,
+        selectedSymbols: gameState.selectedSymbols,
+        selectedNumbers: gameState.selectedNumbers,
+      );
+    }
   }
 
   // 棋盤遊戲區塊
@@ -205,6 +215,31 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                     );
                     return;
                   }
+
+                  final checkDivideZeroIndex = state.selectedFormulaItems
+                      .indexWhere(
+                          (element) => element.mathSymbol == MathSymbol.divide);
+                  if (checkDivideZeroIndex != -1) {
+                    try {
+                      final nextItem =
+                          state.selectedFormulaItems[checkDivideZeroIndex + 1];
+                      if (nextItem.number == 0) {
+                        Fluttertoast.showToast(
+                          msg: ' 不能除以 0 ',
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 2,
+                          backgroundColor: palette.redPen,
+                          textColor: palette.trueWhite,
+                          fontSize: 16,
+                        );
+                        return;
+                      }
+                    } catch (e) {
+                      _log.info('CheckDivideZero error: $e');
+                    }
+                  }
+
                   if (!state.checkFormula() || newScore == '?') {
                     Fluttertoast.showToast(
                       msg: ' 算式有誤 ',
@@ -260,6 +295,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                           }
 
                           if (!context.mounted) return;
+                          // 清除 local storage
+                          playerProgress.removeCurrentPlayingData();
                           Dialogs.materialDialog(
                             customView: Column(
                               children: [
@@ -353,12 +390,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                                           ),
                                           onPressed: () {
                                             Navigator.of(context).pop();
-                                            final canPop =
-                                                GoRouter.of(context).canPop();
-                                            if (canPop) {
-                                              GoRouter.of(context).pop();
-                                            }
-                                            GoRouter.of(context).push('/play');
+                                            GoRouter.of(context).pushReplacement('/play');
                                           },
                                         ),
                                       ),
@@ -414,6 +446,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
   @override
   Widget build(BuildContext context) {
     final palette = context.read<Palette>();
+    final playerProgress = context.read<PlayerProgress>();
+
     // return MultiProvider(
     //   providers: [
     //     Provider.value(value: widget.level),
@@ -487,13 +521,15 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => GameState(),
+          create: (context) => GameState(playerProgress.currentPlayingData),
         ),
       ],
       child: Scaffold(
         backgroundColor: palette.backgroundMain,
         body: Consumer<GameState>(
           builder: ((context, state, child) {
+            tempContext = context;
+
             return ResponsiveScreen(
               squarishMainArea: Column(
                 mainAxisAlignment: MainAxisAlignment.start,

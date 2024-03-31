@@ -60,9 +60,11 @@ class ContentHint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.read<Palette>();
-    double padding = 100;
+    double padding = 120;
 
     if (containHintItems.length == 5) {
+      padding = 100;
+    } else if (containHintItems.length == 5) {
       padding = 90;
     } else if (containHintItems.length >= 6 && containHintItems.length < 8) {
       padding = 60;
@@ -79,7 +81,7 @@ class ContentHint extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          height: 10,
+          height: 15,
         ),
         Padding(
           padding: EdgeInsets.only(left: padding, right: padding),

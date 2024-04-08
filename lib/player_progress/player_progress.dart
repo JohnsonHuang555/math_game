@@ -101,7 +101,11 @@ class PlayerProgress extends ChangeNotifier {
 
   Future<bool> createNewPlayer(String name) async {
     const initScore = 100;
-    final player = <String, dynamic>{'name': name, 'score': initScore};
+    final player = <String, dynamic>{
+      'name': name,
+      'score': initScore,
+      'created_date': Timestamp.now(),
+    };
 
     try {
       final doc = await db.collection('players').add(player);

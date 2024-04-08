@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
@@ -91,28 +92,30 @@ class MainMenuScreen extends StatelessWidget {
               const SizedBox(
                 height: 30,
               ),
-              GestureDetector(
-                onTap: () {
-                  GoRouter.of(context).pushReplacement('/play');
-                },
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 2,
+              ZoomTapAnimation(
+                child: GestureDetector(
+                  onTap: () {
+                    GoRouter.of(context).pushReplacement('/play');
+                  },
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(100),
                         ),
-                        borderRadius: BorderRadius.circular(100),
                       ),
-                    ),
-                    const Icon(
-                      Icons.play_arrow_rounded,
-                      size: 70,
-                    ),
-                  ],
+                      const Icon(
+                        Icons.play_arrow_rounded,
+                        size: 70,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(
@@ -121,18 +124,24 @@ class MainMenuScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SvgPicture.asset(
-                    'assets/icons/trophy.svg',
-                    width: 32,
-                    height: 32,
+                  ZoomTapAnimation(
+                    child: SvgPicture.asset(
+                      'assets/icons/trophy.svg',
+                      width: 32,
+                      height: 32,
+                    ),
                   ),
-                  const Icon(
-                    Icons.leaderboard,
-                    size: 36,
+                  ZoomTapAnimation(
+                    child: const Icon(
+                      Icons.leaderboard,
+                      size: 36,
+                    ),
                   ),
-                  const Icon(
-                    Icons.settings,
-                    size: 36,
+                  ZoomTapAnimation(
+                    child: const Icon(
+                      Icons.settings,
+                      size: 36,
+                    ),
                   ),
                 ],
               )

@@ -60,9 +60,11 @@ class ContentHint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.read<Palette>();
-    double padding = 120;
+    double padding = 140;
 
-    if (containHintItems.length == 5) {
+    if (containHintItems.length <= 3) {
+      padding = 120;
+    } else if (containHintItems.length == 4) {
       padding = 100;
     } else if (containHintItems.length == 5) {
       padding = 90;

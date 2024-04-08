@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
+import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../../helpers/game_risk.dart';
 import '../../player_progress/player_progress.dart';
@@ -47,40 +49,52 @@ class StepCombineFormula extends StatelessWidget {
 
   List<Widget> _getCurrentSelectItems(Palette palette) {
     return currentSelectedItems.map((item) {
-      final isChecked =
-          checkIsAlreadySelected(selectedFormulaItems, item.index);
-      return GestureDetector(
-        onTap: () {
-          onSelectAnswer(item);
-        },
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 3,
-                  color: isChecked ? palette.selectedItem : palette.ink,
-                ),
-                borderRadius: BorderRadius.circular(6),
-              ),
-            ),
-            item.mathSymbol != null
-                ? convertMathSymbolToIcon(
-                    mathSymbol: item.mathSymbol!,
-                    isSelected: isChecked,
-                    palette: palette,
-                    size: 28,
-                  )
-                : Text(
-                    item.number.toString(),
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w500,
-                      color: isChecked ? palette.selectedItem : palette.ink,
+      final isChecked = checkIsAlreadySelected(
+        selectedFormulaItems,
+        item.index,
+      );
+      return AnimationConfiguration.staggeredGrid(
+        position: item.index,
+        duration: const Duration(milliseconds: 375),
+        columnCount: 3,
+        child: ScaleAnimation(
+          child: FadeInAnimation(
+            child: ZoomTapAnimation(
+              onTap: () {
+                onSelectAnswer(item);
+              },
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 3,
+                        color: isChecked ? palette.selectedItem : palette.ink,
+                      ),
+                      borderRadius: BorderRadius.circular(6),
                     ),
                   ),
-          ],
+                  item.mathSymbol != null
+                      ? convertMathSymbolToIcon(
+                          mathSymbol: item.mathSymbol!,
+                          isSelected: isChecked,
+                          palette: palette,
+                          size: 28,
+                        )
+                      : Text(
+                          item.number.toString(),
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w500,
+                            color:
+                                isChecked ? palette.selectedItem : palette.ink,
+                          ),
+                        ),
+                ],
+              ),
+            ),
+          ),
         ),
       );
     }).toList();
@@ -122,16 +136,22 @@ class StepCombineFormula extends StatelessWidget {
                         height: 30,
                       ),
                       Row(
-                        // crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(
                             width: 30,
                           ),
-                          Text(
-                            '當前積分',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
+                          Column(
+                            children: const [
+                              Text(
+                                '當前積分',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                            ],
                           ),
                           const SizedBox(
                             width: 20,
@@ -200,18 +220,20 @@ class StepCombineFormula extends StatelessWidget {
         const SizedBox(height: 40),
         Padding(
           padding: EdgeInsets.only(
-            left: 75,
-            right: 75,
+            left: 60,
+            right: 60,
           ),
-          child: GridView.count(
-            crossAxisCount: 3, //決定每列數量
-            childAspectRatio: 1,
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(10),
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            children: _getCurrentSelectItems(palette),
+          child: AnimationLimiter(
+            child: GridView.count(
+              crossAxisCount: 3, //決定每列數量
+              childAspectRatio: 1,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(10),
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              children: _getCurrentSelectItems(palette),
+            ),
           ),
         ),
       ],

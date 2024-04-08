@@ -12,6 +12,7 @@ import 'package:material_dialogs/material_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
+import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../components/basic_button.dart';
 import '../components/header.dart';
@@ -254,17 +255,19 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                   }
                   Dialogs.materialDialog(
                     msg: '確定要完成嗎？',
-                    title: '結算分數',
-                    color: palette.trueWhite,
-                    titleStyle: TextStyle(
-                      fontWeight: FontWeight.w500,
+                    msgStyle: TextStyle(
                       fontSize: 18,
+                    ),
+                    title: '結算分數',
+                    titleStyle: TextStyle(
+                      fontSize: 22,
                     ),
                     msgAlign: TextAlign.end,
                     context: context,
                     barrierDismissible: false,
                     actions: [
                       BasicButton(
+                        padding: 6.0,
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
@@ -272,18 +275,13 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                           '取消',
                           style: TextStyle(
                             color: palette.ink,
+                            fontSize: 16,
                           ),
                         ),
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blueGrey,
-                          elevation: 0.0,
-                          shadowColor: Colors.transparent,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(6)),
-                          ),
-                        ),
+                      BasicButton(
+                        bgColor: Colors.blueGrey,
+                        padding: 6.0,
                         onPressed: () async {
                           if (!context.mounted) return;
                           Navigator.of(context).pop();
@@ -343,55 +341,60 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Container(
-                                        width: 60,
-                                        height: 60,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          border: Border.all(
-                                            width: 2,
+                                      ZoomTapAnimation(
+                                        child: Container(
+                                          width: 60,
+                                          height: 60,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            border: Border.all(
+                                              width: 2,
+                                            ),
                                           ),
-                                        ),
-                                        child: IconButton(
-                                          icon: SvgPicture.asset(
-                                            'assets/icons/home.svg',
-                                            width: double.infinity,
-                                            height: double.infinity,
-                                            color: palette.ink,
+                                          child: IconButton(
+                                            icon: SvgPicture.asset(
+                                              'assets/icons/home.svg',
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                              color: palette.ink,
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              GoRouter.of(context)
+                                                  .pushReplacement('/');
+                                            },
                                           ),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                            GoRouter.of(context)
-                                                .pushReplacement('/');
-                                          },
                                         ),
                                       ),
                                       const SizedBox(
                                         width: 30,
                                       ),
-                                      Container(
-                                        width: 60,
-                                        height: 60,
-                                        padding: EdgeInsets.all(2),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          border: Border.all(
-                                            width: 2,
+                                      ZoomTapAnimation(
+                                        child: Container(
+                                          width: 60,
+                                          height: 60,
+                                          padding: EdgeInsets.all(2),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            border: Border.all(
+                                              width: 2,
+                                            ),
                                           ),
-                                        ),
-                                        child: IconButton(
-                                          icon: SvgPicture.asset(
-                                            'assets/icons/restart.svg',
-                                            width: double.infinity,
-                                            height: double.infinity,
-                                            color: palette.ink,
+                                          child: IconButton(
+                                            icon: SvgPicture.asset(
+                                              'assets/icons/restart.svg',
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                              color: palette.ink,
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              GoRouter.of(context)
+                                                  .pushReplacement('/play');
+                                            },
                                           ),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                            GoRouter.of(context).pushReplacement('/play');
-                                          },
                                         ),
                                       ),
                                     ],
@@ -408,6 +411,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                           '確定',
                           style: TextStyle(
                             color: palette.trueWhite,
+                            fontSize: 16,
                           ),
                         ),
                       ),
@@ -557,6 +561,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                     margin: EdgeInsets.only(left: 80, right: 80),
                     child: ItemList(),
                   ),
+                  const SizedBox(height: 10),
                 ],
               ),
               rectangularMenuArea: _getBottomAction(context, state, palette),

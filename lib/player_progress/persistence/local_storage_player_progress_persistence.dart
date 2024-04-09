@@ -3,8 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:convert';
-
-import 'package:basic/helpers/math_symbol.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../helpers/current_playing_data.dart';

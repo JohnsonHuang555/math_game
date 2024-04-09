@@ -2,9 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,7 +24,6 @@ class MainMenuScreen extends StatelessWidget {
     final palette = context.watch<Palette>();
     final settingsController = context.watch<SettingsController>();
     final audioController = context.watch<AudioController>();
-
     final playerProgress = context.watch<PlayerProgress>();
 
     if (playerProgress.showIntroduceScreenModal) {
@@ -125,6 +122,9 @@ class MainMenuScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ZoomTapAnimation(
+                    onTap: () {
+                      GoRouter.of(context).push('/achievements');
+                    },
                     child: SvgPicture.asset(
                       'assets/icons/trophy.svg',
                       width: 32,
@@ -132,13 +132,19 @@ class MainMenuScreen extends StatelessWidget {
                     ),
                   ),
                   ZoomTapAnimation(
-                    child: const Icon(
+                    onTap: () {
+                      GoRouter.of(context).push('/leaderboard');
+                    },
+                    child: Icon(
                       Icons.leaderboard,
                       size: 36,
                     ),
                   ),
                   ZoomTapAnimation(
-                    child: const Icon(
+                    onTap: () {
+                      GoRouter.of(context).push('/settings');
+                    },
+                    child: Icon(
                       Icons.settings,
                       size: 36,
                     ),

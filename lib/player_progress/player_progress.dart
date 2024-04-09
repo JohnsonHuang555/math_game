@@ -82,8 +82,8 @@ class PlayerProgress extends ChangeNotifier {
 
     final userIdFromDB = await _store.getUserId();
     if (userIdFromDB != '') {
-      final usersRef = db.collection('players');
-      await usersRef.doc(userIdFromDB).get().then((doc) async {
+      final playersRef = db.collection('players');
+      await playersRef.doc(userIdFromDB).get().then((doc) async {
         if (doc.exists) {
           final data = doc.data() as Map<String, dynamic>;
           _playerName = data['name'] as String;
@@ -144,10 +144,10 @@ class PlayerProgress extends ChangeNotifier {
 
   /// 從 firebase 取得自己名次
   Future<int> _getUserRank() async {
-    final usersRef = db.collection('players');
+    final playersRef = db.collection('players');
 
     // 步驟1：取得自己的使用者資料
-    final selfUserDoc = await usersRef.doc(userId).get();
+    final selfUserDoc = await playersRef.doc(userId).get();
     final selfUser = selfUserDoc.data();
 
     // 步驟2：取得自己的分數
@@ -155,7 +155,7 @@ class PlayerProgress extends ChangeNotifier {
 
     // 步驟3：查詢分數比自己高的使用者數量
     final higherScoreUsersQuery =
-        usersRef.where('score', isGreaterThan: selfScore);
+        playersRef.where('score', isGreaterThan: selfScore);
     final higherScoreUsersSnapshot = await higherScoreUsersQuery.get();
     final higherScoreUsersCount = higherScoreUsersSnapshot.docs.length;
 
@@ -184,5 +184,16 @@ class PlayerProgress extends ChangeNotifier {
 
   void removeCurrentPlayingData() {
     _store.removeCurrentPlayingData();
+  }
+
+  /// 查詢前十名玩家
+  Future<List<DocumentSnapshot>> getTopTenPlayers() async {
+    QuerySnapshot querySnapshot = await db
+        .collection('players')
+        .orderBy('score', descending: true)
+        .limit(20)
+        .get();
+
+    return querySnapshot.docs;
   }
 }

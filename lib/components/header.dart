@@ -23,13 +23,18 @@ class Header extends StatelessWidget {
                   size: 32,
                 ),
               ),
-        title != null
-            ? Text(
-                title!,
-                style: TextStyle(fontSize: 22),
-              )
-            : SizedBox.shrink(),
-        rightChild ?? SizedBox.shrink(),
+        Expanded(
+          child: Center(
+            child: Text(
+              title ?? '',
+              style: TextStyle(fontSize: 22),
+            ),
+          ),
+        ),
+        rightChild ??
+            const SizedBox(
+              width: 30,
+            ),
       ],
     );
   }

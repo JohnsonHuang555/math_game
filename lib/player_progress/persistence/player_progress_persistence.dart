@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:basic/helpers/current_playing_data.dart';
+import '../../helpers/current_playing_data.dart';
 
 /// An interface of persistence stores for the player's progress.
 ///

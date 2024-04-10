@@ -1,5 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:basic/player_progress/player_progress.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -9,11 +12,12 @@ import '../style/palette.dart';
 import '../style/responsive_screen.dart';
 
 class AchievementsScreen extends StatelessWidget {
-  const AchievementsScreen({super.key});
+  AchievementsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
+    final achievements = context.read<PlayerProgress>().achievements;
 
     return Scaffold(
       backgroundColor: palette.backgroundMain,
@@ -24,31 +28,124 @@ class AchievementsScreen extends StatelessWidget {
               title: '成就',
             ),
             const SizedBox(height: 30),
-            // Expanded(
-            //   child: AnimationLimiter(
-            //     child: ListView.builder(
-            //       itemCount: topTenUsers.length,
-            //       itemBuilder: (context, index) {
-            //         return AnimationConfiguration.staggeredList(
-            //           position: index,
-            //           duration: const Duration(milliseconds: 375),
-            //           child: SlideAnimation(
-            //             verticalOffset: 50.0,
-            //             child: FadeInAnimation(
-            //               child: LeaderboardPlayer(
-            //                 rank: rank++,
-            //                 name: topTenUsers[index]['name'] as String,
-            //                 score: topTenUsers[index]['score'].toString(),
-            //                 highlight: playerProgress.userId ==
-            //                     topTenUsers[index].id as String,
-            //               ),
-            //             ),
-            //           ),
-            //         );
-            //       },
-            //     ),
-            //   ),
-            // )
+            Expanded(
+              child: AnimationLimiter(
+                child: GridView.count(
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  padding: EdgeInsets.all(8),
+                  crossAxisCount: 2,
+                  childAspectRatio: (3 / 1.5),
+                  children: List.generate(
+                    achievements.length,
+                    (int index) {
+                      return AnimationConfiguration.staggeredGrid(
+                        position: index,
+                        duration: const Duration(milliseconds: 375),
+                        columnCount: 2,
+                        child: ScaleAnimation(
+                          child: FadeInAnimation(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: achievements[index].isAchieve
+                                    ? const Color.fromARGB(255, 224, 206, 86)
+                                    : const Color.fromARGB(198, 239, 239, 239),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 8, right: 8),
+                                child: Row(
+                                  children: [
+                                    Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Container(
+                                          width: 50,
+                                          height: 50,
+                                          margin: EdgeInsets.only(
+                                            right: 8,
+                                            left: 8,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color:
+                                                  achievements[index].isAchieve
+                                                      ? const Color.fromARGB(
+                                                          255, 146, 116, 71)
+                                                      : const Color.fromARGB(
+                                                          255, 190, 190, 190),
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(120),
+                                          ),
+                                        ),
+                                        SvgPicture.asset(
+                                          achievements[index].imageUrl,
+                                          width: 28,
+                                          height: 28,
+                                          color: achievements[index].isAchieve
+                                              ? const Color.fromARGB(
+                                                  255, 146, 116, 71)
+                                              : const Color.fromARGB(
+                                                  255, 190, 190, 190),
+                                        )
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      width: 3,
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            achievements[index].title,
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                              color:
+                                                  achievements[index].isAchieve
+                                                      ? const Color.fromARGB(
+                                                          255, 146, 116, 71)
+                                                      : const Color.fromARGB(
+                                                          255, 190, 190, 190),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 3,
+                                          ),
+                                          Text(
+                                            achievements[index].description,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              color:
+                                                  achievements[index].isAchieve
+                                                      ? const Color.fromARGB(
+                                                          255, 146, 116, 71)
+                                                      : const Color.fromARGB(
+                                                          255, 190, 190, 190),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
         rectangularMenuArea: BasicButton(

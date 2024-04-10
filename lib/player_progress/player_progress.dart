@@ -11,6 +11,20 @@ import '../helpers/math_symbol.dart';
 import 'persistence/local_storage_player_progress_persistence.dart';
 import 'persistence/player_progress_persistence.dart';
 
+class Achievement {
+  String id;
+  String title;
+  String description;
+  bool isAchieve = false;
+  String imageUrl;
+  Achievement({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.imageUrl,
+  });
+}
+
 /// Encapsulates the player's progress.
 class PlayerProgress extends ChangeNotifier {
   static const maxHighestScoresPerPlayer = 10;
@@ -23,19 +37,81 @@ class PlayerProgress extends ChangeNotifier {
   int _highestLevelReached = 0;
 
   String _userId = '';
-  String _editedPlayerName = '';
   String _playerName = '';
   String _yourScore = '---'; // 預設
   int _yourRank = 0;
+
+  List<Achievement> _achievements = [
+    Achievement(
+      id: 'first_play',
+      title: '小試身手',
+      description: '完成一場遊戲',
+      imageUrl: 'assets/icons/game-controller.svg',
+    ),
+    Achievement(
+      id: 'champion',
+      title: '冠軍',
+      description: '成為第一名',
+      imageUrl: 'assets/icons/game-controller.svg',
+    ),
+    Achievement(
+      id: 'runner_up',
+      title: '亞軍',
+      description: '成為第二名',
+      imageUrl: 'assets/icons/game-controller.svg',
+    ),
+    Achievement(
+      id: 'second_runner_up',
+      title: '季軍',
+      description: '成為第三名',
+      imageUrl: 'assets/icons/game-controller.svg',
+    ),
+    Achievement(
+      id: 'restart',
+      title: '從頭開始',
+      description: '當分數歸零',
+      imageUrl: 'assets/icons/game-controller.svg',
+    ),
+    Achievement(
+      id: 'navigate_number',
+      title: '負負得正',
+      description: '當分數變負的',
+      imageUrl: 'assets/icons/game-controller.svg',
+    ),
+    Achievement(
+      id: 'three_same',
+      title: '三條',
+      description: '抽到三個一樣的符號或數字',
+      imageUrl: 'assets/icons/game-controller.svg',
+    ),
+    Achievement(
+      id: '1000',
+      title: '1,000分',
+      description: '達1000分',
+      imageUrl: 'assets/icons/game-controller.svg',
+    ),
+    Achievement(
+      id: '10000',
+      title: '10,000分',
+      description: '達10000分',
+      imageUrl: 'assets/icons/game-controller.svg',
+    ),
+    Achievement(
+      id: '100000',
+      title: '100,000分',
+      description: '達100000分',
+      imageUrl: 'assets/icons/game-controller.svg',
+    ),
+  ];
 
   bool _showIntroduceScreen = false;
   CurrentPlayingData? _currentPlayingData;
 
   String get userId => _userId;
   String get playerName => _playerName;
-  String get editedPlayerName => _editedPlayerName;
   String get yourScore => _yourScore;
   int get yourRank => _yourRank;
+  List<Achievement> get achievements => _achievements;
 
   bool get showIntroduceScreenModal => _showIntroduceScreen;
   CurrentPlayingData? get currentPlayingData => _currentPlayingData;
@@ -88,6 +164,19 @@ class PlayerProgress extends ChangeNotifier {
           final data = doc.data() as Map<String, dynamic>;
           _playerName = data['name'] as String;
           _yourScore = data['score'].toString();
+
+          List<dynamic> yourArray = data['achievements'] as List<dynamic>;
+          _achievements = _achievements.map(
+            (item) {
+              bool isExist = yourArray.contains(item.id);
+              if (isExist) {
+                item.isAchieve = true;
+                return item;
+              }
+              return item;
+            },
+          ).toList();
+
           _userId = userIdFromDB;
           // 更新 rank
           _yourRank = await _getUserRank();

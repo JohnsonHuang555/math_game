@@ -87,7 +87,7 @@ final router = GoRouter(
         GoRoute(
           path: 'achievements',
           builder: (context, state) =>
-              const AchievementsScreen(key: Key('achievements')),
+              AchievementsScreen(key: Key('achievements')),
         ),
         GoRoute(
           path: 'settings',

@@ -2,161 +2,147 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:basic/components/basic_button.dart';
+import 'package:basic/components/header.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
-import '../player_progress/player_progress.dart';
-import '../style/my_button.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
-import 'custom_name_dialog.dart';
 import 'settings.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
-  static const _gap = SizedBox(height: 60);
-
   @override
   Widget build(BuildContext context) {
     final settings = context.watch<SettingsController>();
-    final palette = context.watch<Palette>();
+    final palette = context.read<Palette>();
 
     return Scaffold(
-      backgroundColor: palette.backgroundSettings,
+      backgroundColor: palette.backgroundMain,
       body: ResponsiveScreen(
-        squarishMainArea: ListView(
+        squarishMainArea: Column(
           children: [
-            _gap,
-            const Text(
-              'Settings',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Permanent Marker',
-                fontSize: 55,
-                height: 1,
-              ),
+            Header(
+              title: '設定',
             ),
-            _gap,
-            const _NameChangeLine(
-              'Name',
-            ),
+            const SizedBox(height: 30),
             ValueListenableBuilder<bool>(
               valueListenable: settings.soundsOn,
-              builder: (context, soundsOn, child) => _SettingsLine(
-                'Sound FX',
-                Icon(soundsOn ? Icons.graphic_eq : Icons.volume_off),
-                onSelected: () => settings.toggleSoundsOn(),
-              ),
-            ),
-            ValueListenableBuilder<bool>(
-              valueListenable: settings.musicOn,
-              builder: (context, musicOn, child) => _SettingsLine(
-                'Music',
-                Icon(musicOn ? Icons.music_note : Icons.music_off),
-                onSelected: () => settings.toggleMusicOn(),
-              ),
-            ),
-            _SettingsLine(
-              'Reset progress',
-              const Icon(Icons.delete),
-              onSelected: () {
-                context.read<PlayerProgress>().reset();
-
-                final messenger = ScaffoldMessenger.of(context);
-                messenger.showSnackBar(
-                  const SnackBar(
-                      content: Text('Player progress has been reset.')),
+              builder: (context, soundsOn, child) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '音效',
+                        style: TextStyle(
+                          fontSize: 22,
+                        ),
+                      ),
+                      ToggleSwitch(
+                        initialLabelIndex: soundsOn ? 0 : 1,
+                        totalSwitches: 2,
+                        labels: const ['ON', 'OFF'],
+                        activeBgColors: const [
+                          [Color.fromARGB(255, 48, 136, 209)],
+                          [Color.fromARGB(255, 48, 136, 209)]
+                        ],
+                        inactiveBgColor: Color.fromARGB(255, 162, 165, 166),
+                        inactiveFgColor: Colors.white,
+                        onToggle: (_) {
+                          settings.toggleSoundsOn();
+                        },
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
-            _gap,
+            const SizedBox(
+              height: 10,
+            ),
+            ValueListenableBuilder<bool>(
+              valueListenable: settings.musicOn,
+              builder: (context, musicOn, child) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '音樂',
+                        style: TextStyle(
+                          fontSize: 22,
+                        ),
+                      ),
+                      ToggleSwitch(
+                        initialLabelIndex: musicOn ? 0 : 1,
+                        totalSwitches: 2,
+                        activeBgColors: const [
+                          [Color.fromARGB(255, 48, 136, 209)],
+                          [Color.fromARGB(255, 48, 136, 209)]
+                        ],
+                        inactiveBgColor: Color.fromARGB(255, 162, 165, 166),
+                        inactiveFgColor: Colors.white,
+                        labels: const ['ON', 'OFF'],
+                        onToggle: (_) {
+                          settings.toggleMusicOn();
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '語言',
+                    style: TextStyle(
+                      fontSize: 22,
+                    ),
+                  ),
+                  ToggleSwitch(
+                    initialLabelIndex: 0,
+                    totalSwitches: 2,
+                    activeBgColors: const [
+                      [Color.fromARGB(255, 48, 136, 209)],
+                      [Color.fromARGB(255, 48, 136, 209)]
+                    ],
+                    inactiveBgColor: Color.fromARGB(255, 162, 165, 166),
+                    inactiveFgColor: Colors.white,
+                    labels: const ['繁中', 'En'],
+                    onToggle: (index) {
+                      print(index);
+                    },
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
-        rectangularMenuArea: MyButton(
+        rectangularMenuArea: BasicButton(
           onPressed: () {
             GoRouter.of(context).pop();
           },
-          child: const Text('Back'),
-        ),
-      ),
-    );
-  }
-}
-
-class _NameChangeLine extends StatelessWidget {
-  final String title;
-
-  const _NameChangeLine(this.title);
-
-  @override
-  Widget build(BuildContext context) {
-    final settings = context.watch<SettingsController>();
-
-    return InkResponse(
-      highlightShape: BoxShape.rectangle,
-      onTap: () => showCustomNameDialog(context),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(title,
-                style: const TextStyle(
-                  fontFamily: 'Permanent Marker',
-                  fontSize: 30,
-                )),
-            const Spacer(),
-            ValueListenableBuilder(
-              valueListenable: settings.playerName,
-              builder: (context, name, child) => Text(
-                '‘$name’',
-                style: const TextStyle(
-                  fontFamily: 'Permanent Marker',
-                  fontSize: 30,
-                ),
-              ),
+          child: Text(
+            '返回',
+            style: TextStyle(
+              color: palette.ink,
+              fontSize: 18,
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SettingsLine extends StatelessWidget {
-  final String title;
-
-  final Widget icon;
-
-  final VoidCallback? onSelected;
-
-  const _SettingsLine(this.title, this.icon, {this.onSelected});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkResponse(
-      highlightShape: BoxShape.rectangle,
-      onTap: onSelected,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontFamily: 'Permanent Marker',
-                  fontSize: 30,
-                ),
-              ),
-            ),
-            icon,
-          ],
+          ),
         ),
       ),
     );

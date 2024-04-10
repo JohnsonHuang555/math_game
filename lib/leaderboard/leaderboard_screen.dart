@@ -123,12 +123,6 @@ class LeaderboardScreen extends StatelessWidget {
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 12),
                                 decoration: BoxDecoration(
-                                  // border: Border.all(
-                                  //   width: highlight ? 2 : 1,
-                                  //   color: highlight
-                                  //       ? palette.selectedItem
-                                  //       : palette.ink,
-                                  // ),
                                   borderRadius: BorderRadius.circular(6),
                                   gradient: LinearGradient(
                                     begin: Alignment.topLeft,

@@ -80,6 +80,7 @@ class LeaderboardScreen extends StatelessWidget {
                 Expanded(
                   child: AnimationLimiter(
                     child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.zero,
                       itemCount: topTenUsers.length,
                       itemBuilder: (context, index) {
@@ -118,7 +119,6 @@ class LeaderboardScreen extends StatelessWidget {
                           position: index,
                           duration: const Duration(milliseconds: 375),
                           child: SlideAnimation(
-                            // verticalOffset: 10.0,
                             child: FadeInAnimation(
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 12),

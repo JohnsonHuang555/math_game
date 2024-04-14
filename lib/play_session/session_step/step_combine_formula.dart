@@ -178,12 +178,29 @@ class StepCombineFormula extends StatelessWidget {
                                 children: _getBoardItems(palette),
                               ),
                             )
-                          : Text(
-                              '請點擊下方的符號或數字組合算式',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey,
-                              ),
+                          : Column(
+                              children: const [
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  '請點擊下方的符號或數字組合算式',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  '(先選符號)',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
                             )
                     ],
                   ),

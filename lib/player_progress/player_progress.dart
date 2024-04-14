@@ -50,57 +50,57 @@ class PlayerProgress extends ChangeNotifier {
     ),
     Achievement(
       id: 'champion',
-      title: '冠軍',
+      title: '獨占鰲頭',
       description: '成為第一名',
-      imageUrl: 'assets/icons/game-controller.svg',
+      imageUrl: 'assets/icons/medal-reward-1.svg',
     ),
     Achievement(
       id: 'runner_up',
-      title: '亞軍',
+      title: '名列前茅',
       description: '成為第二名',
-      imageUrl: 'assets/icons/game-controller.svg',
+      imageUrl: 'assets/icons/medal-reward-2.svg',
     ),
     Achievement(
       id: 'second_runner_up',
-      title: '季軍',
+      title: '穩居前列',
       description: '成為第三名',
-      imageUrl: 'assets/icons/game-controller.svg',
+      imageUrl: 'assets/icons/medal-reward-3.svg',
     ),
     Achievement(
       id: 'restart',
-      title: '從頭開始',
+      title: '從零開始',
       description: '當分數歸零',
-      imageUrl: 'assets/icons/game-controller.svg',
+      imageUrl: 'assets/icons/rocket.svg',
     ),
     Achievement(
       id: 'navigate_number',
       title: '負負得正',
       description: '當分數變負的',
-      imageUrl: 'assets/icons/game-controller.svg',
+      imageUrl: 'assets/icons/sign-plus-minus.svg',
     ),
     Achievement(
       id: 'three_same',
-      title: '三條',
+      title: '如出一轍',
       description: '抽到三個一樣的符號或數字',
-      imageUrl: 'assets/icons/game-controller.svg',
+      imageUrl: 'assets/icons/playing-cards.svg',
     ),
     Achievement(
       id: '1000',
-      title: '1,000分',
-      description: '達1000分',
-      imageUrl: 'assets/icons/game-controller.svg',
+      title: '千迴百轉',
+      description: '積分達1000',
+      imageUrl: 'assets/icons/award-prize.svg',
     ),
     Achievement(
       id: '10000',
-      title: '10,000分',
-      description: '達10000分',
-      imageUrl: 'assets/icons/game-controller.svg',
+      title: '青雲直上',
+      description: '積分達10000',
+      imageUrl: 'assets/icons/award-prize.svg',
     ),
     Achievement(
       id: '100000',
-      title: '100,000分',
-      description: '達100000分',
-      imageUrl: 'assets/icons/game-controller.svg',
+      title: '獨步全場',
+      description: '積分達100000',
+      imageUrl: 'assets/icons/award-prize.svg',
     ),
   ];
 
@@ -159,29 +159,18 @@ class PlayerProgress extends ChangeNotifier {
     final userIdFromDB = await _store.getUserId();
     if (userIdFromDB != '') {
       final playersRef = db.collection('players');
-      await playersRef.doc(userIdFromDB).get().then((doc) async {
-        if (doc.exists) {
-          final data = doc.data() as Map<String, dynamic>;
-          _playerName = data['name'] as String;
-          _yourScore = data['score'].toString();
+      final doc = await playersRef.doc(userIdFromDB).get();
 
-          List<dynamic> yourArray = data['achievements'] as List<dynamic>;
-          _achievements = _achievements.map(
-            (item) {
-              bool isExist = yourArray.contains(item.id);
-              if (isExist) {
-                item.isAchieve = true;
-                return item;
-              }
-              return item;
-            },
-          ).toList();
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>;
+        _playerName = data['name'] as String;
+        _yourScore = data['score'].toString();
 
-          _userId = userIdFromDB;
-          // 更新 rank
-          _yourRank = await _getUserRank();
-        }
-      });
+        _getAchievement(userIdFromDB);
+        _userId = userIdFromDB;
+        // 更新 rank
+        _yourRank = await _getUserRank();
+      }
     } else {
       _showIntroduceScreen = true;
     }
@@ -214,21 +203,106 @@ class PlayerProgress extends ChangeNotifier {
   }
 
   /// 儲存積分到 firebase
-  Future<bool> saveNewScore(String score) async {
-    final data = {'score': double.parse(score).round()};
+  Future<bool> saveNewScore({
+    required String newScore,
+    required List<SelectedItem> selectedSymbols,
+    required List<SelectedItem> selectedNumbers,
+  }) async {
+    final playerRef = db.collection('players').doc(userId);
+    final convertedIntScore = int.parse(newScore);
+
     try {
-      await db
-          .collection('players')
-          .doc(userId)
-          .set(data, SetOptions(merge: true));
-      _yourScore = score;
-      _yourRank = await _getUserRank();
+      playerRef.update({
+        'score': convertedIntScore.round(),
+      });
+      final newRank = await _getUserRank();
+
+      // 更新成就
+      List<String> newAchievements = ['first_play'];
+      if (newRank == 1) {
+        newAchievements.add('champion');
+      }
+      if (newRank == 2) {
+        newAchievements.add('runner_up');
+      }
+      if (newRank == 2) {
+        newAchievements.add('second_runner_up');
+      }
+      if (convertedIntScore == 0) {
+        newAchievements.add('restart');
+      }
+      if (int.parse(_yourScore) < 0 && convertedIntScore > 0) {
+        newAchievements.add('navigate_number');
+      }
+      if (selectedSymbols.every((e) => e.mathSymbol == MathSymbol.plus) ||
+          selectedSymbols.every((e) => e.mathSymbol == MathSymbol.minus) ||
+          selectedSymbols.every((e) => e.mathSymbol == MathSymbol.times) ||
+          selectedSymbols.every((e) => e.mathSymbol == MathSymbol.divide) ||
+          selectedNumbers.every((e) => e.number == -9) ||
+          selectedNumbers.every((e) => e.number == -8) ||
+          selectedNumbers.every((e) => e.number == -7) ||
+          selectedNumbers.every((e) => e.number == -6) ||
+          selectedNumbers.every((e) => e.number == -5) ||
+          selectedNumbers.every((e) => e.number == -4) ||
+          selectedNumbers.every((e) => e.number == -3) ||
+          selectedNumbers.every((e) => e.number == -2) ||
+          selectedNumbers.every((e) => e.number == -1) ||
+          selectedNumbers.every((e) => e.number == 0) ||
+          selectedNumbers.every((e) => e.number == 1) ||
+          selectedNumbers.every((e) => e.number == 2) ||
+          selectedNumbers.every((e) => e.number == 3) ||
+          selectedNumbers.every((e) => e.number == 4) ||
+          selectedNumbers.every((e) => e.number == 5) ||
+          selectedNumbers.every((e) => e.number == 6) ||
+          selectedNumbers.every((e) => e.number == 7) ||
+          selectedNumbers.every((e) => e.number == 8) ||
+          selectedNumbers.every((e) => e.number == 9)) {
+        newAchievements.add('three_same');
+      }
+      if (convertedIntScore >= 1000 && convertedIntScore < 10000) {
+        newAchievements.add('1000');
+      }
+      if (convertedIntScore >= 10000 && convertedIntScore < 100000) {
+        newAchievements.add('10000');
+      }
+      if (convertedIntScore >= 100000) {
+        newAchievements.add('100000');
+      }
+
+      playerRef.update({
+        'achievements': FieldValue.arrayUnion(
+          newAchievements,
+        )
+      });
+
+      _yourScore = newScore;
+      _yourRank = newRank;
+      _getAchievement(_userId);
+
       return true;
     } catch (e) {
       return false;
     } finally {
       notifyListeners();
     }
+  }
+
+  Future<void> _getAchievement(String id) async {
+    final playersRef = db.collection('players');
+    final selfUserDoc = await playersRef.doc(id).get();
+    final selfUser = selfUserDoc.data();
+    List<dynamic> tempAchievements = selfUser!['achievements'] as List<dynamic>;
+
+    _achievements = _achievements.map(
+      (item) {
+        bool isExist = tempAchievements.contains(item.id);
+        if (isExist) {
+          item.isAchieve = true;
+          return item;
+        }
+        return item;
+      },
+    ).toList();
   }
 
   /// 從 firebase 取得自己名次
@@ -277,7 +351,7 @@ class PlayerProgress extends ChangeNotifier {
 
   /// 查詢前十名玩家
   Future<List<DocumentSnapshot>> getTopTenPlayers() async {
-    QuerySnapshot querySnapshot = await db
+    final querySnapshot = await db
         .collection('players')
         .orderBy('score', descending: true)
         .limit(20)

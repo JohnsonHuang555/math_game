@@ -1,6 +1,5 @@
 import 'package:basic/player_progress/player_progress.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -12,7 +11,7 @@ import '../style/palette.dart';
 import '../style/responsive_screen.dart';
 
 class AchievementsScreen extends StatelessWidget {
-  AchievementsScreen({super.key});
+  const AchievementsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +30,7 @@ class AchievementsScreen extends StatelessWidget {
             Expanded(
               child: AnimationLimiter(
                 child: GridView.count(
+                  physics: NeverScrollableScrollPhysics(),
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
                   padding: EdgeInsets.all(8),
@@ -38,7 +38,7 @@ class AchievementsScreen extends StatelessWidget {
                   childAspectRatio: (3 / 1.5),
                   children: List.generate(
                     achievements.length,
-                    (int index) {
+                    (index) {
                       return AnimationConfiguration.staggeredGrid(
                         position: index,
                         duration: const Duration(milliseconds: 375),
@@ -82,8 +82,8 @@ class AchievementsScreen extends StatelessWidget {
                                         ),
                                         SvgPicture.asset(
                                           achievements[index].imageUrl,
-                                          width: 28,
-                                          height: 28,
+                                          width: 30,
+                                          height: 30,
                                           color: achievements[index].isAchieve
                                               ? const Color.fromARGB(
                                                   255, 146, 116, 71)

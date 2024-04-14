@@ -285,8 +285,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                           if (!context.mounted) return;
                           Navigator.of(context).pop();
 
-                          final result =
-                              await playerProgress.saveNewScore(newScore);
+                          final result = await playerProgress.saveNewScore(
+                            newScore: newScore,
+                            selectedSymbols: state.selectedSymbols,
+                            selectedNumbers: state.selectedNumbers,
+                          );
                           if (!result) {
                             throw Exception('setNewScore error');
                           }

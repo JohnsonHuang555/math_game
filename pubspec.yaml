@@ -53,6 +53,7 @@ flutter:
     - assets/music/
     - assets/sfx/
     - assets/animations/
+    - assets/translations/
     - .env
 
   fonts:

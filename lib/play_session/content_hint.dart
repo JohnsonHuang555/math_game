@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../helpers/math_symbol.dart';
@@ -76,11 +78,13 @@ class ContentHint extends StatelessWidget {
 
     return Column(
       children: [
-        const Text(
-          '問號中可能包含',
-          style: TextStyle(
-            fontSize: 16,
-          ),
+        FittedBox(
+          child: const Text(
+            'question_includes_content',
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ).tr(),
         ),
         const SizedBox(
           height: 15,

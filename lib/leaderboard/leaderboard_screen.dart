@@ -1,4 +1,5 @@
 import 'package:basic/components/header.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -39,13 +40,13 @@ class LeaderboardScreen extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
             backgroundColor: palette.backgroundMain,
-            body: const Center(
-              child: Text(
+            body: Center(
+              child: const Text(
                 'loading',
                 style: TextStyle(
                   fontSize: 26,
                 ),
-              ),
+              ).tr(),
             ),
           );
         }
@@ -165,7 +166,7 @@ class LeaderboardScreen extends StatelessWidget {
                   height: 10,
                 ),
                 LeaderboardPlayer(
-                  name: '你的分數',
+                  name: 'your_score'.tr(),
                   score: playerProgress.yourScore,
                   highlight: false,
                 ),
@@ -177,12 +178,12 @@ class LeaderboardScreen extends StatelessWidget {
                     GoRouter.of(context).pop();
                   },
                   child: Text(
-                    '返回',
+                    'back',
                     style: TextStyle(
                       color: palette.ink,
                       fontSize: 18,
                     ),
-                  ),
+                  ).tr(),
                 )
               ],
             ),

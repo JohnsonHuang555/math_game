@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -39,12 +40,12 @@ class StepSelectSymbol extends StatelessWidget {
     }).toList();
     return Column(
       children: [
-        const Text(
-          '選三個',
+        Text(
+          'choose_three_items',
           style: TextStyle(
             fontSize: 18,
           ),
-        ),
+        ).tr(),
         const SizedBox(height: 10),
         GameBoard(
           items: items,

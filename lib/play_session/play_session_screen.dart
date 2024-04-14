@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:basic/helpers/math_symbol.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
@@ -40,21 +41,12 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
     with WidgetsBindingObserver {
   static final _log = Logger('PlaySessionScreen');
 
-  static const _celebrationDuration = Duration(milliseconds: 2000);
-
-  static const _preCelebrationDuration = Duration(milliseconds: 500);
-
-  bool _duringCelebration = false;
-
-  late DateTime _startOfPlay;
-
   late BuildContext tempContext;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _startOfPlay = DateTime.now();
   }
 
   @override
@@ -105,7 +97,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
           onSelectAnswer: state.handleSelectAnswer,
         );
       default:
-        return const Text('Something wrong...');
+        return const Text('something_wrong').tr();
     }
   }
 
@@ -122,7 +114,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                 return;
               }
               Fluttertoast.showToast(
-                msg: ' 請選擇三個 ',
+                msg: 'please_select_three'.tr(),
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 2,
@@ -133,12 +125,12 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
             }
           },
           child: Text(
-            '選好了',
+            'selected',
             style: TextStyle(
               color: palette.ink,
               fontSize: 18,
             ),
-          ),
+          ).tr(),
         );
       case 2:
         return BasicButton(
@@ -149,7 +141,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                 return;
               }
               Fluttertoast.showToast(
-                msg: ' 請選擇三個 ',
+                msg: 'please_select_three'.tr(),
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 2,
@@ -160,12 +152,12 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
             }
           },
           child: Text(
-            '選好了',
+            'selected',
             style: TextStyle(
               color: palette.ink,
               fontSize: 18,
             ),
-          ),
+          ).tr(),
         );
       case 3:
         return Row(
@@ -184,12 +176,12 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                       width: 5,
                     ),
                     Text(
-                      '清除',
+                      'clear',
                       style: TextStyle(
                         fontSize: 18,
                         color: palette.ink,
                       ),
-                    ),
+                    ).tr(),
                   ],
                 ),
               ),
@@ -205,7 +197,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                   final newScore = state.getCurrentAnswer(yourScore);
                   if (state.selectedFormulaItems.length != 6) {
                     Fluttertoast.showToast(
-                      msg: ' 每個都要使用到 ',
+                      msg: 'each_one_must_be_used'.tr(),
                       toastLength: Toast.LENGTH_LONG,
                       gravity: ToastGravity.CENTER,
                       timeInSecForIosWeb: 2,
@@ -225,7 +217,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                           state.selectedFormulaItems[checkDivideZeroIndex + 1];
                       if (nextItem.number == 0) {
                         Fluttertoast.showToast(
-                          msg: ' 不能除以 0 ',
+                          msg: 'cannot_divide_zero'.tr(),
                           toastLength: Toast.LENGTH_LONG,
                           gravity: ToastGravity.CENTER,
                           timeInSecForIosWeb: 2,
@@ -242,7 +234,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
 
                   if (!state.checkFormula() || newScore == '?') {
                     Fluttertoast.showToast(
-                      msg: ' 算式有誤 ',
+                      msg: 'format_error'.tr(),
                       toastLength: Toast.LENGTH_LONG,
                       gravity: ToastGravity.CENTER,
                       timeInSecForIosWeb: 2,
@@ -253,11 +245,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                     return;
                   }
                   Dialogs.materialDialog(
-                    msg: '確定要完成嗎？',
+                    msg: 'confirm_complete'.tr(),
                     msgStyle: TextStyle(
                       fontSize: 18,
                     ),
-                    title: '結算分數',
+                    title: 'calculate_score'.tr(),
                     titleStyle: TextStyle(
                       fontSize: 22,
                     ),
@@ -271,12 +263,12 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                           Navigator.of(context).pop();
                         },
                         child: Text(
-                          '取消',
+                          'cancel',
                           style: TextStyle(
                             color: palette.ink,
                             fontSize: 16,
                           ),
-                        ),
+                        ).tr(),
                       ),
                       BasicButton(
                         bgColor: Colors.blueGrey,
@@ -301,11 +293,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                             customView: Column(
                               children: [
                                 const Text(
-                                  '新積分',
+                                  'new_score',
                                   style: TextStyle(
                                     fontSize: 18,
                                   ),
-                                ),
+                                ).tr(),
                                 const SizedBox(
                                   height: 10,
                                 ),
@@ -410,18 +402,18 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                           );
                         },
                         child: Text(
-                          '確定',
+                          'confirm',
                           style: TextStyle(
                             color: palette.trueWhite,
                             fontSize: 16,
                           ),
-                        ),
+                        ).tr(),
                       ),
                     ],
                   );
                 },
                 child: Text(
-                  '完成',
+                  'OK',
                   style: TextStyle(
                     fontSize: 18,
                     color: palette.ink,
@@ -439,11 +431,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
   String _getStep(int step) {
     switch (step) {
       case 1:
-        return '符號';
+        return 'math_symbol'.tr();
       case 2:
-        return '數字';
+        return 'number'.tr();
       case 3:
-        return '組合';
+        return 'combination'.tr();
       default:
         return '';
     }
@@ -454,76 +446,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
     final palette = context.read<Palette>();
     final playerProgress = context.read<PlayerProgress>();
 
-    // return MultiProvider(
-    //   providers: [
-    //     Provider.value(value: widget.level),
-    //     // Create and provide the [LevelState] object that will be used
-    //     // by widgets below this one in the widget tree.
-    //     ChangeNotifierProvider(
-    //       create: (context) => LevelState(
-    //         goal: widget.level.difficulty,
-    //         onWin: _playerWon,
-    //       ),
-    //     ),
-    //   ],
-    //   child: IgnorePointer(
-    //     // Ignore all input during the celebration animation.
-    //     ignoring: _duringCelebration,
-    //     child: Scaffold(
-    //       backgroundColor: palette.backgroundPlaySession,
-    //       // The stack is how you layer widgets on top of each other.
-    //       // Here, it is used to overlay the winning confetti animation on top
-    //       // of the game.
-    //       body: Stack(
-    //         children: [
-    //           // This is the main layout of the play session screen,
-    //           // with a settings button on top, the actual play area
-    //           // in the middle, and a back button at the bottom.
-    //           Column(
-    //             mainAxisAlignment: MainAxisAlignment.center,
-    //             children: [
-    //               Align(
-    //                 alignment: Alignment.centerRight,
-    //                 child: InkResponse(
-    //                   onTap: () => GoRouter.of(context).push('/settings'),
-    //                   child: Image.asset(
-    //                     'assets/images/settings.png',
-    //                     semanticLabel: 'Settings',
-    //                   ),
-    //                 ),
-    //               ),
-    //               const Spacer(),
-    //               Expanded(
-    //                 // The actual UI of the game.
-    //                 child: GameWidget(),
-    //               ),
-    //               const Spacer(),
-    //               Padding(
-    //                 padding: const EdgeInsets.all(8.0),
-    //                 child: MyButton(
-    //                   onPressed: () => GoRouter.of(context).go('/play'),
-    //                   child: const Text('Back'),
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //           // This is the confetti animation that is overlaid on top of the
-    //           // game when the player wins.
-    //           SizedBox.expand(
-    //             child: Visibility(
-    //               visible: _duringCelebration,
-    //               child: IgnorePointer(
-    //                 child: Confetti(
-    //                   isStopped: !_duringCelebration,
-    //                 ),
-    //               ),
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    // );
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(

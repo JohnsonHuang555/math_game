@@ -8,11 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
-import '../audio/audio_controller.dart';
-import '../audio/sounds.dart';
 import '../helpers/converters.dart';
 import '../player_progress/player_progress.dart';
-import '../settings/settings.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
 
@@ -22,8 +19,6 @@ class MainMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
-    final settingsController = context.watch<SettingsController>();
-    final audioController = context.watch<AudioController>();
     final playerProgress = context.watch<PlayerProgress>();
 
     if (playerProgress.showIntroduceScreenModal) {

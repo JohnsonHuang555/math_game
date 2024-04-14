@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -41,11 +42,11 @@ class StepSelectNumber extends StatelessWidget {
     return Column(
       children: [
         const Text(
-          '選三個',
+          'choose_three_items',
           style: TextStyle(
             fontSize: 18,
           ),
-        ),
+        ).tr(),
         const SizedBox(height: 10),
         GameBoard(
           items: items,

@@ -34,14 +34,14 @@ class LeaderboardPlayer extends StatelessWidget {
               )
             : const SizedBox.shrink(),
         SizedBox(
-          width: rank != null ? 30 : 10,
+          width: rank != null ? 30 : 0,
         ),
         Expanded(
           flex: 2,
           child: Text(
             name,
             style: TextStyle(
-              fontSize: 22,
+              fontSize: 24,
               fontWeight: FontWeight.w500,
               color: highlight ? palette.selectedItem : null,
             ),

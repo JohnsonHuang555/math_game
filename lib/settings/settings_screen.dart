@@ -4,6 +4,7 @@
 
 import 'package:basic/components/basic_button.dart';
 import 'package:basic/components/header.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -21,13 +22,15 @@ class SettingsScreen extends StatelessWidget {
     final settings = context.watch<SettingsController>();
     final palette = context.read<Palette>();
 
+    final defaultLanguage = context.locale.toString();
+
     return Scaffold(
       backgroundColor: palette.backgroundMain,
       body: ResponsiveScreen(
         squarishMainArea: Column(
           children: [
             Header(
-              title: '設定',
+              title: 'settings'.tr(),
             ),
             const SizedBox(height: 30),
             ValueListenableBuilder<bool>(
@@ -38,12 +41,12 @@ class SettingsScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '音效',
+                      const Text(
+                        'sound_effects',
                         style: TextStyle(
                           fontSize: 22,
                         ),
-                      ),
+                      ).tr(),
                       ToggleSwitch(
                         initialLabelIndex: soundsOn ? 0 : 1,
                         totalSwitches: 2,
@@ -74,12 +77,12 @@ class SettingsScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '音樂',
+                      const Text(
+                        'music',
                         style: TextStyle(
                           fontSize: 22,
                         ),
-                      ),
+                      ).tr(),
                       ToggleSwitch(
                         initialLabelIndex: musicOn ? 0 : 1,
                         totalSwitches: 2,
@@ -107,14 +110,14 @@ class SettingsScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    '語言',
+                  const Text(
+                    'languages',
                     style: TextStyle(
                       fontSize: 22,
                     ),
-                  ),
+                  ).tr(),
                   ToggleSwitch(
-                    initialLabelIndex: 0,
+                    initialLabelIndex: defaultLanguage == 'zh_TW' ? 0 : 1,
                     totalSwitches: 2,
                     activeBgColors: const [
                       [Color.fromARGB(255, 48, 136, 209)],
@@ -124,7 +127,14 @@ class SettingsScreen extends StatelessWidget {
                     inactiveFgColor: Colors.white,
                     labels: const ['繁中', 'En'],
                     onToggle: (index) {
-                      print(index);
+                      switch (index) {
+                        case 0:
+                          context.setLocale(Locale('zh', 'TW'));
+                          break;
+                        case 1:
+                          context.setLocale(Locale('en', 'US'));
+                          break;
+                      }
                     },
                   ),
                 ],
@@ -137,12 +147,12 @@ class SettingsScreen extends StatelessWidget {
             GoRouter.of(context).pop();
           },
           child: Text(
-            '返回',
+            'back',
             style: TextStyle(
               color: palette.ink,
               fontSize: 18,
             ),
-          ),
+          ).tr(),
         ),
       ),
     );

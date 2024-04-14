@@ -45,11 +45,6 @@ class SettingsController {
     _loadStateFromPersistence();
   }
 
-  void setPlayerName(String name) {
-    playerName.value = name;
-    _store.savePlayerName(playerName.value);
-  }
-
   void toggleAudioOn() {
     audioOn.value = !audioOn.value;
     _store.saveAudioOn(audioOn.value);

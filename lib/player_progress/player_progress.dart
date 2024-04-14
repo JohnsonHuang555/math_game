@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:basic/helpers/current_playing_data.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../helpers/math_symbol.dart';
@@ -44,62 +45,62 @@ class PlayerProgress extends ChangeNotifier {
   List<Achievement> _achievements = [
     Achievement(
       id: 'first_play',
-      title: '小試身手',
-      description: '完成一場遊戲',
+      title: 'first_play'.tr(),
+      description: 'first_play_desc'.tr(),
       imageUrl: 'assets/icons/game-controller.svg',
     ),
     Achievement(
       id: 'champion',
-      title: '獨占鰲頭',
-      description: '成為第一名',
+      title: 'champion'.tr(),
+      description: 'champion_desc'.tr(),
       imageUrl: 'assets/icons/medal-reward-1.svg',
     ),
     Achievement(
       id: 'runner_up',
-      title: '名列前茅',
-      description: '成為第二名',
+      title: 'runner_up'.tr(),
+      description: 'runner_up_desc'.tr(),
       imageUrl: 'assets/icons/medal-reward-2.svg',
     ),
     Achievement(
       id: 'second_runner_up',
-      title: '穩居前列',
-      description: '成為第三名',
+      title: 'second_runner_up'.tr(),
+      description: 'second_runner_up_desc'.tr(),
       imageUrl: 'assets/icons/medal-reward-3.svg',
     ),
     Achievement(
       id: 'restart',
-      title: '從零開始',
-      description: '當分數歸零',
+      title: 'restart'.tr(),
+      description: 'restart_desc'.tr(),
       imageUrl: 'assets/icons/rocket.svg',
     ),
     Achievement(
       id: 'navigate_number',
-      title: '負負得正',
-      description: '當分數變負的',
+      title: 'navigate_number'.tr(),
+      description: 'navigate_number_desc'.tr(),
       imageUrl: 'assets/icons/sign-plus-minus.svg',
     ),
     Achievement(
       id: 'three_same',
-      title: '如出一轍',
-      description: '抽到三個一樣的符號或數字',
+      title: 'three_same'.tr(),
+      description: 'three_same_desc'.tr(),
       imageUrl: 'assets/icons/playing-cards.svg',
     ),
     Achievement(
       id: '1000',
-      title: '千迴百轉',
-      description: '積分達1000',
+      title: 'thousand'.tr(),
+      description: 'thousand_desc'.tr(),
       imageUrl: 'assets/icons/award-prize.svg',
     ),
     Achievement(
       id: '10000',
-      title: '青雲直上',
-      description: '積分達10000',
+      title: 'ten_thousand'.tr(),
+      description: 'ten_thousand_desc'.tr(),
       imageUrl: 'assets/icons/award-prize.svg',
     ),
     Achievement(
       id: '100000',
-      title: '獨步全場',
-      description: '積分達100000',
+      title: 'one_hundred_thousand'.tr(),
+      description: 'one_hundred_thousand_desc'.tr(),
       imageUrl: 'assets/icons/award-prize.svg',
     ),
   ];

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
@@ -107,12 +108,12 @@ class StepCombineFormula extends StatelessWidget {
 
     return Column(
       children: [
-        Text(
-          '組合出合理算式',
+        const Text(
+          'combine_formula',
           style: TextStyle(
             fontSize: 18,
           ),
-        ),
+        ).tr(),
         const SizedBox(height: 20),
         Container(
           width: double.infinity,
@@ -141,14 +142,14 @@ class StepCombineFormula extends StatelessWidget {
                             width: 30,
                           ),
                           Column(
-                            children: const [
-                              Text(
-                                '當前積分',
+                            children: [
+                              const Text(
+                                'current_score',
                                 style: TextStyle(
                                   fontSize: 14,
                                 ),
-                              ),
-                              SizedBox(
+                              ).tr(),
+                              const SizedBox(
                                 height: 10,
                               ),
                             ],
@@ -173,33 +174,36 @@ class StepCombineFormula extends StatelessWidget {
                     children: [
                       selectedFormulaItems.isNotEmpty
                           ? FittedBox(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: _getBoardItems(palette),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: _getBoardItems(palette),
+                                ),
                               ),
                             )
                           : Column(
-                              children: const [
-                                SizedBox(
+                              children: [
+                                const SizedBox(
                                   height: 5,
                                 ),
-                                Text(
-                                  '請點擊下方的符號或數字組合算式',
+                                const Text(
+                                  'please_click_symbol_or_number',
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.grey,
                                   ),
-                                ),
-                                SizedBox(
+                                ).tr(),
+                                const SizedBox(
                                   height: 5,
                                 ),
-                                Text(
-                                  '(先選符號)',
+                                const Text(
+                                  'select_symbol_first',
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey,
                                   ),
-                                ),
+                                ).tr(),
                               ],
                             )
                     ],

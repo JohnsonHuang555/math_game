@@ -9,10 +9,6 @@ import '../../helpers/current_playing_data.dart';
 /// Implementations can range from simple in-memory storage through
 /// local preferences to cloud saves.
 abstract class PlayerProgressPersistence {
-  Future<int> getHighestLevelReached();
-
-  Future<void> saveHighestLevelReached(int level);
-
   Future<String> getUserId();
 
   Future<void> setUserId(String id);

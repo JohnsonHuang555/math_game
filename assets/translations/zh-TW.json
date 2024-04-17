@@ -47,5 +47,10 @@
   "one_hundred_thousand": "巔峰造極",
   "one_hundred_thousand_desc": "積分達100000",
   "your_score": "你的分數",
+  "magnifier": "放大鏡",
+  "elimination": "刪去法",
+  "reset": "重新開始一局",
+  "symbol_controller": "符號重置器",
+  "number_controller": "數字重置器",
   "loading": "載入中..."
 }

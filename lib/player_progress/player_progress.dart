@@ -12,6 +12,7 @@ import '../helpers/math_symbol.dart';
 import 'persistence/local_storage_player_progress_persistence.dart';
 import 'persistence/player_progress_persistence.dart';
 
+/// 成就
 class Achievement {
   String id;
   String title;
@@ -19,6 +20,21 @@ class Achievement {
   bool isAchieve = false;
   String imageUrl;
   Achievement({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.imageUrl,
+  });
+}
+
+/// 道具
+class Item {
+  String id;
+  String title;
+  String description;
+  int count = 0;
+  String imageUrl;
+  Item({
     required this.id,
     required this.title,
     required this.description,
@@ -34,8 +50,6 @@ class PlayerProgress extends ChangeNotifier {
   /// [LocalStoragePlayerProgressPersistence] (i.e. NSUserDefaults on iOS,
   /// SharedPreferences on Android or local storage on the web).
   final PlayerProgressPersistence _store;
-
-  int _highestLevelReached = 0;
 
   String _userId = '';
   String _playerName = '';
@@ -105,6 +119,39 @@ class PlayerProgress extends ChangeNotifier {
     ),
   ];
 
+  final Map<String, Item> _items = {
+    'magnifier': Item(
+      id: 'magnifier',
+      title: 'magnifier'.tr(),
+      description: '',
+      imageUrl: '',
+    ),
+    'elimination': Item(
+      id: 'elimination',
+      title: 'elimination'.tr(),
+      description: '',
+      imageUrl: '',
+    ),
+    'reset': Item(
+      id: 'reset',
+      title: 'reset'.tr(),
+      description: '',
+      imageUrl: '',
+    ),
+    'symbol_controller': Item(
+      id: 'symbol_controller',
+      title: 'symbol_controller'.tr(),
+      description: '',
+      imageUrl: '',
+    ),
+    'number_controller': Item(
+      id: 'number_controller',
+      title: 'number_controller'.tr(),
+      description: '',
+      imageUrl: '',
+    ),
+  };
+
   bool _showIntroduceScreen = false;
   CurrentPlayingData? _currentPlayingData;
 
@@ -113,6 +160,7 @@ class PlayerProgress extends ChangeNotifier {
   String get yourScore => _yourScore;
   int get yourRank => _yourRank;
   List<Achievement> get achievements => _achievements;
+  Map<String, Item> get items => _items;
 
   bool get showIntroduceScreenModal => _showIntroduceScreen;
   CurrentPlayingData? get currentPlayingData => _currentPlayingData;
@@ -124,30 +172,6 @@ class PlayerProgress extends ChangeNotifier {
   PlayerProgress({PlayerProgressPersistence? store})
       : _store = store ?? LocalStoragePlayerProgressPersistence() {
     _getLatestFromStore();
-  }
-
-  /// The highest level that the player has reached so far.
-  int get highestLevelReached => _highestLevelReached;
-
-  /// Resets the player's progress so it's like if they just started
-  /// playing the game for the first time.
-  void reset() {
-    _highestLevelReached = 0;
-    notifyListeners();
-    _store.saveHighestLevelReached(_highestLevelReached);
-  }
-
-  /// Registers [level] as reached.
-  ///
-  /// If this is higher than [highestLevelReached], it will update that
-  /// value and save it to the injected persistence store.
-  void setLevelReached(int level) {
-    if (level > _highestLevelReached) {
-      _highestLevelReached = level;
-      notifyListeners();
-
-      unawaited(_store.saveHighestLevelReached(level));
-    }
   }
 
   /// Fetches the latest data from the backing persistence store.
@@ -168,6 +192,7 @@ class PlayerProgress extends ChangeNotifier {
         _yourScore = data['score'].toString();
 
         _getAchievement(userIdFromDB);
+        _getItems(userIdFromDB);
         _userId = userIdFromDB;
         // 更新 rank
         _yourRank = await _getUserRank();
@@ -178,11 +203,24 @@ class PlayerProgress extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// 查詢前十名玩家
+  Future<List<DocumentSnapshot>> getTopTenPlayers() async {
+    final querySnapshot = await db
+        .collection('players')
+        .orderBy('score', descending: true)
+        .limit(20)
+        .get();
+
+    return querySnapshot.docs;
+  }
+
   Future<bool> createNewPlayer(String name) async {
     const initScore = 100;
     final player = <String, dynamic>{
       'name': name,
       'score': initScore,
+      'achievements': [],
+      'items': [0, 0, 0, 0, 0],
       'created_date': Timestamp.now(),
     };
 
@@ -292,7 +330,7 @@ class PlayerProgress extends ChangeNotifier {
     final playersRef = db.collection('players');
     final selfUserDoc = await playersRef.doc(id).get();
     final selfUser = selfUserDoc.data();
-    List<dynamic> tempAchievements = selfUser!['achievements'] as List<dynamic>;
+    List<dynamic> tempAchievements = selfUser!['achievements'] as List<String>;
 
     _achievements = _achievements.map(
       (item) {
@@ -304,6 +342,32 @@ class PlayerProgress extends ChangeNotifier {
         return item;
       },
     ).toList();
+  }
+
+  Future<void> _getItems(String id) async {
+    final playersRef = db.collection('players');
+    final selfUserDoc = await playersRef.doc(id).get();
+    final selfUser = selfUserDoc.data();
+    _items.update('magnifier', (value) {
+      value.count = selfUser!['items'][0] as int;
+      return value;
+    });
+    _items.update('elimination', (value) {
+      value.count = selfUser!['items'][1] as int;
+      return value;
+    });
+    _items.update('reset', (value) {
+      value.count = selfUser!['items'][2] as int;
+      return value;
+    });
+    _items.update('symbol_controller', (value) {
+      value.count = selfUser!['items'][3] as int;
+      return value;
+    });
+    _items.update('number_controller', (value) {
+      value.count = selfUser!['items'][4] as int;
+      return value;
+    });
   }
 
   /// 從 firebase 取得自己名次
@@ -348,16 +412,5 @@ class PlayerProgress extends ChangeNotifier {
 
   void removeCurrentPlayingData() {
     _store.removeCurrentPlayingData();
-  }
-
-  /// 查詢前十名玩家
-  Future<List<DocumentSnapshot>> getTopTenPlayers() async {
-    final querySnapshot = await db
-        .collection('players')
-        .orderBy('score', descending: true)
-        .limit(20)
-        .get();
-
-    return querySnapshot.docs;
   }
 }

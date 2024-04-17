@@ -40,7 +40,7 @@ class StepSelectSymbol extends StatelessWidget {
     }).toList();
     return Column(
       children: [
-        Text(
+        const Text(
           'choose_three_items',
           style: TextStyle(
             fontSize: 18,

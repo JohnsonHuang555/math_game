@@ -27,7 +27,7 @@ class Header extends StatelessWidget {
           child: Center(
             child: Text(
               title ?? '',
-              style: TextStyle(fontSize: 22),
+              style: TextStyle(fontSize: 24),
             ),
           ),
         ),

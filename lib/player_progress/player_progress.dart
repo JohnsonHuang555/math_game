@@ -27,21 +27,6 @@ class Achievement {
   });
 }
 
-/// 道具
-class Item {
-  String id;
-  String title;
-  String description;
-  int count = 0;
-  String imageUrl;
-  Item({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.imageUrl,
-  });
-}
-
 /// Encapsulates the player's progress.
 class PlayerProgress extends ChangeNotifier {
   static const maxHighestScoresPerPlayer = 10;
@@ -91,7 +76,7 @@ class PlayerProgress extends ChangeNotifier {
       id: 'navigate_number',
       title: 'navigate_number'.tr(),
       description: 'navigate_number_desc'.tr(),
-      imageUrl: 'assets/icons/sign-plus-minus.svg',
+      imageUrl: 'assets/icons/plus-slash-minus.svg',
     ),
     Achievement(
       id: 'three_same',
@@ -119,39 +104,6 @@ class PlayerProgress extends ChangeNotifier {
     ),
   ];
 
-  final Map<String, Item> _items = {
-    'magnifier': Item(
-      id: 'magnifier',
-      title: 'magnifier'.tr(),
-      description: '',
-      imageUrl: '',
-    ),
-    'elimination': Item(
-      id: 'elimination',
-      title: 'elimination'.tr(),
-      description: '',
-      imageUrl: '',
-    ),
-    'reset': Item(
-      id: 'reset',
-      title: 'reset'.tr(),
-      description: '',
-      imageUrl: '',
-    ),
-    'symbol_controller': Item(
-      id: 'symbol_controller',
-      title: 'symbol_controller'.tr(),
-      description: '',
-      imageUrl: '',
-    ),
-    'number_controller': Item(
-      id: 'number_controller',
-      title: 'number_controller'.tr(),
-      description: '',
-      imageUrl: '',
-    ),
-  };
-
   bool _showIntroduceScreen = false;
   CurrentPlayingData? _currentPlayingData;
 
@@ -160,7 +112,6 @@ class PlayerProgress extends ChangeNotifier {
   String get yourScore => _yourScore;
   int get yourRank => _yourRank;
   List<Achievement> get achievements => _achievements;
-  Map<String, Item> get items => _items;
 
   bool get showIntroduceScreenModal => _showIntroduceScreen;
   CurrentPlayingData? get currentPlayingData => _currentPlayingData;
@@ -192,7 +143,6 @@ class PlayerProgress extends ChangeNotifier {
         _yourScore = data['score'].toString();
 
         _getAchievement(userIdFromDB);
-        _getItems(userIdFromDB);
         _userId = userIdFromDB;
         // 更新 rank
         _yourRank = await _getUserRank();
@@ -330,7 +280,7 @@ class PlayerProgress extends ChangeNotifier {
     final playersRef = db.collection('players');
     final selfUserDoc = await playersRef.doc(id).get();
     final selfUser = selfUserDoc.data();
-    List<dynamic> tempAchievements = selfUser!['achievements'] as List<String>;
+    List<dynamic> tempAchievements = selfUser!['achievements'] as List<dynamic>;
 
     _achievements = _achievements.map(
       (item) {
@@ -342,32 +292,6 @@ class PlayerProgress extends ChangeNotifier {
         return item;
       },
     ).toList();
-  }
-
-  Future<void> _getItems(String id) async {
-    final playersRef = db.collection('players');
-    final selfUserDoc = await playersRef.doc(id).get();
-    final selfUser = selfUserDoc.data();
-    _items.update('magnifier', (value) {
-      value.count = selfUser!['items'][0] as int;
-      return value;
-    });
-    _items.update('elimination', (value) {
-      value.count = selfUser!['items'][1] as int;
-      return value;
-    });
-    _items.update('reset', (value) {
-      value.count = selfUser!['items'][2] as int;
-      return value;
-    });
-    _items.update('symbol_controller', (value) {
-      value.count = selfUser!['items'][3] as int;
-      return value;
-    });
-    _items.update('number_controller', (value) {
-      value.count = selfUser!['items'][4] as int;
-      return value;
-    });
   }
 
   /// 從 firebase 取得自己名次

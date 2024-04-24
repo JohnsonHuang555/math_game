@@ -22,8 +22,7 @@ final router = GoRouter(
       routes: [
         GoRoute(
           path: 'play',
-          builder: (context, state) =>
-              const PlaySessionScreen(key: Key('play')),
+          builder: (context, state) => const PlaySessionScreen(key: Key('play')),
         ),
         GoRoute(
           path: 'leaderboard',

@@ -47,7 +47,7 @@ class StepSelectNumber extends StatelessWidget {
             fontSize: 18,
           ),
         ).tr(),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         GameBoard(
           items: items,
           onSelect: (index) {
@@ -56,7 +56,7 @@ class StepSelectNumber extends StatelessWidget {
           showSelectResult: showSelectResult,
           selectedItems: selectedNumbers,
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 30),
         ContentHint(
           containHintItems: containHintNumberItems,
         ),

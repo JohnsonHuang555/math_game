@@ -46,7 +46,7 @@ class StepSelectSymbol extends StatelessWidget {
             fontSize: 18,
           ),
         ).tr(),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         GameBoard(
           items: items,
           onSelect: (index) {
@@ -55,7 +55,7 @@ class StepSelectSymbol extends StatelessWidget {
           showSelectResult: showSelectResult,
           selectedItems: selectedSymbols,
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 30),
         ContentHint(
           containHintItems: containHintSymbolItems,
         ),

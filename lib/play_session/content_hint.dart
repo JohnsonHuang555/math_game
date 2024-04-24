@@ -82,12 +82,12 @@ class ContentHint extends StatelessWidget {
           child: const Text(
             'question_includes_content',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 18,
             ),
           ).tr(),
         ),
         const SizedBox(
-          height: 15,
+          height: 20,
         ),
         Padding(
           padding: EdgeInsets.only(left: padding, right: padding),

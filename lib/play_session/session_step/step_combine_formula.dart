@@ -238,7 +238,7 @@ class StepCombineFormula extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 40),
+        const SizedBox(height: 60),
         Padding(
           padding: EdgeInsets.only(
             left: 60,

@@ -18,7 +18,6 @@ import '../components/basic_button.dart';
 import '../components/header.dart';
 import '../game_internals/game_state.dart';
 import '../player_progress/player_progress.dart';
-import '../play_session/item_list.dart';
 import '../play_session/session_step/step_combine_formula.dart';
 import '../play_session/session_step/step_select_number.dart';
 import '../play_session/session_step/step_select_symbol.dart';
@@ -478,14 +477,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                     ),
                     title: _getStep(state.step).toString(),
                   ),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 60),
                   _getGameStep(state),
-                  const Spacer(),
-                  Container(
-                    margin: EdgeInsets.only(left: 80, right: 80),
-                    child: ItemList(),
-                  ),
-                  const SizedBox(height: 10),
                 ],
               ),
               rectangularMenuArea: _getBottomAction(context, state, palette),

@@ -182,29 +182,32 @@ class StepCombineFormula extends StatelessWidget {
                                 ),
                               ),
                             )
-                          : Column(
-                              children: [
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                const Text(
-                                  'please_click_symbol_or_number',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey,
+                          : FittedBox(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const SizedBox(
+                                    height: 5,
                                   ),
-                                ).tr(),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                const Text(
-                                  'select_symbol_first',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
+                                  const Text(
+                                    'please_click_symbol_or_number',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey,
+                                    ),
+                                  ).tr(),
+                                  const SizedBox(
+                                    height: 5,
                                   ),
-                                ).tr(),
-                              ],
+                                  const Text(
+                                    'select_symbol_first',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
+                                  ).tr(),
+                                ],
+                              ),
                             )
                     ],
                   ),

@@ -451,39 +451,42 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
           create: (context) => GameState(playerProgress.currentPlayingData),
         ),
       ],
-      child: Scaffold(
-        backgroundColor: palette.backgroundMain,
-        body: Consumer<GameState>(
-          builder: ((context, state, child) {
-            tempContext = context;
+      child: PopScope(
+        canPop: false,
+        child: Scaffold(
+          backgroundColor: palette.backgroundMain,
+          body: Consumer<GameState>(
+            builder: ((context, state, child) {
+              tempContext = context;
 
-            return ResponsiveScreen(
-              squarishMainArea: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Header(
-                    leftChild: GestureDetector(
-                      onTap: () {
-                        GoRouter.of(context).push('/settings');
-                      },
-                      child: Icon(
-                        Icons.settings,
-                        size: 32,
+              return ResponsiveScreen(
+                squarishMainArea: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Header(
+                      leftChild: GestureDetector(
+                        onTap: () {
+                          GoRouter.of(context).push('/settings');
+                        },
+                        child: Icon(
+                          Icons.settings,
+                          size: 32,
+                        ),
                       ),
+                      rightChild: Icon(
+                        Icons.help_outline,
+                        size: 34,
+                      ),
+                      title: _getStep(state.step).toString(),
                     ),
-                    rightChild: Icon(
-                      Icons.help_outline,
-                      size: 34,
-                    ),
-                    title: _getStep(state.step).toString(),
-                  ),
-                  const SizedBox(height: 60),
-                  _getGameStep(state),
-                ],
-              ),
-              rectangularMenuArea: _getBottomAction(context, state, palette),
-            );
-          }),
+                    const SizedBox(height: 60),
+                    _getGameStep(state),
+                  ],
+                ),
+                rectangularMenuArea: _getBottomAction(context, state, palette),
+              );
+            }),
+          ),
         ),
       ),
     );

@@ -81,7 +81,8 @@ class LeaderboardScreen extends StatelessWidget {
                 Expanded(
                   child: AnimationLimiter(
                     child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: BouncingScrollPhysics(),
+                      shrinkWrap: true,
                       padding: EdgeInsets.zero,
                       itemCount: topTenUsers.length,
                       itemBuilder: (context, index) {
@@ -124,6 +125,11 @@ class LeaderboardScreen extends StatelessWidget {
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 12),
                                 decoration: BoxDecoration(
+                                  border: Border.all(
+                                      width: highlight ? 3 : 1,
+                                      color: highlight
+                                          ? palette.selectedItem
+                                          : palette.ink),
                                   borderRadius: BorderRadius.circular(6),
                                   gradient: LinearGradient(
                                     begin: Alignment.topLeft,

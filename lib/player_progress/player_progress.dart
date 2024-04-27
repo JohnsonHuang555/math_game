@@ -5,7 +5,6 @@
 import 'dart:async';
 
 import 'package:basic/helpers/current_playing_data.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../helpers/math_symbol.dart';
@@ -44,62 +43,62 @@ class PlayerProgress extends ChangeNotifier {
   List<Achievement> _achievements = [
     Achievement(
       id: 'first_play',
-      title: 'first_play'.tr(),
-      description: 'first_play_desc'.tr(),
+      title: 'first_play',
+      description: 'first_play_desc',
       imageUrl: 'assets/icons/game-controller.svg',
     ),
     Achievement(
       id: 'champion',
-      title: 'champion'.tr(),
-      description: 'champion_desc'.tr(),
+      title: 'champion',
+      description: 'champion_desc',
       imageUrl: 'assets/icons/medal-reward-1.svg',
     ),
     Achievement(
       id: 'runner_up',
-      title: 'runner_up'.tr(),
-      description: 'runner_up_desc'.tr(),
+      title: 'runner_up',
+      description: 'runner_up_desc',
       imageUrl: 'assets/icons/medal-reward-2.svg',
     ),
     Achievement(
       id: 'second_runner_up',
-      title: 'second_runner_up'.tr(),
-      description: 'second_runner_up_desc'.tr(),
+      title: 'second_runner_up',
+      description: 'second_runner_up_desc',
       imageUrl: 'assets/icons/medal-reward-3.svg',
     ),
     Achievement(
       id: 'restart',
-      title: 'restart'.tr(),
-      description: 'restart_desc'.tr(),
+      title: 'restart',
+      description: 'restart_desc',
       imageUrl: 'assets/icons/rocket.svg',
     ),
     Achievement(
       id: 'navigate_number',
-      title: 'navigate_number'.tr(),
-      description: 'navigate_number_desc'.tr(),
+      title: 'navigate_number',
+      description: 'navigate_number_desc',
       imageUrl: 'assets/icons/plus-slash-minus.svg',
     ),
     Achievement(
       id: 'three_same',
-      title: 'three_same'.tr(),
-      description: 'three_same_desc'.tr(),
+      title: 'three_same',
+      description: 'three_same_desc',
       imageUrl: 'assets/icons/playing-cards.svg',
     ),
     Achievement(
       id: '1000',
-      title: 'thousand'.tr(),
-      description: 'thousand_desc'.tr(),
+      title: 'thousand',
+      description: 'thousand_desc',
       imageUrl: 'assets/icons/award-prize.svg',
     ),
     Achievement(
       id: '10000',
-      title: 'ten_thousand'.tr(),
-      description: 'ten_thousand_desc'.tr(),
+      title: 'ten_thousand',
+      description: 'ten_thousand_desc',
       imageUrl: 'assets/icons/award-prize.svg',
     ),
     Achievement(
       id: '100000',
-      title: 'one_hundred_thousand'.tr(),
-      description: 'one_hundred_thousand_desc'.tr(),
+      title: 'one_hundred_thousand',
+      description: 'one_hundred_thousand_desc',
       imageUrl: 'assets/icons/award-prize.svg',
     ),
   ];
@@ -170,12 +169,17 @@ class PlayerProgress extends ChangeNotifier {
       'name': name,
       'score': initScore,
       'achievements': [],
-      'items': [0, 0, 0, 0, 0],
       'created_date': Timestamp.now(),
     };
 
     try {
-      final doc = await db.collection('players').add(player);
+      final playersRef = db.collection('players');
+      final existPlayer = await playersRef.where('name', isEqualTo: name).get();
+      if (existPlayer.docs.isNotEmpty) {
+        return false;
+      }
+
+      final doc = await playersRef.add(player);
       await _store.setUserId(doc.id);
       _userId = doc.id;
       _yourScore = initScore.toString();
@@ -183,11 +187,10 @@ class PlayerProgress extends ChangeNotifier {
       _yourRank = await _getUserRank();
 
       _showIntroduceScreen = false;
+      notifyListeners();
       return true;
     } catch (e) {
       return false;
-    } finally {
-      notifyListeners();
     }
   }
 

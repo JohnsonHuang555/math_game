@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +18,7 @@ class IntroduceScreen extends StatefulWidget {
 
 class _IntroduceScreenState extends State<IntroduceScreen> {
   String playerName = '';
+  bool validate = false;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +29,8 @@ class _IntroduceScreenState extends State<IntroduceScreen> {
         squarishMainArea: IntroductionScreen(
           pages: [
             PageViewModel(
-              title: 'Welcome to 算式拼圖',
-              body: '遊戲分為三個階段，符號、數字、組合，運用所選的符號與數字組合成合理的算式，得出最高積分與全世界的玩家一較高下！',
+              title: 'introduce_page_1_title'.tr(),
+              body: 'introduce_page_1_desc'.tr(),
               image: Center(
                 child: Lottie.asset(
                   'assets/animations/introduce.json',
@@ -36,8 +39,8 @@ class _IntroduceScreenState extends State<IntroduceScreen> {
               ),
             ),
             PageViewModel(
-              title: '選符號',
-              body: '每個格子會隨機產生加減乘除其中一種符號，請在九個格子中選取三個，並進入下一個階段',
+              title: 'introduce_page_2_title'.tr(),
+              body: 'introduce_page_2_desc'.tr(),
               image: Center(
                 child: SvgPicture.asset(
                   'assets/icons/select-symbol.svg',
@@ -46,8 +49,8 @@ class _IntroduceScreenState extends State<IntroduceScreen> {
               ),
             ),
             PageViewModel(
-              title: '選數字',
-              body: '每個格子會隨機產生 -9~9 其中一個數字，請在九個格子中選取三個，並進入下一個階段',
+              title: 'introduce_page_3_title'.tr(),
+              body: 'introduce_page_3_desc'.tr(),
               image: Center(
                 child: SvgPicture.asset(
                   'assets/icons/select-number.svg',
@@ -56,8 +59,8 @@ class _IntroduceScreenState extends State<IntroduceScreen> {
               ),
             ),
             PageViewModel(
-              title: '組合算式',
-              body: '運用前兩個階段抽的符號與數字組合出合理的算式，得到的結果會更新到積分上，會影響排名及成就',
+              title: 'introduce_page_4_title'.tr(),
+              body: 'introduce_page_4_desc'.tr(),
               image: Center(
                 child: SvgPicture.asset(
                   'assets/icons/combine-formula.svg',
@@ -66,37 +69,29 @@ class _IntroduceScreenState extends State<IntroduceScreen> {
               ),
             ),
             PageViewModel(
-              title: '開始遊戲',
+              title: 'introduce_page_5_title'.tr(),
               bodyWidget: Column(
                 children: [
-                  SizedBox(height: 20,),
-                  Text(
-                    '遊戲暱稱',
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
+                  SizedBox(
+                    height: 10,
                   ),
-                  SizedBox(height: 10,),
                   SizedBox(
                     width: 200,
                     child: TextField(
                       maxLength: 8,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: '請輸入遊戲暱稱',
-                      ),
+                          errorText:
+                              validate ? 'name_already_exist'.tr() : null,
+                          border: OutlineInputBorder(),
+                          hintText: 'introduce_page_5_hint_text'.tr(),
+                          labelText: 'introduce_page_5_label_text'.tr(),
+                          helperText: 'introduce_page_5_helper_text'.tr()),
                       onChanged: (value) {
                         setState(() {
                           playerName = value;
+                          validate = false;
                         });
                       },
-                    ),
-                  ),
-                  SizedBox(height: 10,),
-                  Text(
-                    '暱稱輸入後不能更改',
-                    style: TextStyle(
-                      fontSize: 14,
                     ),
                   ),
                 ],
@@ -109,14 +104,20 @@ class _IntroduceScreenState extends State<IntroduceScreen> {
               ),
             ),
           ],
-          // showBackButton: true,
           showNextButton: false,
           done: const Text('Let\'s GO'),
           onDone: () async {
+            if (playerName == '') {
+              return;
+            }
+
             final isSuccess = await playerProgress.createNewPlayer(playerName);
             if (isSuccess && context.mounted) {
-              print('succccc');
-              Navigator.of(context).pop();
+              GoRouter.of(context).pushReplacement('/');
+            } else {
+              setState(() {
+                validate = true;
+              });
             }
           },
         ),

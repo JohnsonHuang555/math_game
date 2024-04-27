@@ -116,7 +116,7 @@ class AchievementsScreen extends StatelessWidget {
                                                     : const Color.fromARGB(
                                                         255, 190, 190, 190),
                                               ),
-                                            ),
+                                            ).tr(),
                                           ),
                                           const SizedBox(
                                             height: 3,
@@ -134,7 +134,7 @@ class AchievementsScreen extends StatelessWidget {
                                                     : const Color.fromARGB(
                                                         255, 190, 190, 190),
                                               ),
-                                            ),
+                                            ).tr(),
                                           ),
                                         ],
                                       ),

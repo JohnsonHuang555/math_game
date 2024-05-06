@@ -191,6 +191,7 @@ class StepCombineFormula extends StatelessWidget {
                                   ),
                                   const Text(
                                     'please_click_symbol_or_number',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Colors.grey,
@@ -241,7 +242,12 @@ class StepCombineFormula extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 60),
+        const SizedBox(height: 20),
+        Text(
+          'step_three_hint',
+          textAlign: TextAlign.center,
+        ).tr(),
+        const SizedBox(height: 20),
         Padding(
           padding: EdgeInsets.only(
             left: 60,

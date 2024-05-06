@@ -29,7 +29,7 @@ class MainMenuScreen extends StatelessWidget {
 
     if (playerProgress.currentPlayingData != null) {
       Future.delayed(Duration.zero).then((_) {
-        GoRouter.of(context).push('/play');
+        GoRouter.of(context).pushReplacement('/play');
       });
     }
 
@@ -38,9 +38,9 @@ class MainMenuScreen extends StatelessWidget {
       body: ResponsiveScreen(
         squarishMainArea: Column(
           children: [
-            const SizedBox(height: 80),
+            const SizedBox(height: 100),
             SizedBox(
-              width: 200,
+              height: 130,
               child: Image.asset(
                 'assets/images/logo.png',
               ),
@@ -71,7 +71,7 @@ class MainMenuScreen extends StatelessWidget {
                 ),
                 Text(
                   getOrdinalSuffix(playerProgress.yourRank),
-                  style: TextStyle(fontSize: 24),
+                  style: TextStyle(fontSize: 28),
                 ),
               ],
             ),

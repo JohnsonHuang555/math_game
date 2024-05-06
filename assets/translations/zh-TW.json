@@ -18,6 +18,7 @@
   "current_score": "當前積分",
   "please_click_symbol_or_number": "請點擊下方的符號或數字組合算式",
   "select_symbol_first": "(先選符號)",
+  "step_three_hint": "完成後積分會更新至排行榜上",
   "choose_three_items": "選三個",
   "question_includes_content": "問號中可能包含以下內容",
   "settings": "設定",
@@ -60,5 +61,7 @@
   "introduce_page_5_hint_text": "請輸入遊戲暱稱",
   "introduce_page_5_label_text": "遊戲暱稱",
   "introduce_page_5_helper_text": "暱稱決定後不能更改",
+  "modal_restart_title": "重開一局",
+  "modal_restart_desc": "觀看廣告即可重開一局，你確定要重開嗎？",
   "loading": "載入中..."
 }

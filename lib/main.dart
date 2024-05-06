@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:developer' as dev;
 
 import 'package:firebase_core/firebase_core.dart';
@@ -9,6 +10,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -39,6 +41,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // 載入語系包
   await EasyLocalization.ensureInitialized();
+
+  unawaited(MobileAds.instance.initialize());
 
   // Put game into full screen mode on mobile devices.
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
@@ -120,15 +124,6 @@ class MyApp extends StatelessWidget {
               ),
               useMaterial3: true,
             ).copyWith(
-              // Make buttons more fun.
-              // filledButtonTheme: FilledButtonThemeData(
-              //   style: FilledButton.styleFrom(
-              //     textStyle: TextStyle(
-              //       fontWeight: FontWeight.bold,
-              //       fontSize: 20,
-              //     ),
-              //   ),
-              // ),
               highlightColor: Colors.transparent,
             ),
             routeInformationProvider: router.routeInformationProvider,

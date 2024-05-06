@@ -2,11 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:basic/helpers/ad_helper.dart';
 import 'package:basic/helpers/math_symbol.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lottie/lottie.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 import 'package:flutter/material.dart';
@@ -40,17 +42,22 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
     with WidgetsBindingObserver {
   static final _log = Logger('PlaySessionScreen');
 
+  /// The banner ad to show. This is `null` until the ad is actually loaded.
+  BannerAd? _bannerAd;
+
   late BuildContext tempContext;
 
   @override
   void initState() {
     super.initState();
+    _loadAd();
     WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _bannerAd?.dispose();
     super.dispose();
   }
 
@@ -252,9 +259,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                     titleStyle: TextStyle(
                       fontSize: 22,
                     ),
-                    msgAlign: TextAlign.end,
                     context: context,
-                    barrierDismissible: false,
                     actions: [
                       BasicButton(
                         padding: 6.0,
@@ -274,7 +279,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                         padding: 6.0,
                         onPressed: () async {
                           if (!context.mounted) return;
-                          Navigator.of(context).pop();
+                          // Navigator.of(context).pop();
 
                           final result = await playerProgress.saveNewScore(
                             newScore: newScore,
@@ -288,6 +293,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                           if (!context.mounted) return;
                           // 清除 local storage
                           playerProgress.removeCurrentPlayingData();
+                          print('??????');
                           Dialogs.materialDialog(
                             customView: Column(
                               children: [
@@ -353,7 +359,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                                               color: palette.ink,
                                             ),
                                             onPressed: () {
-                                              Navigator.of(context).pop();
+                                              // Navigator.of(context).pop();
                                               GoRouter.of(context)
                                                   .pushReplacement('/');
                                             },
@@ -383,7 +389,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                                               color: palette.ink,
                                             ),
                                             onPressed: () {
-                                              Navigator.of(context).pop();
+                                              // Navigator.of(context).pop();
                                               GoRouter.of(context)
                                                   .pushReplacement('/play');
                                             },
@@ -440,6 +446,35 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
     }
   }
 
+  /// Loads a banner ad.
+  void _loadAd() {
+    final bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: AdHelper.bannerAdUnitId,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        // Called when an ad is successfully received.
+        onAdLoaded: (ad) {
+          if (!mounted) {
+            ad.dispose();
+            return;
+          }
+          setState(() {
+            _bannerAd = ad as BannerAd;
+          });
+        },
+        // Called when an ad request failed.
+        onAdFailedToLoad: (ad, error) {
+          debugPrint('BannerAd failed to load: $error');
+          ad.dispose();
+        },
+      ),
+    );
+
+    // Start loading.
+    bannerAd.load();
+  }
+
   @override
   Widget build(BuildContext context) {
     final palette = context.read<Palette>();
@@ -468,18 +503,74 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                         onTap: () {
                           GoRouter.of(context).push('/settings');
                         },
-                        child: Icon(
+                        child: const Icon(
                           Icons.settings,
                           size: 32,
                         ),
                       ),
-                      rightChild: Icon(
-                        Icons.help_outline,
-                        size: 34,
+                      rightChild: GestureDetector(
+                        onTap: () {
+                          Dialogs.materialDialog(
+                            title: 'modal_restart_title'.tr(),
+                            titleStyle: TextStyle(
+                              fontSize: 22,
+                            ),
+                            msg: 'modal_restart_desc'.tr(),
+                            msgStyle: TextStyle(
+                              fontSize: 18,
+                            ),
+                            msgAlign: TextAlign.center,
+                            context: context,
+                            actions: [
+                              BasicButton(
+                                padding: 6.0,
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  'cancel',
+                                  style: TextStyle(
+                                    color: palette.ink,
+                                    fontSize: 16,
+                                  ),
+                                ).tr(),
+                              ),
+                              BasicButton(
+                                padding: 6.0,
+                                bgColor: Colors.blueGrey,
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  'confirm',
+                                  style: TextStyle(
+                                    color: palette.trueWhite,
+                                    fontSize: 16,
+                                  ),
+                                ).tr(),
+                              ),
+                            ],
+                          );
+                        },
+                        child: const Icon(
+                          Icons.replay,
+                          size: 34,
+                        ),
                       ),
                       title: _getStep(state.step).toString(),
                     ),
-                    const SizedBox(height: 60),
+                    const SizedBox(height: 20),
+                    _bannerAd == null
+                        // Nothing to render yet.
+                        ? SizedBox.shrink()
+                        // The actual ad.
+                        : Container(
+                            alignment: Alignment.center,
+                            width: _bannerAd!.size.width.toDouble(),
+                            height: _bannerAd!.size.height.toDouble(),
+                            child: AdWidget(ad: _bannerAd!),
+                          ),
+                    const SizedBox(height: 30),
                     _getGameStep(state),
                   ],
                 ),
@@ -491,34 +582,4 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
       ),
     );
   }
-
-  // Future<void> _playerWon() async {
-  //   _log.info('Level ${widget.level.number} won');
-
-  //   final score = Score(
-  //     widget.level.number,
-  //     widget.level.difficulty,
-  //     DateTime.now().difference(_startOfPlay),
-  //   );
-
-  //   final playerProgress = context.read<PlayerProgress>();
-  //   playerProgress.setLevelReached(widget.level.number);
-
-  //   // Let the player see the game just after winning for a bit.
-  //   await Future<void>.delayed(_preCelebrationDuration);
-  //   if (!mounted) return;
-
-  //   setState(() {
-  //     _duringCelebration = true;
-  //   });
-
-  //   final audioController = context.read<AudioController>();
-  //   audioController.playSfx(SfxType.congrats);
-
-  //   /// Give the player some time to see the celebration animation.
-  //   await Future<void>.delayed(_celebrationDuration);
-  //   if (!mounted) return;
-
-  //   GoRouter.of(context).go('/play/won', extra: {'score': score});
-  // }
 }

@@ -326,7 +326,7 @@ class PlayerProgress extends ChangeNotifier {
     required List<int> boxNumbers,
     required List<SelectedItem> selectedSymbols,
     required List<SelectedItem> selectedNumbers,
-  }) async {
+  }) {
     // 中離遊戲暫存
     _store.saveCurrentPlayingData(CurrentPlayingData(
       step: step,
@@ -337,7 +337,9 @@ class PlayerProgress extends ChangeNotifier {
     ));
   }
 
-  void removeCurrentPlayingData() {
-    _store.removeCurrentPlayingData();
+  Future<void> removeCurrentPlayingData() async {
+    await _store.removeCurrentPlayingData();
+    _currentPlayingData = null;
+    notifyListeners();
   }
 }

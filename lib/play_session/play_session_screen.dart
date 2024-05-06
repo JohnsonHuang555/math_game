@@ -45,7 +45,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
   /// The banner ad to show. This is `null` until the ad is actually loaded.
   BannerAd? _bannerAd;
 
-  late BuildContext tempContext;
+  late BuildContext newContext;
 
   @override
   void initState() {
@@ -65,8 +65,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.inactive) {
-      final playerProgress = context.read<PlayerProgress>();
-      final gameState = tempContext.read<GameState>();
+      final playerProgress = newContext.read<PlayerProgress>();
+      final gameState = newContext.read<GameState>();
       playerProgress.saveCurrentPlayingData(
         step: gameState.step,
         boxSymbols: gameState.boxSymbols,
@@ -109,7 +109,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
 
   // 底部按鈕
   Widget _getBottomAction(
-      BuildContext context, GameState state, Palette palette) {
+    BuildContext context,
+    GameState state,
+    Palette palette,
+  ) {
     switch (state.step) {
       case 1:
         return BasicButton(
@@ -278,8 +281,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                         bgColor: Colors.blueGrey,
                         padding: 6.0,
                         onPressed: () async {
-                          if (!context.mounted) return;
-                          // Navigator.of(context).pop();
+                          Navigator.of(context).pop();
 
                           final result = await playerProgress.saveNewScore(
                             newScore: newScore,
@@ -290,10 +292,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                             throw Exception('setNewScore error');
                           }
 
-                          if (!context.mounted) return;
                           // 清除 local storage
-                          playerProgress.removeCurrentPlayingData();
-                          print('??????');
+                          await playerProgress.removeCurrentPlayingData();
+                          if (!context.mounted) return;
+
                           Dialogs.materialDialog(
                             customView: Column(
                               children: [
@@ -492,7 +494,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
           backgroundColor: palette.backgroundMain,
           body: Consumer<GameState>(
             builder: ((context, state, child) {
-              tempContext = context;
+              newContext = context;
 
               return ResponsiveScreen(
                 squarishMainArea: Column(
@@ -574,7 +576,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                     _getGameStep(state),
                   ],
                 ),
-                rectangularMenuArea: _getBottomAction(context, state, palette),
+                rectangularMenuArea: _getBottomAction(
+                  context,
+                  state,
+                  palette,
+                ),
               );
             }),
           ),

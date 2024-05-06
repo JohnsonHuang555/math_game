@@ -53,7 +53,7 @@ class LeaderboardPlayer extends StatelessWidget {
             score,
             style: TextStyle(
               fontWeight: FontWeight.w600,
-              fontSize: 22,
+              fontSize: 20,
               color: highlight ? palette.selectedItem : null,
             ),
           ),

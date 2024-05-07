@@ -44,13 +44,15 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
 
   /// The banner ad to show. This is `null` until the ad is actually loaded.
   BannerAd? _bannerAd;
+  RewardedAd? _rewardedAd;
 
   late BuildContext newContext;
 
   @override
   void initState() {
     super.initState();
-    _loadAd();
+    _loadBannerAd();
+    _loadRewardedAd();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -58,6 +60,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _bannerAd?.dispose();
+    _rewardedAd?.dispose();
     super.dispose();
   }
 
@@ -449,7 +452,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
   }
 
   /// Loads a banner ad.
-  void _loadAd() {
+  void _loadBannerAd() {
     final bannerAd = BannerAd(
       size: AdSize.banner,
       adUnitId: AdHelper.bannerAdUnitId,
@@ -475,6 +478,46 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
 
     // Start loading.
     bannerAd.load();
+  }
+
+  /// Loads a rewarded ad.
+  void _loadRewardedAd() {
+    RewardedAd.load(
+      adUnitId: AdHelper.rewardedAdUnitId,
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        // Called when an ad is successfully received.
+        onAdLoaded: (ad) {
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            // Called when the ad showed the full screen content.
+            onAdShowedFullScreenContent: (ad) {},
+            // Called when an impression occurs on the ad.
+            onAdImpression: (ad) {},
+            // Called when the ad failed to show full screen content.
+            onAdFailedToShowFullScreenContent: (ad, err) {
+              // Dispose the ad here to free resources.
+              ad.dispose();
+            },
+            // Called when the ad dismissed full screen content.
+            onAdDismissedFullScreenContent: (ad) {
+              // Dispose the ad here to free resources.
+              ad.dispose();
+            },
+            // Called when a click is recorded for an ad.
+            onAdClicked: (ad) {},
+          );
+
+          // Keep a reference to the ad so you can show it later.
+          setState(() {
+            _rewardedAd = ad;
+          });
+        },
+        // Called when an ad request failed.
+        onAdFailedToLoad: (LoadAdError error) {
+          debugPrint('RewardedAd failed to load: $error');
+        },
+      ),
+    );
   }
 
   @override
@@ -510,55 +553,62 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                           size: 32,
                         ),
                       ),
-                      rightChild: GestureDetector(
-                        onTap: () {
-                          Dialogs.materialDialog(
-                            title: 'modal_restart_title'.tr(),
-                            titleStyle: TextStyle(
-                              fontSize: 22,
-                            ),
-                            msg: 'modal_restart_desc'.tr(),
-                            msgStyle: TextStyle(
-                              fontSize: 18,
-                            ),
-                            msgAlign: TextAlign.center,
-                            context: context,
-                            actions: [
-                              BasicButton(
-                                padding: 6.0,
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(
-                                  'cancel',
-                                  style: TextStyle(
-                                    color: palette.ink,
-                                    fontSize: 16,
+                      rightChild: _rewardedAd != null
+                          ? GestureDetector(
+                              onTap: () {
+                                Dialogs.materialDialog(
+                                  title: 'modal_restart_title'.tr(),
+                                  titleStyle: TextStyle(
+                                    fontSize: 22,
                                   ),
-                                ).tr(),
-                              ),
-                              BasicButton(
-                                padding: 6.0,
-                                bgColor: Colors.blueGrey,
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(
-                                  'confirm',
-                                  style: TextStyle(
-                                    color: palette.trueWhite,
-                                    fontSize: 16,
+                                  msg: 'modal_restart_desc'.tr(),
+                                  msgStyle: TextStyle(
+                                    fontSize: 18,
                                   ),
-                                ).tr(),
+                                  msgAlign: TextAlign.center,
+                                  context: context,
+                                  actions: [
+                                    BasicButton(
+                                      padding: 6.0,
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        'cancel',
+                                        style: TextStyle(
+                                          color: palette.ink,
+                                          fontSize: 16,
+                                        ),
+                                      ).tr(),
+                                    ),
+                                    BasicButton(
+                                      padding: 6.0,
+                                      bgColor: Colors.blueGrey,
+                                      onPressed: () {
+                                        _rewardedAd!.show(onUserEarnedReward:
+                                            (AdWithoutView ad,
+                                                RewardItem rewardItem) {
+                                          GoRouter.of(context)
+                                              .pushReplacement('/');
+                                        });
+                                      },
+                                      child: Text(
+                                        'confirm',
+                                        style: TextStyle(
+                                          color: palette.trueWhite,
+                                          fontSize: 16,
+                                        ),
+                                      ).tr(),
+                                    ),
+                                  ],
+                                );
+                              },
+                              child: const Icon(
+                                Icons.replay,
+                                size: 34,
                               ),
-                            ],
-                          );
-                        },
-                        child: const Icon(
-                          Icons.replay,
-                          size: 34,
-                        ),
-                      ),
+                            )
+                          : null,
                       title: _getStep(state.step).toString(),
                     ),
                     const SizedBox(height: 20),

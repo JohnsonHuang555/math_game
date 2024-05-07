@@ -28,8 +28,6 @@ class Achievement {
 
 /// Encapsulates the player's progress.
 class PlayerProgress extends ChangeNotifier {
-  static const maxHighestScoresPerPlayer = 10;
-
   /// By default, settings are persisted using
   /// [LocalStoragePlayerProgressPersistence] (i.e. NSUserDefaults on iOS,
   /// SharedPreferences on Android or local storage on the web).

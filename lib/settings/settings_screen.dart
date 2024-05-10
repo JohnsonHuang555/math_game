@@ -30,11 +30,14 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: palette.backgroundMain,
       body: ResponsiveScreen(
+        topMessageArea: SizedBox(
+          height: 40,
+          child: Header(
+            title: 'settings'.tr(),
+          ),
+        ),
         squarishMainArea: Column(
           children: [
-            Header(
-              title: 'settings'.tr(),
-            ),
             const SizedBox(height: 30),
             ValueListenableBuilder<bool>(
               valueListenable: settings.soundsOn,

@@ -25,12 +25,14 @@ class AchievementsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: palette.backgroundMain,
       body: ResponsiveScreen(
+        topMessageArea: SizedBox(
+          height: 40,
+          child: Header(
+            title: 'achievements'.tr(),
+          ),
+        ),
         squarishMainArea: Column(
           children: [
-            Header(
-              title: 'achievements'.tr(),
-            ),
-            const SizedBox(height: 30),
             Expanded(
               child: AnimationLimiter(
                 child: GridView.count(

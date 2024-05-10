@@ -75,12 +75,14 @@ class LeaderboardScreen extends StatelessWidget {
         return Scaffold(
           backgroundColor: palette.backgroundMain,
           body: ResponsiveScreen(
+            topMessageArea: SizedBox(
+              height: 40,
+              child: const Header(
+                title: 'TOP 20',
+              ),
+            ),
             squarishMainArea: Column(
               children: [
-                const Header(
-                  title: 'TOP 20',
-                ),
-                const SizedBox(height: 30),
                 Expanded(
                   child: AnimationLimiter(
                     child: ListView.builder(

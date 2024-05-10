@@ -161,7 +161,7 @@ class StepCombineFormula extends StatelessWidget {
                           ),
                           SizedBox(
                             height: 50,
-                            width: 250,
+                            width: 200,
                             child: FittedBox(
                               alignment: Alignment.centerLeft,
                               child: Text(

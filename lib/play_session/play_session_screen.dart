@@ -210,13 +210,13 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
             ),
             Expanded(
               child: BasicButton(
-                onPressed: () {
+                onPressed: () async {
                   audioController.playSfx(SfxType.buttonTap);
                   final playerProgress = context.read<PlayerProgress>();
                   final yourScore = playerProgress.yourScore;
                   final newScore = state.getCurrentAnswer(yourScore);
                   if (state.selectedFormulaItems.length != 6) {
-                    Fluttertoast.showToast(
+                    await Fluttertoast.showToast(
                       msg: 'each_one_must_be_used'.tr(),
                       toastLength: Toast.LENGTH_LONG,
                       gravity: ToastGravity.CENTER,
@@ -236,7 +236,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                       final nextItem =
                           state.selectedFormulaItems[checkDivideZeroIndex + 1];
                       if (nextItem.number == 0) {
-                        Fluttertoast.showToast(
+                        await Fluttertoast.showToast(
                           msg: 'cannot_divide_zero'.tr(),
                           toastLength: Toast.LENGTH_LONG,
                           gravity: ToastGravity.CENTER,
@@ -253,7 +253,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                   }
 
                   if (!state.checkFormula() || newScore == '?') {
-                    Fluttertoast.showToast(
+                    await Fluttertoast.showToast(
                       msg: 'format_error'.tr(),
                       toastLength: Toast.LENGTH_LONG,
                       gravity: ToastGravity.CENTER,
@@ -264,7 +264,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                     );
                     return;
                   }
-                  Dialogs.materialDialog(
+                  await Dialogs.materialDialog(
                     msg: 'confirm_complete'.tr(),
                     msgStyle: TextStyle(
                       fontSize: 18,
@@ -312,7 +312,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
 
                           audioController.playSfx(SfxType.congrats);
 
-                          Dialogs.materialDialog(
+                          await Dialogs.materialDialog(
                             customView: Column(
                               children: [
                                 const Text(
@@ -560,86 +560,91 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
               newContext = context;
 
               return ResponsiveScreen(
+                topMessageArea: SizedBox(
+                  height: 40,
+                  child: Header(
+                    leftChild: GestureDetector(
+                      onTap: () {
+                        audioController.playSfx(SfxType.buttonTap);
+                        GoRouter.of(context).push('/settings');
+                      },
+                      child: const Icon(
+                        Icons.settings,
+                        size: 32,
+                      ),
+                    ),
+                    rightChild: _rewardedAd != null
+                        ? GestureDetector(
+                            onTap: () {
+                              audioController.playSfx(SfxType.buttonTap);
+                              Dialogs.materialDialog(
+                                title: 'modal_restart_title'.tr(),
+                                titleStyle: TextStyle(
+                                  fontSize: 22,
+                                ),
+                                msg: 'modal_restart_desc'.tr(),
+                                msgStyle: TextStyle(
+                                  fontSize: 18,
+                                ),
+                                msgAlign: TextAlign.center,
+                                context: newContext,
+                                lottieBuilder: Lottie.asset(
+                                  'assets/animations/congrats.json',
+                                  fit: BoxFit.contain,
+                                ),
+                                actions: [
+                                  BasicButton(
+                                    padding: 6.0,
+                                    onPressed: () {
+                                      audioController
+                                          .playSfx(SfxType.buttonBack);
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(
+                                      'cancel',
+                                      style: TextStyle(
+                                        color: palette.ink,
+                                        fontSize: 16,
+                                      ),
+                                    ).tr(),
+                                  ),
+                                  BasicButton(
+                                    padding: 6.0,
+                                    bgColor: Colors.blueGrey,
+                                    onPressed: () {
+                                      audioController
+                                          .playSfx(SfxType.buttonTap);
+                                      _rewardedAd!.show(onUserEarnedReward:
+                                          (AdWithoutView ad,
+                                              RewardItem rewardItem) {
+                                        GoRouter.of(context)
+                                            .pushReplacement('/');
+                                      });
+                                    },
+                                    child: Text(
+                                      'confirm',
+                                      style: TextStyle(
+                                        color: palette.trueWhite,
+                                        fontSize: 16,
+                                      ),
+                                    ).tr(),
+                                  ),
+                                ],
+                              );
+                            },
+                            child: const Icon(
+                              Icons.replay,
+                              size: 34,
+                            ),
+                          )
+                        : null,
+                    title: _getStep(state.step).toString(),
+                  ),
+                ),
                 squarishMainArea: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Header(
-                      leftChild: GestureDetector(
-                        onTap: () {
-                          audioController.playSfx(SfxType.buttonTap);
-                          GoRouter.of(context).push('/settings');
-                        },
-                        child: const Icon(
-                          Icons.settings,
-                          size: 32,
-                        ),
-                      ),
-                      rightChild: _rewardedAd != null
-                          ? GestureDetector(
-                              onTap: () {
-                                audioController.playSfx(SfxType.buttonTap);
-                                Dialogs.materialDialog(
-                                  title: 'modal_restart_title'.tr(),
-                                  titleStyle: TextStyle(
-                                    fontSize: 22,
-                                  ),
-                                  msg: 'modal_restart_desc'.tr(),
-                                  msgStyle: TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                  msgAlign: TextAlign.center,
-                                  context: context,
-                                  actions: [
-                                    BasicButton(
-                                      padding: 6.0,
-                                      onPressed: () {
-                                        audioController
-                                            .playSfx(SfxType.buttonBack);
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text(
-                                        'cancel',
-                                        style: TextStyle(
-                                          color: palette.ink,
-                                          fontSize: 16,
-                                        ),
-                                      ).tr(),
-                                    ),
-                                    BasicButton(
-                                      padding: 6.0,
-                                      bgColor: Colors.blueGrey,
-                                      onPressed: () {
-                                        audioController
-                                            .playSfx(SfxType.buttonTap);
-                                        _rewardedAd!.show(onUserEarnedReward:
-                                            (AdWithoutView ad,
-                                                RewardItem rewardItem) {
-                                          GoRouter.of(context)
-                                              .pushReplacement('/');
-                                        });
-                                      },
-                                      child: Text(
-                                        'confirm',
-                                        style: TextStyle(
-                                          color: palette.trueWhite,
-                                          fontSize: 16,
-                                        ),
-                                      ).tr(),
-                                    ),
-                                  ],
-                                );
-                              },
-                              child: const Icon(
-                                Icons.replay,
-                                size: 34,
-                              ),
-                            )
-                          : null,
-                      title: _getStep(state.step).toString(),
-                    ),
-                    const SizedBox(height: 20),
                     _bannerAd == null
-                        // Nothing to render yet.
                         ? SizedBox.shrink()
                         // The actual ad.
                         : Container(

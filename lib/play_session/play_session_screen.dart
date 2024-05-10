@@ -293,6 +293,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                         bgColor: Colors.blueGrey,
                         padding: 6.0,
                         onPressed: () async {
+                          audioController.stopMusic();
                           audioController.playSfx(SfxType.buttonTap);
                           Navigator.of(context).pop();
 

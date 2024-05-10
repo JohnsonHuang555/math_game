@@ -1,5 +1,9 @@
+import 'package:basic/audio/sounds.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+import '../audio/audio_controller.dart';
 
 class Header extends StatelessWidget {
   final Widget? leftChild;
@@ -9,6 +13,8 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final audioController = context.read<AudioController>();
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -16,6 +22,7 @@ class Header extends StatelessWidget {
             ? leftChild!
             : GestureDetector(
                 onTap: () {
+                  audioController.playSfx(SfxType.buttonBack);
                   GoRouter.of(context).pop();
                 },
                 child: Icon(

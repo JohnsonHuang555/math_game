@@ -10,6 +10,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
+import '../audio/audio_controller.dart';
+import '../audio/sounds.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
 import 'settings.dart';
@@ -21,6 +23,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = context.watch<SettingsController>();
     final palette = context.read<Palette>();
+    final audioController = context.read<AudioController>();
 
     final defaultLanguage = context.locale.toString();
 
@@ -144,6 +147,7 @@ class SettingsScreen extends StatelessWidget {
         ),
         rectangularMenuArea: BasicButton(
           onPressed: () {
+            audioController.playSfx(SfxType.buttonBack);
             GoRouter.of(context).pop();
           },
           child: Text(

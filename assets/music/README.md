@@ -1,6 +1,5 @@
-Music in the template is by Mr Smith, and licensed under Creative Commons
-Attribution 4.0 International (CC BY 4.0).
+Music are from pixabay.com
 
-https://freemusicarchive.org/music/mr-smith
+https://pixabay.com/music/cartoons-her-scissors-are-good-182043/
 
-Mr Smith's music is used in this template project with his explicit permission.
+https://pixabay.com/music/happy-childrens-tunes-lets-go-to-the-park-playful-cute-flute-and-piano-170322/

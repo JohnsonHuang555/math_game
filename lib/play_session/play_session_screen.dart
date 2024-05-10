@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:basic/audio/sounds.dart';
 import 'package:basic/helpers/ad_helper.dart';
 import 'package:basic/helpers/math_symbol.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -16,6 +17,7 @@ import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
+import '../audio/audio_controller.dart';
 import '../components/basic_button.dart';
 import '../components/header.dart';
 import '../game_internals/game_state.dart';
@@ -116,10 +118,13 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
     GameState state,
     Palette palette,
   ) {
+    final audioController = context.read<AudioController>();
+
     switch (state.step) {
       case 1:
         return BasicButton(
           onPressed: () {
+            audioController.playSfx(SfxType.buttonTap);
             if (!state.showSelectResult) {
               if (state.selectedSymbols.length == 3) {
                 state.handleNextStep();
@@ -147,6 +152,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
       case 2:
         return BasicButton(
           onPressed: () {
+            audioController.playSfx(SfxType.buttonTap);
             if (!state.showSelectResult) {
               if (state.selectedNumbers.length == 3) {
                 state.handleNextStep();
@@ -178,6 +184,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
               width: 120,
               child: BasicButton(
                 onPressed: () {
+                  audioController.playSfx(SfxType.buttonTap);
                   state.clearSelection();
                 },
                 child: Row(
@@ -204,6 +211,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
             Expanded(
               child: BasicButton(
                 onPressed: () {
+                  audioController.playSfx(SfxType.buttonTap);
                   final playerProgress = context.read<PlayerProgress>();
                   final yourScore = playerProgress.yourScore;
                   final newScore = state.getCurrentAnswer(yourScore);
@@ -270,6 +278,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                       BasicButton(
                         padding: 6.0,
                         onPressed: () {
+                          audioController.playSfx(SfxType.buttonBack);
                           Navigator.of(context).pop();
                         },
                         child: Text(
@@ -284,6 +293,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                         bgColor: Colors.blueGrey,
                         padding: 6.0,
                         onPressed: () async {
+                          audioController.playSfx(SfxType.buttonTap);
                           Navigator.of(context).pop();
 
                           final result = await playerProgress.saveNewScore(
@@ -298,6 +308,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                           // 清除 local storage
                           await playerProgress.removeCurrentPlayingData();
                           if (!context.mounted) return;
+
+                          audioController.playSfx(SfxType.congrats);
 
                           Dialogs.materialDialog(
                             customView: Column(
@@ -364,7 +376,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                                               color: palette.ink,
                                             ),
                                             onPressed: () {
-                                              // Navigator.of(context).pop();
+                                              audioController
+                                                  .playSfx(SfxType.buttonTap);
                                               GoRouter.of(context)
                                                   .pushReplacement('/');
                                             },
@@ -394,7 +407,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                                               color: palette.ink,
                                             ),
                                             onPressed: () {
-                                              // Navigator.of(context).pop();
+                                              audioController
+                                                  .playSfx(SfxType.buttonTap);
                                               GoRouter.of(context)
                                                   .pushReplacement('/play');
                                             },
@@ -524,6 +538,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
   Widget build(BuildContext context) {
     final palette = context.read<Palette>();
     final playerProgress = context.read<PlayerProgress>();
+    final audioController = context.read<AudioController>();
+
+    Future.delayed(Duration.zero).then((_) {
+      audioController.playMusic('play_session');
+    });
 
     return MultiProvider(
       providers: [
@@ -546,6 +565,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                     Header(
                       leftChild: GestureDetector(
                         onTap: () {
+                          audioController.playSfx(SfxType.buttonTap);
                           GoRouter.of(context).push('/settings');
                         },
                         child: const Icon(
@@ -556,6 +576,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                       rightChild: _rewardedAd != null
                           ? GestureDetector(
                               onTap: () {
+                                audioController.playSfx(SfxType.buttonTap);
                                 Dialogs.materialDialog(
                                   title: 'modal_restart_title'.tr(),
                                   titleStyle: TextStyle(
@@ -571,6 +592,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                                     BasicButton(
                                       padding: 6.0,
                                       onPressed: () {
+                                        audioController
+                                            .playSfx(SfxType.buttonBack);
                                         Navigator.of(context).pop();
                                       },
                                       child: Text(
@@ -585,6 +608,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                                       padding: 6.0,
                                       bgColor: Colors.blueGrey,
                                       onPressed: () {
+                                        audioController
+                                            .playSfx(SfxType.buttonTap);
                                         _rewardedAd!.show(onUserEarnedReward:
                                             (AdWithoutView ad,
                                                 RewardItem rewardItem) {

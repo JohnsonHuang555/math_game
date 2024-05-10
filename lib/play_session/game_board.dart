@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
+import '../audio/audio_controller.dart';
+import '../audio/sounds.dart';
 import '../helpers/math_symbol.dart';
 import '../helpers/game_risk.dart';
 import '../style/palette.dart';
@@ -24,6 +26,7 @@ class GameBoard extends StatelessWidget {
 
   List<Widget> getGameCard(BuildContext context) {
     final palette = context.read<Palette>();
+    final audioController = context.read<AudioController>();
 
     return List.generate(9, (index) {
       final isChecked = checkIsAlreadySelected(selectedItems, index);
@@ -35,6 +38,7 @@ class GameBoard extends StatelessWidget {
           child: FadeInAnimation(
             child: ZoomTapAnimation(
               onTap: () {
+                audioController.playSfx(SfxType.buttonGaming);
                 onSelect(index);
               },
               child: Container(

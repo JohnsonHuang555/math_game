@@ -6,6 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../audio/sounds.dart';
+import '../audio/audio_controller.dart';
 import '../components/basic_button.dart';
 import '../components/header.dart';
 import '../style/palette.dart';
@@ -18,6 +20,7 @@ class AchievementsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
     final achievements = context.read<PlayerProgress>().achievements;
+    final audioController = context.read<AudioController>();
 
     return Scaffold(
       backgroundColor: palette.backgroundMain,
@@ -158,6 +161,7 @@ class AchievementsScreen extends StatelessWidget {
         ),
         rectangularMenuArea: BasicButton(
           onPressed: () {
+            audioController.playSfx(SfxType.buttonBack);
             GoRouter.of(context).pop();
           },
           child: Text(

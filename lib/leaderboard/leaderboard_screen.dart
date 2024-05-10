@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
+import '../audio/sounds.dart';
+import '../audio/audio_controller.dart';
 import '../components/basic_button.dart';
 import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
@@ -33,6 +35,7 @@ class LeaderboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
     final playerProgress = context.read<PlayerProgress>();
+    final audioController = context.read<AudioController>();
 
     return FutureBuilder(
       future: playerProgress.getTopTenPlayers(),
@@ -181,6 +184,7 @@ class LeaderboardScreen extends StatelessWidget {
                 ),
                 BasicButton(
                   onPressed: () {
+                    audioController.playSfx(SfxType.buttonBack);
                     GoRouter.of(context).pop();
                   },
                   child: Text(

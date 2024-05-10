@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
+import '../audio/sounds.dart';
+import '../audio/audio_controller.dart';
 import '../helpers/converters.dart';
 import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
@@ -20,6 +22,7 @@ class MainMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
     final playerProgress = context.watch<PlayerProgress>();
+    final audioController = context.watch<AudioController>();
 
     if (playerProgress.showIntroduceScreenModal) {
       Future.delayed(Duration.zero).then((_) {
@@ -32,6 +35,10 @@ class MainMenuScreen extends StatelessWidget {
         GoRouter.of(context).pushReplacement('/play');
       });
     }
+
+    Future.delayed(Duration.zero).then((_) {
+      audioController.playMusic('main_menu');
+    });
 
     return Scaffold(
       backgroundColor: palette.backgroundMain,
@@ -87,6 +94,7 @@ class MainMenuScreen extends StatelessWidget {
               ZoomTapAnimation(
                 child: GestureDetector(
                   onTap: () {
+                    audioController.playSfx(SfxType.buttonPlay);
                     GoRouter.of(context).pushReplacement('/play');
                   },
                   child: Stack(
@@ -118,6 +126,7 @@ class MainMenuScreen extends StatelessWidget {
                 children: [
                   ZoomTapAnimation(
                     onTap: () {
+                      audioController.playSfx(SfxType.buttonTap);
                       GoRouter.of(context).push('/achievements');
                     },
                     child: SvgPicture.asset(
@@ -128,6 +137,7 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                   ZoomTapAnimation(
                     onTap: () {
+                      audioController.playSfx(SfxType.buttonTap);
                       GoRouter.of(context).push('/leaderboard');
                     },
                     child: Icon(
@@ -137,6 +147,7 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                   ZoomTapAnimation(
                     onTap: () {
+                      audioController.playSfx(SfxType.buttonTap);
                       GoRouter.of(context).push('/settings');
                     },
                     child: Icon(
@@ -145,34 +156,7 @@ class MainMenuScreen extends StatelessWidget {
                     ),
                   ),
                 ],
-              )
-              // MyButton(
-              //   onPressed: () {
-              //     audioController.playSfx(SfxType.buttonTap);
-              //     GoRouter.of(context).go('/play');
-              //   },
-              //   child: const Text('Play'),
-              // ),
-              // MyButton(
-              //   onPressed: () => GoRouter.of(context).push('/settings'),
-              //   child: const Text('Settings'),
-              // ),
-              // _gap,
-              // Padding(
-              //   padding: const EdgeInsets.only(top: 32),
-              //   child: ValueListenableBuilder<bool>(
-              //     valueListenable: settingsController.audioOn,
-              //     builder: (context, audioOn, child) {
-              //       return IconButton(
-              //         onPressed: () => settingsController.toggleAudioOn(),
-              //         icon: Icon(audioOn ? Icons.volume_up : Icons.volume_off),
-              //       );
-              //     },
-              //   ),
-              // ),
-              // _gap,
-              // const Text('Music by Mr Smith'),
-              // _gap,
+              ),
             ],
           ),
         ),

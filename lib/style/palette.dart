@@ -28,11 +28,11 @@ class Palette {
   Color get redPen => Color.fromARGB(255, 196, 78, 78); // #d10841
   Color get inkFullOpacity => Color.fromARGB(255, 0, 0, 0); // #352b42
   Color get ink => Color.fromARGB(255, 0, 0, 0); // #352b42
-  Color get backgroundMain => Color.fromARGB(255, 255, 255, 255);
+  Color get backgroundMain => Color(0xFFFFFCEC);
   Color get backgroundLevelSelection => const Color(0xffa2dcc7);
   Color get backgroundPlaySession => const Color(0xffffebb5); // #ffebb5
   Color get background4 => const Color(0xffffd7ff); // #ffd7ff
   Color get backgroundSettings => const Color(0xffbfc8e3); // #bfc8e3
   Color get trueWhite => const Color(0xffffffff);
-  Color get selectedItem => const Color(0xffC95421);
+  Color get selectedItem => Color.fromARGB(255, 211, 97, 49);
 }

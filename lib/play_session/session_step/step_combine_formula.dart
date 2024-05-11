@@ -6,6 +6,8 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
+import '../../audio/audio_controller.dart';
+import '../../audio/sounds.dart';
 import '../../helpers/game_risk.dart';
 import '../../player_progress/player_progress.dart';
 import '../../style/palette.dart';
@@ -38,10 +40,10 @@ class StepCombineFormula extends StatelessWidget {
       // 負數需要加括號
       final numberVal = item.number.toString();
       return Container(
-        margin: EdgeInsets.only(left: 5, right: 5),
+        margin: const EdgeInsets.only(left: 5, right: 5),
         child: Text(
           item.number! < 0 ? '($numberVal)' : numberVal,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 44,
             fontWeight: FontWeight.w500,
           ),
@@ -50,7 +52,8 @@ class StepCombineFormula extends StatelessWidget {
     }).toList();
   }
 
-  List<Widget> _getCurrentSelectItems(Palette palette) {
+  List<Widget> _getCurrentSelectItems(
+      Palette palette, AudioController audioController) {
     return currentSelectedItems.map((item) {
       final isChecked = checkIsAlreadySelected(
         selectedFormulaItems,
@@ -64,6 +67,7 @@ class StepCombineFormula extends StatelessWidget {
           child: FadeInAnimation(
             child: ZoomTapAnimation(
               onTap: () {
+                audioController.playSfx(SfxType.buttonGaming);
                 onSelectAnswer(item);
               },
               child: Stack(
@@ -107,24 +111,26 @@ class StepCombineFormula extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.read<Palette>();
     final playerProgress = context.read<PlayerProgress>();
+    final audioController = context.read<AudioController>();
 
     return Column(
       children: [
         const Text(
           'combine_formula',
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 20,
           ),
         ).tr(),
-        const SizedBox(height: 15),
+        const SizedBox(height: 10),
         Container(
           width: double.infinity,
           height: 270,
           decoration: BoxDecoration(
-            color: Color(0xffE6E6E6),
+            color: const Color.fromARGB(255, 220, 234, 204),
             borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.white, width: 2),
           ),
-          margin: EdgeInsets.only(
+          margin: const EdgeInsets.only(
             left: 5,
             right: 5,
           ),
@@ -206,8 +212,8 @@ class StepCombineFormula extends StatelessWidget {
                                     'please_click_symbol_or_number',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.grey,
+                                      fontSize: 18,
+                                      color: Color.fromARGB(255, 135, 135, 135),
                                     ),
                                   ).tr(),
                                   const SizedBox(
@@ -216,8 +222,8 @@ class StepCombineFormula extends StatelessWidget {
                                   const Text(
                                     'select_symbol_first',
                                     style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
+                                      fontSize: 16,
+                                      color: Color.fromARGB(255, 135, 135, 135),
                                     ),
                                   ).tr(),
                                 ],
@@ -237,7 +243,7 @@ class StepCombineFormula extends StatelessWidget {
                           Text(
                             '= ?',
                             style: TextStyle(
-                              fontSize: 36,
+                              fontSize: 38,
                             ),
                           ),
                           SizedBox(
@@ -271,11 +277,11 @@ class StepCombineFormula extends StatelessWidget {
               crossAxisCount: 3, //決定每列數量
               childAspectRatio: 1,
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.all(10),
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
-              children: _getCurrentSelectItems(palette),
+              children: _getCurrentSelectItems(palette, audioController),
             ),
           ),
         ),

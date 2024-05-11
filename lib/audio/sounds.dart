@@ -27,21 +27,6 @@ List<String> soundTypeToFilename(SfxType type) {
   }
 }
 
-/// Allows control over loudness of different SFX types.
-// double soundTypeToVolume(SfxType type) {
-// switch (type) {
-//   case SfxType.huhsh:
-//     return 0.4;
-//   case SfxType.wssh:
-//     return 0.2;
-//   case SfxType.buttonTap:
-//   case SfxType.congrats:
-//   case SfxType.erase:
-//   case SfxType.swishSwish:
-//     return 1.0;
-// }
-// }
-
 enum SfxType {
   buttonPlay,
   buttonTap,

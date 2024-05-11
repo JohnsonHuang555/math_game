@@ -44,10 +44,10 @@ class StepSelectNumber extends StatelessWidget {
         const Text(
           'choose_three_items',
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 20,
           ),
         ).tr(),
-        const SizedBox(height: 15),
+        const SizedBox(height: 10),
         GameBoard(
           items: items,
           onSelect: (index) {

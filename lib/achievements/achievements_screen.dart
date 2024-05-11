@@ -36,10 +36,10 @@ class AchievementsScreen extends StatelessWidget {
             Expanded(
               child: AnimationLimiter(
                 child: GridView.count(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   crossAxisCount: 2,
                   childAspectRatio: (3 / 1.5),
                   children: List.generate(
@@ -55,7 +55,7 @@ class AchievementsScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: achievements[index].isAchieve
                                     ? const Color.fromARGB(255, 224, 206, 86)
-                                    : const Color.fromARGB(198, 239, 239, 239),
+                                    : const Color.fromARGB(255, 255, 247, 247),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Padding(
@@ -69,7 +69,7 @@ class AchievementsScreen extends StatelessWidget {
                                         Container(
                                           width: 50,
                                           height: 50,
-                                          margin: EdgeInsets.only(
+                                          margin: const EdgeInsets.only(
                                             right: 8,
                                             left: 8,
                                           ),

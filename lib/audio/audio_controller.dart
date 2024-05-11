@@ -51,8 +51,8 @@ class AudioController {
                 polyphony, (i) => AudioPlayer(playerId: 'sfxPlayer#$i'))
             .toList(growable: false),
         _playlist = Queue.of(List<Song>.of(songs)) {
+          print('create');
     _musicPlayer.setReleaseMode(ReleaseMode.loop);
-    // _musicPlayer.onPlayerComplete.listen(_handleSongFinished);
     unawaited(_preloadSfx());
   }
 
@@ -100,7 +100,6 @@ class AudioController {
     final currentPlayer = _sfxPlayers[_currentSfxPlayer];
     currentPlayer.play(
       AssetSource('sfx/$filename'),
-      // volume: soundTypeToVolume(type),
     );
     _currentSfxPlayer = (_currentSfxPlayer + 1) % _sfxPlayers.length;
   }
@@ -175,14 +174,6 @@ class AudioController {
     settingsController.audioOn.addListener(_audioOnHandler);
     settingsController.musicOn.addListener(_musicOnHandler);
     settingsController.soundsOn.addListener(_soundsOnHandler);
-
-    // if (settingsController.audioOn.value && settingsController.musicOn.value) {
-    //   if (kIsWeb) {
-    //     _log.info('On the web, music can only start after user interaction.');
-    //   } else {
-    //     // _playCurrentSongInPlaylist();
-    //   }
-    // }
   }
 
   void _audioOnHandler() {
@@ -214,14 +205,6 @@ class AudioController {
     }
   }
 
-  // void _handleSongFinished(void _) {
-  //   _log.info('Last song finished playing.');
-  //   // Move the song that just finished playing to the end of the playlist.
-  //   _playlist.addLast(_playlist.removeFirst());
-  //   // Play the song at the beginning of the playlist.
-  //   _playCurrentSongInPlaylist();
-  // }
-
   void _musicOnHandler() {
     if (_settings!.musicOn.value) {
       // Music got turned on.
@@ -233,31 +216,6 @@ class AudioController {
       _musicPlayer.pause();
     }
   }
-
-  // Future<void> _playCurrentSongInPlaylist() async {
-  //   _log.info(() => 'Playing ${_playlist.first} now.');
-  //   try {
-  //     await _musicPlayer.play(AssetSource('music/${_playlist.first.filename}'));
-  //   } catch (e) {
-  //     _log.severe('Could not play song ${_playlist.first}', e);
-  //   }
-
-  //   // Settings can change while the music player is preparing
-  //   // to play a song (i.e. during the `await` above).
-  //   // Unfortunately, `audioplayers` has a bug which will ignore calls
-  //   // to `pause()` before that await is finished, so we need
-  //   // to double check here.
-  //   // See issue: https://github.com/bluefireteam/audioplayers/issues/1687
-  //   if (!_settings!.audioOn.value || !_settings!.musicOn.value) {
-  //     try {
-  //       _log.fine('Settings changed while preparing to play song. '
-  //           'Pausing music.');
-  //       await _musicPlayer.pause();
-  //     } catch (e) {
-  //       _log.severe('Could not pause music player', e);
-  //     }
-  //   }
-  // }
 
   /// Preloads all sound effects.
   Future<void> _preloadSfx() async {
@@ -287,7 +245,6 @@ class AudioController {
     if (_musicPlayer.source == null) {
       _log.info('No music source set. '
           'Start playing the current song in playlist.');
-      // await _playCurrentSongInPlaylist();
       await playMusic(currentScreen!);
       return;
     }

@@ -22,7 +22,7 @@ class MainMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
     final playerProgress = context.watch<PlayerProgress>();
-    final audioController = context.watch<AudioController>();
+    final audioController = context.read<AudioController>();
 
     if (playerProgress.showIntroduceScreenModal) {
       Future.delayed(Duration.zero).then((_) {

@@ -1,4 +1,3 @@
-import 'package:basic/components/header.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../audio/sounds.dart';
 import '../audio/audio_controller.dart';
 import '../components/basic_button.dart';
+import '../components/header.dart';
 import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
@@ -16,20 +16,6 @@ import './player.dart';
 
 class LeaderboardScreen extends StatelessWidget {
   const LeaderboardScreen({super.key});
-
-  List<Widget> getPlayers(List<dynamic> topTenUsers, String userId) {
-    int rank = 1;
-    List<Widget> list = [];
-    for (final user in topTenUsers) {
-      list.add(LeaderboardPlayer(
-        rank: rank++,
-        name: user['name'] as String,
-        score: user['score'].toString(),
-        highlight: userId == user.id as String,
-      ));
-    }
-    return list;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +46,7 @@ class LeaderboardScreen extends StatelessWidget {
             body: Center(
               child: Text(
                 'Error: ${snapshot.error}',
-                style: TextStyle(
-                  fontFamily: 'Saira',
+                style: const TextStyle(
                   fontSize: 26,
                 ),
               ),
@@ -70,7 +55,6 @@ class LeaderboardScreen extends StatelessWidget {
         }
 
         List<dynamic> topTenUsers = snapshot.data as List<dynamic>;
-        int rank = 1;
 
         return Scaffold(
           backgroundColor: palette.backgroundMain,
@@ -95,27 +79,27 @@ class LeaderboardScreen extends StatelessWidget {
                             topTenUsers[index].id as String;
 
                         List<Color> colors = [];
-                        switch (rank) {
+                        switch (index + 1) {
                           case 1:
-                            colors = [
+                            colors = const [
                               Color(0xffFFD700),
                               Color.fromARGB(255, 255, 245, 166),
                             ];
                             break;
                           case 2:
-                            colors = [
+                            colors = const [
                               Color.fromARGB(255, 178, 178, 178),
                               Color.fromARGB(192, 228, 228, 228),
                             ];
                             break;
                           case 3:
-                            colors = [
+                            colors = const [
                               Color.fromARGB(255, 229, 158, 92),
                               Color.fromARGB(255, 255, 218, 184),
                             ];
                             break;
                           default:
-                            colors = [
+                            colors = const [
                               Color.fromARGB(198, 239, 239, 239),
                               Color.fromARGB(198, 239, 239, 239),
                             ];
@@ -128,7 +112,7 @@ class LeaderboardScreen extends StatelessWidget {
                           child: SlideAnimation(
                             child: FadeInAnimation(
                               child: Container(
-                                margin: EdgeInsets.only(bottom: 12),
+                                margin: const EdgeInsets.only(bottom: 12),
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       width: highlight ? 3 : 1,
@@ -150,7 +134,7 @@ class LeaderboardScreen extends StatelessWidget {
                                     bottom: 16.0,
                                   ),
                                   child: LeaderboardPlayer(
-                                    rank: rank++,
+                                    rank: index + 1,
                                     name: topTenUsers[index]['name'] as String,
                                     score:
                                         topTenUsers[index]['score'].toString(),

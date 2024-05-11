@@ -41,7 +41,7 @@ class LeaderboardPlayer extends StatelessWidget {
           child: Text(
             name,
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 22,
               fontWeight: FontWeight.w500,
               color: highlight ? palette.selectedItem : null,
             ),

@@ -74,7 +74,7 @@ class GameBoard extends StatelessWidget {
         crossAxisCount: 3, //決定每列數量
         childAspectRatio: 1,
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.all(10),
         crossAxisSpacing: 20,
         mainAxisSpacing: 20,

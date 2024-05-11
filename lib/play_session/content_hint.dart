@@ -15,7 +15,7 @@ class ContentHint extends StatelessWidget {
     required this.containHintItems,
   });
 
-  List<Widget> getHints(Palette palette) {
+  List<Widget> _getHints(Palette palette) {
     return List.generate(
       containHintItems.length,
       (index) => badges.Badge(
@@ -93,7 +93,7 @@ class ContentHint extends StatelessWidget {
           padding: EdgeInsets.only(left: padding, right: padding),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: getHints(palette),
+            children: _getHints(palette),
           ),
         ),
       ],

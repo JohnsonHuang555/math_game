@@ -23,6 +23,7 @@ class _IntroduceScreenState extends State<IntroduceScreen> {
   @override
   Widget build(BuildContext context) {
     final playerProgress = context.read<PlayerProgress>();
+    final currentLanguage = context.locale.toString();
 
     return Scaffold(
       body: ResponsiveScreen(
@@ -30,42 +31,113 @@ class _IntroduceScreenState extends State<IntroduceScreen> {
           pages: [
             PageViewModel(
               title: 'introduce_page_1_title'.tr(),
-              body: 'introduce_page_1_desc'.tr(),
-              image: Center(
-                child: Lottie.asset(
-                  'assets/animations/introduce.json',
-                  fit: BoxFit.contain,
-                ),
+              bodyWidget: Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    height: 300,
+                    child: Center(
+                      child: Lottie.asset(
+                        'assets/animations/introduce.json',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    'introduce_page_1_desc',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ).tr(),
+                ],
               ),
             ),
             PageViewModel(
               title: 'introduce_page_2_title'.tr(),
-              body: 'introduce_page_2_desc'.tr(),
-              image: Center(
-                child: SvgPicture.asset(
-                  'assets/icons/select-symbol.svg',
-                  width: 200,
-                ),
+              bodyWidget: Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    height: 450,
+                    child: Center(
+                      child: Image.asset(
+                        currentLanguage == 'zh_TW'
+                            ? 'assets/images/select_symbol_zh_tw.png'
+                            : 'assets/images/select_symbol_en_us.png',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    'introduce_page_2_desc',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ).tr(),
+                ],
               ),
             ),
             PageViewModel(
               title: 'introduce_page_3_title'.tr(),
-              body: 'introduce_page_3_desc'.tr(),
-              image: Center(
-                child: SvgPicture.asset(
-                  'assets/icons/select-number.svg',
-                  width: 200,
-                ),
+              bodyWidget: Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    height: 450,
+                    child: Center(
+                      child: Image.asset(
+                        currentLanguage == 'zh_TW'
+                            ? 'assets/images/select_number_zh_tw.png'
+                            : 'assets/images/select_number_en_us.png',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    'introduce_page_3_desc',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ).tr(),
+                ],
               ),
             ),
             PageViewModel(
               title: 'introduce_page_4_title'.tr(),
-              body: 'introduce_page_4_desc'.tr(),
-              image: Center(
-                child: SvgPicture.asset(
-                  'assets/icons/combine-formula.svg',
-                  width: 200,
-                ),
+              bodyWidget: Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    height: 450,
+                    child: Center(
+                      child: Image.asset(
+                        currentLanguage == 'zh_TW'
+                            ? 'assets/images/combine_formula_zh_tw.png'
+                            : 'assets/images/combine_formula_en_us.png',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    'introduce_page_4_desc',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ).tr(),
+                ],
               ),
             ),
             PageViewModel(
@@ -73,16 +145,13 @@ class _IntroduceScreenState extends State<IntroduceScreen> {
               bodyWidget: Column(
                 children: [
                   SizedBox(
-                    height: 10,
-                  ),
-                  SizedBox(
                     width: 200,
                     child: TextField(
                       maxLength: 8,
                       decoration: InputDecoration(
                           errorText:
                               validate ? 'name_already_exist'.tr() : null,
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                           hintText: 'introduce_page_5_hint_text'.tr(),
                           labelText: 'introduce_page_5_label_text'.tr(),
                           helperText: 'introduce_page_5_helper_text'.tr()),
@@ -97,9 +166,9 @@ class _IntroduceScreenState extends State<IntroduceScreen> {
                 ],
               ),
               image: Center(
-                child: Lottie.asset(
-                  'assets/animations/write-name.json',
-                  fit: BoxFit.contain,
+                child: SvgPicture.asset(
+                  'assets/icons/combine-formula.svg',
+                  width: 200,
                 ),
               ),
             ),
@@ -121,7 +190,7 @@ class _IntroduceScreenState extends State<IntroduceScreen> {
             }
           },
         ),
-        rectangularMenuArea: SizedBox.shrink(),
+        rectangularMenuArea: const SizedBox.shrink(),
       ),
     );
   }

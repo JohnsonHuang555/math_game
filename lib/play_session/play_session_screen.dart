@@ -2,9 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:basic/audio/sounds.dart';
-import 'package:basic/helpers/ad_helper.dart';
-import 'package:basic/helpers/math_symbol.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,6 +15,9 @@ import 'package:provider/provider.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../audio/audio_controller.dart';
+import '../audio/sounds.dart';
+import '../helpers/ad_helper.dart';
+import '../helpers/math_symbol.dart';
 import '../components/basic_button.dart';
 import '../components/header.dart';
 import '../game_internals/game_state.dart';
@@ -124,7 +124,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
       case 1:
         return BasicButton(
           onPressed: () {
-            audioController.playSfx(SfxType.buttonTap);
+            audioController.playSfx(SfxType.buttonPlay);
             if (!state.showSelectResult) {
               if (state.selectedSymbols.length == 3) {
                 state.handleNextStep();
@@ -141,10 +141,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
               );
             }
           },
-          child: Text(
+          child: const Text(
             'selected',
             style: TextStyle(
-              color: palette.ink,
               fontSize: 18,
             ),
           ).tr(),
@@ -152,7 +151,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
       case 2:
         return BasicButton(
           onPressed: () {
-            audioController.playSfx(SfxType.buttonTap);
+            audioController.playSfx(SfxType.buttonPlay);
             if (!state.showSelectResult) {
               if (state.selectedNumbers.length == 3) {
                 state.handleNextStep();
@@ -169,10 +168,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
               );
             }
           },
-          child: Text(
+          child: const Text(
             'selected',
             style: TextStyle(
-              color: palette.ink,
               fontSize: 18,
             ),
           ).tr(),
@@ -194,11 +192,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                     const SizedBox(
                       width: 5,
                     ),
-                    Text(
+                    const Text(
                       'clear',
                       style: TextStyle(
                         fontSize: 18,
-                        color: palette.ink,
                       ),
                     ).tr(),
                   ],
@@ -211,7 +208,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
             Expanded(
               child: BasicButton(
                 onPressed: () async {
-                  audioController.playSfx(SfxType.buttonTap);
+                  audioController.playSfx(SfxType.buttonPlay);
                   final playerProgress = context.read<PlayerProgress>();
                   final yourScore = playerProgress.yourScore;
                   final newScore = state.getCurrentAnswer(yourScore);
@@ -266,11 +263,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                   }
                   await Dialogs.materialDialog(
                     msg: 'confirm_complete'.tr(),
-                    msgStyle: TextStyle(
+                    msgStyle: const TextStyle(
                       fontSize: 18,
                     ),
                     title: 'calculate_score'.tr(),
-                    titleStyle: TextStyle(
+                    titleStyle: const TextStyle(
                       fontSize: 22,
                     ),
                     context: context,
@@ -281,10 +278,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                           audioController.playSfx(SfxType.buttonBack);
                           Navigator.of(context).pop();
                         },
-                        child: Text(
+                        child: const Text(
                           'cancel',
                           style: TextStyle(
-                            color: palette.ink,
                             fontSize: 16,
                           ),
                         ).tr(),
@@ -312,7 +308,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
 
                           audioController.playSfx(SfxType.congrats);
 
-                          await Dialogs.materialDialog(
+                          Dialogs.materialDialog(
                             customView: Column(
                               children: [
                                 const Text(
@@ -437,11 +433,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                     ],
                   );
                 },
-                child: Text(
+                child: const Text(
                   'OK',
                   style: TextStyle(
                     fontSize: 18,
-                    color: palette.ink,
                   ),
                 ),
               ),
@@ -541,6 +536,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
     final playerProgress = context.read<PlayerProgress>();
     final audioController = context.read<AudioController>();
 
+    print(_bannerAd);
     Future.delayed(Duration.zero).then((_) {
       audioController.playMusic('play_session');
     });
@@ -600,10 +596,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                                           .playSfx(SfxType.buttonBack);
                                       Navigator.of(context).pop();
                                     },
-                                    child: Text(
+                                    child: const Text(
                                       'cancel',
                                       style: TextStyle(
-                                        color: palette.ink,
                                         fontSize: 16,
                                       ),
                                     ).tr(),
@@ -618,7 +613,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                                           (AdWithoutView ad,
                                               RewardItem rewardItem) {
                                         GoRouter.of(context)
-                                            .pushReplacement('/');
+                                            .pushReplacement('/play');
                                       });
                                     },
                                     child: Text(
@@ -645,11 +640,12 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     _bannerAd == null
-                        ? SizedBox.shrink()
+                        ? const SizedBox(
+                            height: 50,
+                          )
                         // The actual ad.
                         : Container(
                             alignment: Alignment.center,
-                            width: _bannerAd!.size.width.toDouble(),
                             height: _bannerAd!.size.height.toDouble(),
                             child: AdWidget(ad: _bannerAd!),
                           ),

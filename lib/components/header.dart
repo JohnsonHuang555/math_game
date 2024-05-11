@@ -25,7 +25,7 @@ class Header extends StatelessWidget {
                   audioController.playSfx(SfxType.buttonBack);
                   GoRouter.of(context).pop();
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_back_ios_new,
                   size: 32,
                 ),

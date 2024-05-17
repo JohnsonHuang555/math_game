@@ -289,9 +289,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                         bgColor: Colors.blueGrey,
                         padding: 6.0,
                         onPressed: () async {
-                          audioController.stopMusic();
-                          audioController.playSfx(SfxType.buttonTap);
+                          if (!context.mounted) return;
                           Navigator.of(context).pop();
+
+                          await audioController.pauseMusic();
+                          audioController.playSfx(SfxType.buttonTap);
 
                           final result = await playerProgress.saveNewScore(
                             newScore: newScore,
@@ -311,6 +313,13 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                           Dialogs.materialDialog(
                             customView: Column(
                               children: [
+                                SizedBox(
+                                  height: 50,
+                                  child: Lottie.asset(
+                                    'assets/animations/congrats.json',
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
                                 const Text(
                                   'new_score',
                                   style: TextStyle(
@@ -342,10 +351,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                               fontSize: 18,
                             ),
                             msgAlign: TextAlign.end,
-                            lottieBuilder: Lottie.asset(
-                              'assets/animations/congrats.json',
-                              fit: BoxFit.contain,
-                            ),
+                            // lottieBuilder: Lottie.asset(
+                            //   'assets/animations/congrats.json',
+                            //   fit: BoxFit.contain,
+                            // ),
                             context: context,
                             barrierDismissible: false,
                             actions: [
@@ -536,7 +545,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
     final playerProgress = context.read<PlayerProgress>();
     final audioController = context.read<AudioController>();
 
-    print(_bannerAd);
     Future.delayed(Duration.zero).then((_) {
       audioController.playMusic('play_session');
     });
@@ -584,10 +592,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                                 ),
                                 msgAlign: TextAlign.center,
                                 context: newContext,
-                                lottieBuilder: Lottie.asset(
-                                  'assets/animations/congrats.json',
-                                  fit: BoxFit.contain,
-                                ),
                                 actions: [
                                   BasicButton(
                                     padding: 6.0,

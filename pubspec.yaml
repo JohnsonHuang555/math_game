@@ -70,6 +70,4 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: 'assets/icons/icon.png'
-  adaptive_icon_background: '#FFFCEC'
-  adaptive_icon_foreground: 'assets/icons/icon-adaptive-foreground.png'
+  image_path: 'assets/images/app-logo.png'

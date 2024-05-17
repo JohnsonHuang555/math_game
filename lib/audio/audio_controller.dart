@@ -51,7 +51,6 @@ class AudioController {
                 polyphony, (i) => AudioPlayer(playerId: 'sfxPlayer#$i'))
             .toList(growable: false),
         _playlist = Queue.of(List<Song>.of(songs)) {
-          print('create');
     _musicPlayer.setReleaseMode(ReleaseMode.loop);
     unawaited(_preloadSfx());
   }
@@ -136,8 +135,8 @@ class AudioController {
     }
   }
 
-  void stopMusic() {
-    _musicPlayer.stop();
+  Future<void>pauseMusic() async {
+    await _musicPlayer.pause();
   }
 
   /// Enables the [AudioController] to listen to [AppLifecycleState] events,

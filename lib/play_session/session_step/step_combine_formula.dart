@@ -266,7 +266,7 @@ class StepCombineFormula extends StatelessWidget {
           'step_three_hint',
           textAlign: TextAlign.center,
         ).tr(),
-        const SizedBox(height: 20),
+        const SizedBox(height: 40),
         Padding(
           padding: EdgeInsets.only(
             left: 60,

@@ -53,6 +53,7 @@ class AchievementsScreen extends StatelessWidget {
                           child: FadeInAnimation(
                             child: Container(
                               decoration: BoxDecoration(
+                                border: Border.all(width: 1, color: const Color.fromARGB(255, 193, 193, 193)),
                                 color: achievements[index].isAchieve
                                     ? const Color.fromARGB(255, 224, 206, 86)
                                     : const Color.fromARGB(255, 255, 247, 247),

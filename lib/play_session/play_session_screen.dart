@@ -71,6 +71,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
     if (state == AppLifecycleState.inactive) {
       final playerProgress = newContext.read<PlayerProgress>();
       final gameState = newContext.read<GameState>();
+      if (gameState.gameOver) {
+        return;
+      }
       playerProgress.saveCurrentPlayingData(
         step: gameState.step,
         boxSymbols: gameState.boxSymbols,
@@ -209,6 +212,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                 onPressed: () async {
                   audioController.playSfx(SfxType.buttonPlay);
                   final playerProgress = context.read<PlayerProgress>();
+                  final gameState = context.read<GameState>();
                   final yourScore = playerProgress.yourScore;
                   final newScore = state.getCurrentAnswer(yourScore);
                   if (state.selectedFormulaItems.length != 6) {
@@ -305,10 +309,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
 
                           // 清除 local storage
                           await playerProgress.removeCurrentPlayingData();
+                          gameState.setGameOver();
                           if (!context.mounted) return;
 
                           audioController.playSfx(SfxType.congrats);
-                          createCongratsDialog(newScore);
+                          createCongratsDialog(context, newScore);
                         },
                         child: Text(
                           'confirm',
@@ -418,9 +423,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
     );
   }
 
-  void createCongratsDialog(String newScore) {
-    final audioController = newContext.read<AudioController>();
-    final palette = newContext.read<Palette>();
+  void createCongratsDialog(BuildContext context,String newScore) {
+    final audioController = context.read<AudioController>();
+    final palette = context.read<Palette>();
 
     Dialogs.materialDialog(
       customView: Column(
@@ -471,7 +476,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
       //   'assets/animations/congrats.json',
       //   fit: BoxFit.contain,
       // ),
-      context: newContext,
+      context: context,
       barrierDismissible: false,
       actions: [
         Column(

@@ -25,6 +25,9 @@ class GameState extends ChangeNotifier {
   // 已選擇的算式項目
   final List<SelectedItem> _selectedFormulaItems = [];
 
+  // 是否遊戲結束
+  bool _gameOver = false;
+
   GameState(CurrentPlayingData? data) {
     if (data != null) {
       _step = data.step;
@@ -45,6 +48,7 @@ class GameState extends ChangeNotifier {
   List<SelectedItem> get selectedSymbols => _selectedSymbols;
   List<SelectedItem> get selectedNumbers => _selectedNumbers;
   List<SelectedItem> get selectedFormulaItems => _selectedFormulaItems;
+  bool get gameOver => _gameOver;
 
   List<SelectedItem> get currentSelectedItems {
     return [..._selectedSymbols, ..._selectedNumbers]
@@ -127,7 +131,6 @@ class GameState extends ChangeNotifier {
         }
       }
     }
-    print(result);
     try {
       final answer = result.interpret();
       return answer.toInt().toString();
@@ -213,5 +216,9 @@ class GameState extends ChangeNotifier {
       return false;
     }
     return true;
+  }
+
+  void setGameOver() {
+    _gameOver = true;
   }
 }

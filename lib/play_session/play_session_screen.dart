@@ -7,7 +7,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:lottie/lottie.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart' hide Level;
@@ -309,127 +308,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
                           if (!context.mounted) return;
 
                           audioController.playSfx(SfxType.congrats);
-
-                          Dialogs.materialDialog(
-                            customView: Column(
-                              children: [
-                                SizedBox(
-                                  height: 50,
-                                  child: Lottie.asset(
-                                    'assets/animations/congrats.json',
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                                const Text(
-                                  'new_score',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ).tr(),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 20,
-                                    right: 20,
-                                  ),
-                                  child: FittedBox(
-                                    child: Text(
-                                      newScore,
-                                      style: TextStyle(
-                                        fontSize: 44,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            color: palette.trueWhite,
-                            titleStyle: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 18,
-                            ),
-                            msgAlign: TextAlign.end,
-                            // lottieBuilder: Lottie.asset(
-                            //   'assets/animations/congrats.json',
-                            //   fit: BoxFit.contain,
-                            // ),
-                            context: context,
-                            barrierDismissible: false,
-                            actions: [
-                              Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      ZoomTapAnimation(
-                                        child: Container(
-                                          width: 60,
-                                          height: 60,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            border: Border.all(
-                                              width: 2,
-                                            ),
-                                          ),
-                                          child: IconButton(
-                                            icon: SvgPicture.asset(
-                                              'assets/icons/home.svg',
-                                              width: double.infinity,
-                                              height: double.infinity,
-                                              color: palette.ink,
-                                            ),
-                                            onPressed: () {
-                                              audioController
-                                                  .playSfx(SfxType.buttonTap);
-                                              GoRouter.of(context)
-                                                  .pushReplacement('/');
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 30,
-                                      ),
-                                      ZoomTapAnimation(
-                                        child: Container(
-                                          width: 60,
-                                          height: 60,
-                                          padding: EdgeInsets.all(2),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            border: Border.all(
-                                              width: 2,
-                                            ),
-                                          ),
-                                          child: IconButton(
-                                            icon: SvgPicture.asset(
-                                              'assets/icons/restart.svg',
-                                              width: double.infinity,
-                                              height: double.infinity,
-                                              color: palette.ink,
-                                            ),
-                                            onPressed: () {
-                                              audioController
-                                                  .playSfx(SfxType.buttonTap);
-                                              GoRouter.of(context)
-                                                  .pushReplacement('/play');
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          );
+                          createCongratsDialog(newScore);
                         },
                         child: Text(
                           'confirm',
@@ -536,6 +415,130 @@ class _PlaySessionScreenState extends State<PlaySessionScreen>
           debugPrint('RewardedAd failed to load: $error');
         },
       ),
+    );
+  }
+
+  void createCongratsDialog(String newScore) {
+    final audioController = newContext.read<AudioController>();
+    final palette = newContext.read<Palette>();
+
+    Dialogs.materialDialog(
+      customView: Column(
+        children: [
+          const SizedBox(
+            height: 30,
+          ),
+          SvgPicture.asset(
+            'assets/icons/congrats.svg',
+            width: double.infinity,
+            height: 120,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          const Text(
+            'new_score',
+            style: TextStyle(
+              fontSize: 24,
+            ),
+          ).tr(),
+          const SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 20,
+              right: 20,
+            ),
+            child: FittedBox(
+              child: Text(
+                newScore,
+                style: TextStyle(
+                  fontSize: 44,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      color: palette.trueWhite,
+      titleStyle: const TextStyle(
+        fontWeight: FontWeight.w500,
+        fontSize: 18,
+      ),
+      msgAlign: TextAlign.end,
+      // lottieBuilder: Lottie.asset(
+      //   'assets/animations/congrats.json',
+      //   fit: BoxFit.contain,
+      // ),
+      context: newContext,
+      barrierDismissible: false,
+      actions: [
+        Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ZoomTapAnimation(
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(
+                        width: 2,
+                      ),
+                    ),
+                    child: IconButton(
+                      icon: SvgPicture.asset(
+                        'assets/icons/home.svg',
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: palette.ink,
+                      ),
+                      onPressed: () {
+                        audioController.playSfx(SfxType.buttonTap);
+                        GoRouter.of(context).pushReplacement('/');
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 30,
+                ),
+                ZoomTapAnimation(
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    padding: EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(
+                        width: 2,
+                      ),
+                    ),
+                    child: IconButton(
+                      icon: SvgPicture.asset(
+                        'assets/icons/restart.svg',
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: palette.ink,
+                      ),
+                      onPressed: () {
+                        audioController.playSfx(SfxType.buttonTap);
+                        GoRouter.of(context).pushReplacement('/play');
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+          ],
+        ),
+      ],
     );
   }
 

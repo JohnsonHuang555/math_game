@@ -23,9 +23,7 @@ class AudioController {
 
   /// This is a list of [AudioPlayer] instances which are rotated to play
   /// sound effects.
-  final List<AudioPlayer> _sfxPlayers;
-
-  int _currentSfxPlayer = 0;
+  final AudioPlayer _sfxPlayer;
 
   final Queue<Song> _playlist;
 
@@ -35,21 +33,21 @@ class AudioController {
 
   ValueNotifier<AppLifecycleState>? _lifecycleNotifier;
 
+  bool _isPlaying = false;
+
   /// Creates an instance that plays music and sound.
   ///
   /// Use [polyphony] to configure the number of sound effects (SFX) that can
   /// play at the same time. A [polyphony] of `1` will always only play one
   /// sound (a new sound will stop the previous one). See discussion
-  /// of [_sfxPlayers] to learn why this is the case.
+  /// of [_sfxPlayer] to learn why this is the case.
   ///
   /// Background music does not count into the [polyphony] limit. Music will
   /// never be overridden by sound effects because that would be silly.
-  AudioController({int polyphony = 2})
-      : assert(polyphony >= 1),
+  AudioController()
+      : assert(true),
         _musicPlayer = AudioPlayer(playerId: 'musicPlayer'),
-        _sfxPlayers = Iterable.generate(
-                polyphony, (i) => AudioPlayer(playerId: 'sfxPlayer#$i'))
-            .toList(growable: false),
+        _sfxPlayer = AudioPlayer(playerId: 'sfxPlayer'),
         _playlist = Queue.of(List<Song>.of(songs)) {
     _musicPlayer.setReleaseMode(ReleaseMode.loop);
     unawaited(_preloadSfx());
@@ -68,9 +66,7 @@ class AudioController {
     _lifecycleNotifier?.removeListener(_handleAppLifecycle);
     _stopAllSound();
     _musicPlayer.dispose();
-    for (final player in _sfxPlayers) {
-      player.dispose();
-    }
+    _sfxPlayer.dispose();
   }
 
   /// Plays a single sound effect, defined by [type].
@@ -78,7 +74,11 @@ class AudioController {
   /// The controller will ignore this call when the attached settings'
   /// [SettingsController.audioOn] is `true` or if its
   /// [SettingsController.soundsOn] is `false`.
-  void playSfx(SfxType type) {
+  Future<void> playSfx(SfxType type) async {
+    if (_isPlaying) {
+      _isPlaying = false;
+      await _sfxPlayer.stop();
+    }
     final audioOn = _settings?.audioOn.value ?? false;
     if (!audioOn) {
       _log.fine(() => 'Ignoring playing sound ($type) because audio is muted.');
@@ -96,11 +96,10 @@ class AudioController {
     final filename = options[0];
     _log.fine(() => '- Chosen filename: $filename');
 
-    final currentPlayer = _sfxPlayers[_currentSfxPlayer];
-    currentPlayer.play(
+    _isPlaying = true;
+    await _sfxPlayer.play(
       AssetSource('sfx/$filename'),
     );
-    _currentSfxPlayer = (_currentSfxPlayer + 1) % _sfxPlayers.length;
   }
 
   Future<void> playMusic(String screenName) async {
@@ -135,7 +134,7 @@ class AudioController {
     }
   }
 
-  Future<void>pauseMusic() async {
+  Future<void> pauseMusic() async {
     await _musicPlayer.pause();
   }
 
@@ -229,10 +228,8 @@ class AudioController {
   }
 
   void _soundsOnHandler() {
-    for (final player in _sfxPlayers) {
-      if (player.state == PlayerState.playing) {
-        player.stop();
-      }
+    if (_sfxPlayer.state == PlayerState.playing) {
+      _sfxPlayer.stop();
     }
   }
 
@@ -256,15 +253,12 @@ class AudioController {
       _log.severe("Error resuming music", e);
       // Try starting the song from scratch.
       playMusic(currentScreen!);
-      // _playCurrentSongInPlaylist();
     }
   }
 
   void _stopAllSound() {
     _log.info('Stopping all sound');
     _musicPlayer.pause();
-    for (final player in _sfxPlayers) {
-      player.stop();
-    }
+    _sfxPlayer.stop();
   }
 }

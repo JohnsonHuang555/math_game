@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 import '../audio/sounds.dart';
 import '../audio/audio_controller.dart';
@@ -56,6 +55,8 @@ class LeaderboardScreen extends StatelessWidget {
 
         List<dynamic> topTenUsers = snapshot.data as List<dynamic>;
 
+        print(topTenUsers.length);
+
         return Scaffold(
           backgroundColor: palette.backgroundMain,
           body: ResponsiveScreen(
@@ -68,89 +69,145 @@ class LeaderboardScreen extends StatelessWidget {
             squarishMainArea: Column(
               children: [
                 Expanded(
-                  child: AnimationLimiter(
-                    child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      padding: EdgeInsets.zero,
-                      itemCount: topTenUsers.length,
-                      itemBuilder: (context, index) {
-                        final highlight = playerProgress.userId ==
-                            topTenUsers[index].id as String;
+                  child: ListView.builder(
+                    physics:  NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    itemCount: topTenUsers.length,
+                    itemBuilder: (context, index) {
+                      final highlight = playerProgress.userId ==
+                          topTenUsers[index].id as String;
+                      List<Color> colors = [];
+                      switch (index + 1) {
+                        case 1:
+                          colors = const [
+                            Color(0xffFFD700),
+                            Color.fromARGB(255, 255, 245, 166),
+                          ];
+                          break;
+                        case 2:
+                          colors = const [
+                            Color.fromARGB(255, 178, 178, 178),
+                            Color.fromARGB(192, 228, 228, 228),
+                          ];
+                          break;
+                        case 3:
+                          colors = const [
+                            Color.fromARGB(255, 229, 158, 92),
+                            Color.fromARGB(255, 255, 218, 184),
+                          ];
+                          break;
+                        default:
+                          colors = const [
+                            Color.fromARGB(197, 250, 250, 250),
+                            Color.fromARGB(197, 255, 255, 255),
+                          ];
+                          break;
+                      }
 
-                        List<Color> colors = [];
-                        switch (index + 1) {
-                          case 1:
-                            colors = const [
-                              Color(0xffFFD700),
-                              Color.fromARGB(255, 255, 245, 166),
-                            ];
-                            break;
-                          case 2:
-                            colors = const [
-                              Color.fromARGB(255, 178, 178, 178),
-                              Color.fromARGB(192, 228, 228, 228),
-                            ];
-                            break;
-                          case 3:
-                            colors = const [
-                              Color.fromARGB(255, 229, 158, 92),
-                              Color.fromARGB(255, 255, 218, 184),
-                            ];
-                            break;
-                          default:
-                            colors = const [
-                              Color.fromARGB(198, 239, 239, 239),
-                              Color.fromARGB(198, 239, 239, 239),
-                            ];
-                            break;
-                        }
-
-                        return AnimationConfiguration.staggeredList(
-                          position: index,
-                          duration: const Duration(milliseconds: 375),
-                          child: SlideAnimation(
-                            child: FadeInAnimation(
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 12),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: highlight ? 3 : 1,
-                                      color: highlight
-                                          ? palette.selectedItem
-                                          : palette.ink),
-                                  borderRadius: BorderRadius.circular(6),
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: colors,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 30.0,
-                                    right: 16.0,
-                                    top: 16.0,
-                                    bottom: 16.0,
-                                  ),
-                                  child: LeaderboardPlayer(
-                                    rank: index + 1,
-                                    name: topTenUsers[index]['name'] as String,
-                                    score:
-                                        topTenUsers[index]['score'].toString(),
-                                    highlight: highlight,
-                                  ),
-                                ),
-                              ),
-                            ),
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              width: highlight ? 3 : 1,
+                              color: highlight
+                                  ? palette.selectedItem
+                                  : palette.ink),
+                          borderRadius: BorderRadius.circular(6),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: colors,
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            left: 30.0,
+                            right: 16.0,
+                            top: 16.0,
+                            bottom: 16.0,
+                          ),
+                          child: LeaderboardPlayer(
+                            rank: index + 1,
+                            name: topTenUsers[index]['name'] as String,
+                            score: topTenUsers[index]['score'].toString(),
+                            highlight: highlight,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 )
               ],
             ),
+            // squarishMainArea: ListView.builder(
+            //   physics: BouncingScrollPhysics(),
+            //   shrinkWrap: true,
+            //   padding: EdgeInsets.zero,
+            //   itemCount: topTenUsers.length,
+            //   itemBuilder: (context, index) {
+            //     final highlight =
+            //         playerProgress.userId == topTenUsers[index].id as String;
+            //     List<Color> colors = [];
+            //     switch (index + 1) {
+            //       case 1:
+            //         colors = const [
+            //           Color(0xffFFD700),
+            //           Color.fromARGB(255, 255, 245, 166),
+            //         ];
+            //         break;
+            //       case 2:
+            //         colors = const [
+            //           Color.fromARGB(255, 178, 178, 178),
+            //           Color.fromARGB(192, 228, 228, 228),
+            //         ];
+            //         break;
+            //       case 3:
+            //         colors = const [
+            //           Color.fromARGB(255, 229, 158, 92),
+            //           Color.fromARGB(255, 255, 218, 184),
+            //         ];
+            //         break;
+            //       default:
+            //         colors = const [
+            //           Color.fromARGB(198, 239, 239, 239),
+            //           Color.fromARGB(198, 239, 239, 239),
+            //         ];
+            //         break;
+            //     }
+
+            //     return Container(
+            //         margin: const EdgeInsets.only(bottom: 12),
+            //         decoration: BoxDecoration(
+            //           border: Border.all(
+            //               width: highlight ? 3 : 1,
+            //               color: highlight
+            //                   ? palette.selectedItem
+            //                   : palette.ink),
+            //           borderRadius: BorderRadius.circular(6),
+            //           gradient: LinearGradient(
+            //             begin: Alignment.topLeft,
+            //             end: Alignment.bottomRight,
+            //             colors: colors,
+            //           ),
+            //         ),
+            //         child: Padding(
+            //           padding: const EdgeInsets.only(
+            //             left: 30.0,
+            //             right: 16.0,
+            //             top: 16.0,
+            //             bottom: 16.0,
+            //           ),
+            //           child: LeaderboardPlayer(
+            //             rank: index + 1,
+            //             name: topTenUsers[index]['name'] as String,
+            //             score: topTenUsers[index]['score'].toString(),
+            //             highlight: highlight,
+            //           ),
+            //         ),
+            //       );
+            //   },
+            // ),
             rectangularMenuArea: Column(
               children: [
                 Divider(

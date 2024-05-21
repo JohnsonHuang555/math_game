@@ -62,7 +62,7 @@ class _IntroduceScreenState extends State<IntroduceScreen> {
                 children: [
                   SizedBox(
                     width: double.infinity,
-                    height: 450,
+                    height: 400,
                     child: Center(
                       child: Image.asset(
                         currentLanguage == 'zh_TW'
@@ -90,7 +90,7 @@ class _IntroduceScreenState extends State<IntroduceScreen> {
                 children: [
                   SizedBox(
                     width: double.infinity,
-                    height: 450,
+                    height: 400,
                     child: Center(
                       child: Image.asset(
                         currentLanguage == 'zh_TW'
@@ -118,7 +118,7 @@ class _IntroduceScreenState extends State<IntroduceScreen> {
                 children: [
                   SizedBox(
                     width: double.infinity,
-                    height: 450,
+                    height: 400,
                     child: Center(
                       child: Image.asset(
                         currentLanguage == 'zh_TW'

@@ -55,8 +55,6 @@ class LeaderboardScreen extends StatelessWidget {
 
         List<dynamic> topTenUsers = snapshot.data as List<dynamic>;
 
-        print(topTenUsers.length);
-
         return Scaffold(
           backgroundColor: palette.backgroundMain,
           body: ResponsiveScreen(
@@ -70,7 +68,7 @@ class LeaderboardScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: ListView.builder(
-                    physics:  NeverScrollableScrollPhysics(),
+                    // physics:  NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     padding: EdgeInsets.zero,
                     itemCount: topTenUsers.length,
